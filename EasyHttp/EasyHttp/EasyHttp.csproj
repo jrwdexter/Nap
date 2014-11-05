@@ -46,14 +46,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EasyConfig.cs" />
     <Compile Include="EasyHttpClient.cs" />
     <Compile Include="EasyHttpRequest.cs" />
+    <Compile Include="Formatters\Base\IEasyFormatter.cs" />
+    <Compile Include="Formatters\EasyFormsSerializer.cs" />
+    <Compile Include="Formatters\EasyXmlSerializer.cs" />
+    <Compile Include="Formatters\EasyJsonSerializer.cs" />
+    <Compile Include="IEasyHttpRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestFormat.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
