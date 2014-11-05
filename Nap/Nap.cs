@@ -12,15 +12,15 @@ namespace Napper
     /// <summary>
     /// The Easy REST client allows for simple requests to be made and configured.
     /// </summary>
-    public class NapClient
+    public class Nap
     {
-        private static NapClient _instance;
+        private static Nap _instance;
         private readonly static object _padlock = new object();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NapClient"/> class.
+        /// Initializes a new instance of the <see cref="Nap"/> class.
         /// </summary>
-        public NapClient()
+        public Nap()
         {
             Config = new NapConfig();
             Config.Serializers.Add(RequestFormat.Json, new NapJsonSerializer());
@@ -28,10 +28,10 @@ namespace Napper
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NapClient" /> class.
+        /// Initializes a new instance of the <see cref="Nap" /> class.
         /// </summary>
         /// <param name="baseUrl">The base URL to use.</param>
-        public NapClient(string baseUrl)
+        public Nap(string baseUrl)
         {
             Config = new NapConfig { BaseUrl = baseUrl };
             Config.Serializers.Add(RequestFormat.Json, new NapJsonSerializer());
@@ -39,9 +39,9 @@ namespace Napper
         }
 
         /// <summary>
-        /// Gets a single instance of the <see cref="NapClient"/>, which can be used to perform requests swiftly.
+        /// Gets a single instance of the <see cref="Nap"/>, which can be used to perform requests swiftly.
         /// </summary>
-        public static NapClient Lets
+        public static Nap Lets
         {
             get
             {
@@ -50,7 +50,7 @@ namespace Napper
                     lock (_padlock)
                     {
                         if (_instance == null)
-                            _instance = new NapClient();
+                            _instance = new Nap();
                     }
                 }
 

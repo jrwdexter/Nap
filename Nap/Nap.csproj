@@ -47,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\NapConfig.cs" />
-    <Compile Include="NapClient.cs" />
+    <Compile Include="Nap.cs" />
     <Compile Include="NapRequest.cs" />
     <Compile Include="Formatters\Base\IEasyFormatter.cs" />
     <Compile Include="Formatters\NapFormsSerializer.cs" />
