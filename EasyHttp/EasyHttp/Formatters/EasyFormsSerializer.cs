@@ -22,6 +22,7 @@ namespace EasyHttp.Formatters
             {
                 sb.AppendFormat("{0}{1}&", prop.Name, prop.GetValue(graph));
             }
+
             return sb.ToString().TrimEnd('&');
         }
     }

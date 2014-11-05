@@ -12,6 +12,17 @@ namespace EasyHttp.Configuration
     public class EasyConfig
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="EasyConfig"/> class.
+        /// </summary>
+        public EasyConfig()
+        {
+            Serializers = new Dictionary<RequestFormat, IEasySerializer>();
+            AcceptFormat = RequestFormat.Json;
+            ContentFormat = RequestFormat.Json;
+            FillMetadata = false;
+        }
+
+        /// <summary>
         /// Gets or sets the serializers that can be used to both serialize and deserialize content.
         /// </summary>
         public Dictionary<RequestFormat, IEasySerializer> Serializers { get; set; }
@@ -40,17 +51,6 @@ namespace EasyHttp.Configuration
         /// Gets or sets a value indicating whether or not to fill "Special Values" such as StatusCode on the deserialized object.
         /// </summary>
         public bool FillMetadata { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EasyConfig"/> class.
-        /// </summary>
-        public EasyConfig()
-        {
-            Serializers = new Dictionary<RequestFormat, IEasySerializer>();
-            AcceptFormat = RequestFormat.Json;
-            ContentFormat = RequestFormat.Json;
-            FillMetadata = false;
-        }
 
         /// <summary>
         /// Creates a copy of the <see cref="EasyConfig"/> configuration.

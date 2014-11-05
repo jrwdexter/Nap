@@ -17,13 +17,13 @@ namespace EasyHttp
     /// </summary>
     public partial class EasyHttpRequest : IEasyHttpRequest, IEasyRemovableRequestComponent
     {
-        private bool _doNot;
         private readonly EasyConfig _config;
-        private string _content;
         private readonly string _url;
         private readonly HttpMethod _method;
         private readonly Dictionary<string, string> _queryParameters = new Dictionary<string, string>();
         private readonly Dictionary<string, string> _headers = new Dictionary<string, string>();
+        private string _content;
+        private bool _doNot;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EasyHttpRequest" /> class.
@@ -41,7 +41,7 @@ namespace EasyHttp
         #region Include/Fill
 
         /// <summary>
-        /// Perform some removal of data from the request.
+        /// Gets a set of methods to perform some removal of data from the request.
         /// </summary>
         public IEasyRemovableRequestComponent DoNot
         {
@@ -110,6 +110,7 @@ namespace EasyHttp
                 _content = null;
                 _doNot = false;
             }
+
             return this;
         }
 
@@ -126,6 +127,7 @@ namespace EasyHttp
                 {
                     _headers.Remove(headerName);
                 }
+
                 _doNot = false;
             }
 
@@ -145,6 +147,7 @@ namespace EasyHttp
                 {
                     _queryParameters.Remove(key);
                 }
+
                 _doNot = false;
             }
 
@@ -170,7 +173,7 @@ namespace EasyHttp
         /// <typeparam name="T">The type to deserialize the object to.</typeparam>
         /// <returns>
         /// A task, that when run returns the body content deserialized to the object <typeparamref name="T"/>,
-        /// using the serializer matchin <see cref="EasyConfig.AcceptFormat"/>.
+        /// using the serializer matching <see cref="EasyConfig.AcceptFormat"/>.
         /// </returns>
         public async Task<T> ExecuteAsync<T>()
         {
@@ -182,6 +185,7 @@ namespace EasyHttp
                 var property = typeof(T).GetProperty("StatusCode", BindingFlags.Instance | BindingFlags.Public);
                 if (property != null)
                     property.SetValue(toReturn, Convert.ChangeType(responseWithContent.Response.StatusCode, property.PropertyType));
+
                 // TODO: Populate items with defaults (statuscode, etc)
             }
 
@@ -203,7 +207,7 @@ namespace EasyHttp
         /// <typeparam name="T">The type to deserialize the object to.</typeparam>
         /// <returns>
         /// The body content deserialized to the object <typeparamref name="T"/>,
-        /// using the serializer matchin <see cref="EasyConfig.AcceptFormat"/>.
+        /// using the serializer matching <see cref="EasyConfig.AcceptFormat"/>.
         /// </returns>
         public T Execute<T>()
         {
@@ -264,6 +268,7 @@ namespace EasyHttp
                 handler.Proxy = new WebProxy(_config.Proxy);
                 handler.UseProxy = true;
             }
+
             var client = new HttpClient(handler);
             return client;
         }

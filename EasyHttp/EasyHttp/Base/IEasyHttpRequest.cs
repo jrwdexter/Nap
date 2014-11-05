@@ -13,7 +13,7 @@ namespace EasyHttp.Base
     public interface IEasyHttpRequest
     {
         /// <summary>
-        /// Perform some removal of data from the request.
+        /// Gets a set of methods to perform some removal of data from the request.
         /// </summary>
         IEasyRemovableRequestComponent DoNot { get; }
 
@@ -58,7 +58,7 @@ namespace EasyHttp.Base
         /// <typeparam name="T">The type to deserialize the object to.</typeparam>
         /// <returns>
         /// A task, that when run returns the body content deserialized to the object <typeparamref name="T"/>,
-        /// using the serializer matchin <see cref="EasyConfig.AcceptFormat"/>.
+        /// using the serializer matching <see cref="EasyConfig.AcceptFormat"/>.
         /// </returns>
         Task<T> ExecuteAsync<T>();
 
@@ -74,7 +74,7 @@ namespace EasyHttp.Base
         /// <typeparam name="T">The type to deserialize the object to.</typeparam>
         /// <returns>
         /// The body content deserialized to the object <typeparamref name="T"/>,
-        /// using the serializer matchin <see cref="EasyConfig.AcceptFormat"/>.
+        /// using the serializer matching <see cref="EasyConfig.AcceptFormat"/>.
         /// </returns>
         T Execute<T>();
     }

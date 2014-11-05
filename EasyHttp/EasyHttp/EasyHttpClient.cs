@@ -15,11 +15,6 @@ namespace EasyHttp
     public class EasyHttpClient
     {
         /// <summary>
-        /// Gets or sets the configuration that is used as the base for all requests.
-        /// </summary>
-        public EasyConfig Config { get; set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="EasyHttpClient"/> class.
         /// </summary>
         public EasyHttpClient()
@@ -39,6 +34,11 @@ namespace EasyHttp
             Config.Serializers.Add(RequestFormat.Json, new EasyJsonSerializer());
             Config.Serializers.Add(RequestFormat.Xml, new EasyXmlSerializer());
         }
+
+        /// <summary>
+        /// Gets or sets the configuration that is used as the base for all requests.
+        /// </summary>
+        public EasyConfig Config { get; set; }
 
         /// <summary>
         /// Performs a GET request against the <see cref="url"/>.

@@ -24,7 +24,6 @@ namespace EasyHttp.Formatters
             var xmlSerializer = new XmlSerializer(graph.GetType());
             using (var textWriter = new StringWriter())
             {
-
                 xmlSerializer.Serialize(textWriter, graph);
                 return textWriter.ToString();
             }
