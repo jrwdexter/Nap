@@ -30,6 +30,17 @@ namespace EasyHttp
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="EasyHttpClient" /> class.
+        /// </summary>
+        /// <param name="baseUrl">The base URL to use.</param>
+        public EasyHttpClient(string baseUrl)
+        {
+            Config = new EasyConfig { BaseUrl = baseUrl };
+            Config.Serializers.Add(RequestFormat.Json, new EasyJsonSerializer());
+            Config.Serializers.Add(RequestFormat.Xml, new EasyXmlSerializer());
+        }
+
+        /// <summary>
         /// Performs a GET request against the <see cref="url"/>.
         /// </summary>
         /// <param name="url">The URL to perform the GET request against.</param>

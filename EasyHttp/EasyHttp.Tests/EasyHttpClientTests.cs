@@ -7,17 +7,16 @@ namespace EasyHttp.Tests
     public class EasyHttpClientTests
     {
         [TestMethod]
-        public void Something()
+        public async void Something()
         {
-            var ec = new EasyHttpClient();
+            var ec = new EasyHttpClient("http://api.github.com/");
             ec.Config.Proxy = new Uri("http://localhost:8888");
-            var task = ec.Post("http://api.github.com/")
-                         .IncludeQueryParameter("q", "v")
-                         .IncludeHeader("aHeader", "aValue")
-                         .IncludeBody(new { FirstName = "John", LastName = "Doe" })
-                         .ExecuteAsync()
-                         .Result;
-            Assert.IsNotNull(task);
+            var response = await ec.Get("/")
+                                   .IncludeQueryParameter("q", "v")
+                                   .IncludeHeader("aHeader", "aValue")
+                                   .IncludeBody(new { FirstName = "John", LastName = "Doe" })
+                                   .ExecuteAsync();
+            Assert.IsNotNull(response);
         }
     }
 }
