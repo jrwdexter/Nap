@@ -9,11 +9,11 @@ namespace Napper.Tests
         [TestMethod]
         public async void Something()
         {
-            var response = await NapClient.Lets.Get("/")
-                                               .IncludeQueryParameter("q", "v")
-                                               .IncludeHeader("aHeader", "aValue")
-                                               .IncludeBody(new { FirstName = "John", LastName = "Doe" })
-                                               .ExecuteAsync();
+            var response = await Nap.Lets.Get("/")
+                                         .IncludeQueryParameter("q", "v")
+                                         .IncludeHeader("aHeader", "aValue")
+                                         .IncludeBody(new { FirstName = "John", LastName = "Doe" })
+                                         .ExecuteAsync();
             Assert.IsNotNull(response);
         }
     }
