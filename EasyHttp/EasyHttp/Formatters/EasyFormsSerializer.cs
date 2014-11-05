@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
+using EasyHttp.Formatters.Base;
+
 namespace EasyHttp.Formatters
 {
     public class EasyFormsSerializer : IEasySerializer

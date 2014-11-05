@@ -46,16 +46,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EasyConfig.cs" />
+    <Compile Include="Configuration\EasyConfig.cs" />
     <Compile Include="EasyHttpClient.cs" />
     <Compile Include="EasyHttpRequest.cs" />
     <Compile Include="Formatters\Base\IEasyFormatter.cs" />
     <Compile Include="Formatters\EasyFormsSerializer.cs" />
     <Compile Include="Formatters\EasyXmlSerializer.cs" />
     <Compile Include="Formatters\EasyJsonSerializer.cs" />
-    <Compile Include="IEasyHttpRequest.cs" />
+    <Compile Include="Base\IEasyHttpRequest.cs" />
+    <Compile Include="Base\IEasyRemovableRequestComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RequestFormat.cs" />
+    <Compile Include="Configuration\RequestFormat.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

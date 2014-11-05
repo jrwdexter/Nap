@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EasyHttp
+namespace EasyHttp.Formatters.Base
 {
     public interface IEasySerializer
     {

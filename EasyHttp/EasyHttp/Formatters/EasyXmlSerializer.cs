@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 
+using EasyHttp.Formatters.Base;
 
 namespace EasyHttp.Formatters
 {
