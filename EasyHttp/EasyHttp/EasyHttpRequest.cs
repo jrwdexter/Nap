@@ -57,7 +57,7 @@ namespace EasyHttp
 
         public EasyHttpRequest WithHeader(string headerName, string value)
         {
-            this.Headers.Add(new KeyValuePair<string, string>(headerName, value);
+            this.Headers.Add(new KeyValuePair<string, string>(headerName, value));
             return this;
         }
         public async Task<object> ExecuteASync<T>()
