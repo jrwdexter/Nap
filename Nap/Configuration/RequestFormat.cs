@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EasyHttp.Configuration
+namespace Napper.Configuration
 {
     public enum RequestFormat
     {

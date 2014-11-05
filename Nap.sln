@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyHttp", "EasyHttp\EasyHttp.csproj", "{2D0869E5-CEB3-4719-BFC3-3FAACC721384}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap", "Nap\Nap.csproj", "{2D0869E5-CEB3-4719-BFC3-3FAACC721384}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyHttp.Tests", "EasyHttp.Tests\EasyHttp.Tests.csproj", "{A9CC8956-2590-4DFC-B7A8-CB42F5ED26DE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Tests", "Nap.Tests\Nap.Tests.csproj", "{A9CC8956-2590-4DFC-B7A8-CB42F5ED26DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

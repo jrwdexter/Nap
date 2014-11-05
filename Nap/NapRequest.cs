@@ -7,17 +7,17 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using EasyHttp.Base;
-using EasyHttp.Configuration;
+using Napper.Base;
+using Napper.Configuration;
 
-namespace EasyHttp
+namespace Napper
 {
     /// <summary>
     /// An easily configurable request.
     /// </summary>
-    public partial class EasyHttpRequest : IEasyHttpRequest, IEasyRemovableRequestComponent
+    internal partial class NapRequest : INapRequest, INapRemovableRequestComponent
     {
-        private readonly EasyConfig _config;
+        private readonly NapConfig _config;
         private readonly string _url;
         private readonly HttpMethod _method;
         private readonly Dictionary<string, string> _queryParameters = new Dictionary<string, string>();
@@ -26,12 +26,12 @@ namespace EasyHttp
         private bool _doNot;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EasyHttpRequest" /> class.
+        /// Initializes a new instance of the <see cref="NapRequest" /> class.
         /// </summary>
         /// <param name="initialConfiguration">The initial configuration for the request.</param>
         /// <param name="url">The URL to perform the request against.  Can be a full URL or a partial.</param>
         /// <param name="method">The method to use in the request.</param>
-        internal EasyHttpRequest(EasyConfig initialConfiguration, string url, HttpMethod method)
+        internal NapRequest(NapConfig initialConfiguration, string url, HttpMethod method)
         {
             _config = initialConfiguration;
             _url = url;
@@ -43,7 +43,7 @@ namespace EasyHttp
         /// <summary>
         /// Gets a set of methods to perform some removal of data from the request.
         /// </summary>
-        public IEasyRemovableRequestComponent DoNot
+        public INapRemovableRequestComponent DoNot
         {
             get
             {
@@ -57,19 +57,19 @@ namespace EasyHttp
         /// </summary>
         /// <param name="key">The key for the query parameter to include.</param>
         /// <param name="value">The value of the query parameter to include.</param>
-        /// <returns>The <see cref="IEasyHttpRequest"/> object.</returns>
-        public IEasyHttpRequest IncludeQueryParameter(string key, string value)
+        /// <returns>The <see cref="INapRequest"/> object.</returns>
+        public INapRequest IncludeQueryParameter(string key, string value)
         {
             _queryParameters.Add(key, value);
             return this;
         }
 
         /// <summary>
-        /// Includes some content in the body, serialized according to <see cref="EasyConfig.ContentFormat"/>.
+        /// Includes some content in the body, serialized according to <see cref="NapConfig.ContentFormat"/>.
         /// </summary>
         /// <param name="body">The object to serialize into the body.</param>
-        /// <returns>The <see cref="IEasyHttpRequest"/> object.</returns>
-        public IEasyHttpRequest IncludeBody(object body)
+        /// <returns>The <see cref="INapRequest"/> object.</returns>
+        public INapRequest IncludeBody(object body)
         {
             _content = _config.Serializers[_config.ContentFormat].Serialize(body);
             return this;
@@ -80,8 +80,8 @@ namespace EasyHttp
         /// </summary>
         /// <param name="headerName">Name of the header to include.</param>
         /// <param name="value">The value of the header to send.</param>
-        /// <returns>The <see cref="IEasyHttpRequest"/> object.</returns>
-        public IEasyHttpRequest IncludeHeader(string headerName, string value)
+        /// <returns>The <see cref="INapRequest"/> object.</returns>
+        public INapRequest IncludeHeader(string headerName, string value)
         {
             _headers.Add(headerName, value);
             return this;
@@ -91,8 +91,8 @@ namespace EasyHttp
         /// Fills the response object with metadata using special keys, such as "StatusCode".
         /// If used after <see cref="DoNot"/>, instead removes the fill metadata flag.
         /// </summary>
-        /// <returns>The <see cref="IEasyHttpRequest"/> object.</returns>
-        public IEasyHttpRequest FillMetadata()
+        /// <returns>The <see cref="INapRequest"/> object.</returns>
+        public INapRequest FillMetadata()
         {
             _config.FillMetadata = _doNot == false;
             _doNot = false;
@@ -102,8 +102,8 @@ namespace EasyHttp
         /// <summary>
         /// Excludes the body from the request.
         /// </summary>
-        /// <returns>The <see cref="IEasyHttpRequest"/> object.</returns>
-        public IEasyHttpRequest IncludeBody()
+        /// <returns>The <see cref="INapRequest"/> object.</returns>
+        public INapRequest IncludeBody()
         {
             if (_doNot)
             {
@@ -118,8 +118,8 @@ namespace EasyHttp
         /// Excludes the header with key <see cref="headerName"/>.
         /// </summary>
         /// <param name="headerName">The header name to be removed.</param>
-        /// <returns>The <see cref="IEasyHttpRequest"/> object.</returns>
-        public IEasyHttpRequest IncludeHeader(string headerName)
+        /// <returns>The <see cref="INapRequest"/> object.</returns>
+        public INapRequest IncludeHeader(string headerName)
         {
             if (_doNot)
             {
@@ -138,8 +138,8 @@ namespace EasyHttp
         /// Excludes the query with key <see cref="key"/>.
         /// </summary>
         /// <param name="key">The key of the query parameter to remove.</param>
-        /// <returns>The <see cref="IEasyHttpRequest"/> object.</returns>
-        public IEasyHttpRequest IncludeQueryParameter(string key)
+        /// <returns>The <see cref="INapRequest"/> object.</returns>
+        public INapRequest IncludeQueryParameter(string key)
         {
             if (_doNot)
             {
@@ -173,7 +173,7 @@ namespace EasyHttp
         /// <typeparam name="T">The type to deserialize the object to.</typeparam>
         /// <returns>
         /// A task, that when run returns the body content deserialized to the object <typeparamref name="T"/>,
-        /// using the serializer matching <see cref="EasyConfig.AcceptFormat"/>.
+        /// using the serializer matching <see cref="NapConfig.AcceptFormat"/>.
         /// </returns>
         public async Task<T> ExecuteAsync<T>()
         {
@@ -207,7 +207,7 @@ namespace EasyHttp
         /// <typeparam name="T">The type to deserialize the object to.</typeparam>
         /// <returns>
         /// The body content deserialized to the object <typeparamref name="T"/>,
-        /// using the serializer matching <see cref="EasyConfig.AcceptFormat"/>.
+        /// using the serializer matching <see cref="NapConfig.AcceptFormat"/>.
         /// </returns>
         public T Execute<T>()
         {
@@ -274,7 +274,7 @@ namespace EasyHttp
         }
 
         /// <summary>
-        /// Creates the URL from an (optional) <see cref="EasyConfig.BaseUrl"/>, URL and query parameters.
+        /// Creates the URL from an (optional) <see cref="NapConfig.BaseUrl"/>, URL and query parameters.
         /// </summary>
         /// <returns>The fully formed URL.</returns>
         private string CreateUrl()

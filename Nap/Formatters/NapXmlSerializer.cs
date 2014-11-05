@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 
-using EasyHttp.Formatters.Base;
+using Napper.Formatters.Base;
 
-namespace EasyHttp.Formatters
+namespace Napper.Formatters
 {
-    public class EasyXmlSerializer : IEasySerializer
+    public class NapXmlSerializer : INapSerializer
     {
         public T Deserialize<T>(string serialized)
         {

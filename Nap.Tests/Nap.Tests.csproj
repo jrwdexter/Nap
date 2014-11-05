@@ -6,8 +6,8 @@
     <ProjectGuid>{A9CC8956-2590-4DFC-B7A8-CB42F5ED26DE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EasyHttp.Tests</RootNamespace>
-    <AssemblyName>EasyHttp.Tests</AssemblyName>
+    <RootNamespace>Napper.Tests</RootNamespace>
+    <AssemblyName>Nap.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -53,13 +53,13 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="EasyHttpClientTests.cs" />
+    <Compile Include="NapClientTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EasyHttp\EasyHttp.csproj">
+    <ProjectReference Include="..\Nap\Nap.csproj">
       <Project>{2D0869E5-CEB3-4719-BFC3-3FAACC721384}</Project>
-      <Name>EasyHttp</Name>
+      <Name>Nap</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

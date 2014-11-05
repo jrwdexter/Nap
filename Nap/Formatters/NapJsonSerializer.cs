@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using EasyHttp.Formatters.Base;
+using Napper.Formatters.Base;
 
 using Newtonsoft.Json;
 
-namespace EasyHttp.Formatters
+namespace Napper.Formatters
 {
-    public class EasyJsonSerializer : IEasySerializer
+    public class NapJsonSerializer : INapSerializer
     {
         public T Deserialize<T>(string serialized)
         {

@@ -7,8 +7,8 @@
     <ProjectGuid>{2D0869E5-CEB3-4719-BFC3-3FAACC721384}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EasyHttp</RootNamespace>
-    <AssemblyName>EasyHttp</AssemblyName>
+    <RootNamespace>Napper</RootNamespace>
+    <AssemblyName>Nap</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -46,15 +46,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\EasyConfig.cs" />
-    <Compile Include="EasyHttpClient.cs" />
-    <Compile Include="EasyHttpRequest.cs" />
+    <Compile Include="Configuration\NapConfig.cs" />
+    <Compile Include="NapClient.cs" />
+    <Compile Include="NapRequest.cs" />
     <Compile Include="Formatters\Base\IEasyFormatter.cs" />
-    <Compile Include="Formatters\EasyFormsSerializer.cs" />
-    <Compile Include="Formatters\EasyXmlSerializer.cs" />
-    <Compile Include="Formatters\EasyJsonSerializer.cs" />
-    <Compile Include="Base\IEasyHttpRequest.cs" />
-    <Compile Include="Base\IEasyRemovableRequestComponent.cs" />
+    <Compile Include="Formatters\NapFormsSerializer.cs" />
+    <Compile Include="Formatters\NapXmlSerializer.cs" />
+    <Compile Include="Formatters\NapJsonSerializer.cs" />
+    <Compile Include="Base\INapRequest.cs" />
+    <Compile Include="Base\INapRemovableRequestComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\RequestFormat.cs" />
   </ItemGroup>

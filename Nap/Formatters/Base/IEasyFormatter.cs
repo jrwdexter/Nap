@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EasyHttp.Formatters.Base
+namespace Napper.Formatters.Base
 {
-    public interface IEasySerializer
+    public interface INapSerializer
     {
         T Deserialize<T>(string serialized);
 

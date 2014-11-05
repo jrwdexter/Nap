@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using EasyHttp.Formatters.Base;
+using Napper.Formatters.Base;
 
-namespace EasyHttp.Configuration
+namespace Napper.Configuration
 {
     /// <summary>
     /// The configuration class for clients and requests.
     /// </summary>
-    public class EasyConfig
+    public class NapConfig
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EasyConfig"/> class.
+        /// Initializes a new instance of the <see cref="NapConfig"/> class.
         /// </summary>
-        public EasyConfig()
+        public NapConfig()
         {
-            Serializers = new Dictionary<RequestFormat, IEasySerializer>();
+            Serializers = new Dictionary<RequestFormat, INapSerializer>();
             AcceptFormat = RequestFormat.Json;
             ContentFormat = RequestFormat.Json;
             FillMetadata = false;
@@ -25,7 +25,7 @@ namespace EasyHttp.Configuration
         /// <summary>
         /// Gets or sets the serializers that can be used to both serialize and deserialize content.
         /// </summary>
-        public Dictionary<RequestFormat, IEasySerializer> Serializers { get; set; }
+        public Dictionary<RequestFormat, INapSerializer> Serializers { get; set; }
 
         /// <summary>
         /// Gets or sets the optional base URL for easy requests.
@@ -53,12 +53,12 @@ namespace EasyHttp.Configuration
         public bool FillMetadata { get; set; }
 
         /// <summary>
-        /// Creates a copy of the <see cref="EasyConfig"/> configuration.
+        /// Creates a copy of the <see cref="NapConfig"/> configuration.
         /// </summary>
         /// <returns>A copy of the current instance.</returns>
-        internal EasyConfig Clone()
+        internal NapConfig Clone()
         {
-            var easyConfig = new EasyConfig
+            var easyConfig = new NapConfig
             {
                 Serializers = Serializers.ToArray().ToDictionary(s => s.Key, s => s.Value),
                 BaseUrl = BaseUrl,
