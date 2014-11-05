@@ -60,7 +60,7 @@ namespace EasyHttp
             this.Headers.Add(new KeyValuePair<string, string>(headerName, value));
             return this;
         }
-        public async Task<object> ExecuteASync<T>()
+        public async Task<string> ExecuteASync()
         {
             var client = new HttpClient();
             var content = new StringContent(this.Body);
@@ -81,7 +81,13 @@ namespace EasyHttp
             if(this.Method == HttpMethod.Delete)
                 response = await client.DeleteAsync(new Uri(urlTemp)); 
             if(response == null)
-                return null;
+                return default(string);
+            throw new NotImplementedException();
         }
+        public async Task<T> ExecuteASync<T>()
+        {
+            return (T) await this.ExecuteASync();
+        }
+
     }
 }
