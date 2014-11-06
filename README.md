@@ -119,3 +119,22 @@ var cake = Nap.Lets.Get<Cake>("http://example.com/cake")
                    .UseSSL()
                    .Execute()
 ```
+
+Metadata properties are supported!
+
+```c#
+class Cake
+{
+  public bool Tasty { get; set; }
+  public string Type { get; set; }
+  public int StatusCode { get; set; }
+}
+
+var cake = Nap.Lets.Get<Cake>("http://example.com/cake")
+                   .FillMetadata()
+                   .Execute()
+```
+
+In the above example, if the URL cake has no property called "Status Code", it would be populated by the `FillMetadata()` flag, and result in the status code of the request.
+
+Deserialization is performed by default through Json.Net and XmlSerializer.  Additional formatters for deserialization can be implemented by inheriting from the `INapFormatter` interface.
