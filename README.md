@@ -81,5 +81,31 @@ Nap.Lets.Get<Potato>("/potato")
         .Execute();
 ```
 
+Nap supports 3 levels of cascading configuration: *.config < Nap() < Fluent.  In this example:
+
+```xml
+...
+<Nap>
+  <BaseUrl>http://example.com</BaseUrl>
+  <Headers>
+    <Header key="sugar" value="100g" />
+  </Headers>
+  <QueryParameters>
+    <QueryParameter key="temp" value="425F" />
+  </QueryParameters>
+</Nap>
+...
+```
+
+```c#
+var nap = new Nap();
+nap.Config.QueryParameters["temp"] = "300F";
+var cake = nap.Get<Cake>("/cake")
+              .IncludeHeader("sugar", "10g")
+              .Execute();
+```
+
+The end result would perform an HTTP GET Request to `http://example.com/cake` (from *.config), using a query parameter of "temp=300F" (Nap() configuration level) and a Header of "sugar: 10g" (Fluent level).  This allows for a high degree of customization on a per-request or per-scope basis.
+
 ## Powerful
 
