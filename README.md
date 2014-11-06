@@ -109,3 +109,13 @@ The end result would perform an HTTP GET Request to `http://example.com/cake` (f
 
 ## Powerful
 
+Most of all, **Nap** is aimed at bringing the full power of the RESTful requests to your projects.  Although few methods are exposed at the `INapRequest` level, the `INapRequest.Advanced` property quickly allows access to many more features:
+
+```c#
+var cake = Nap.Lets.Get<Cake>("http://example.com/cake")
+                   .Advanced
+                   .Proxy("http://localhost:8888")
+                   .Authentication.Basic("jdoe@example.com", "Password")
+                   .UseSSL()
+                   .Execute()
+```
