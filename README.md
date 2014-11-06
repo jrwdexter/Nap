@@ -37,6 +37,17 @@ var cake = Nap.Lets.Post<Cake>("http://example.com/bake-cake")
 **Nap** removes the need to configure stuff over and over again if you don't want to, or the need to create a client if you don't want one.  Your `App.config` or `Web.config` file can include:
 
 ```xml
+<configuration>
+  <configSections>
+    <section 
+      name="Nap" 
+      type="Napper.Configuration.NapConfig" 
+      allowLocation="true" 
+      allowDefinition="Everywhere"
+    />
+  </configSections>
+</configuration>
+...
 <Nap>
   <BaseUrl>http://example.com</BaseUrl>
   <Headers>
@@ -53,7 +64,7 @@ var cake = Nap.Lets.Post<Cake>("http://example.com/bake-cake")
 </Nap>
 ```
 
-And make your **Nap**s even easier:
+And make your **Naps** even easier:
 
 ```c#
 var ingredients = new { Flour = 10, Eggs = 2, CakeMix = 1 };
@@ -65,7 +76,7 @@ Nap.Lets.Post<Cake>("/bake-cake")
 And still fully malleable:
 
 ```c#
-  Nap.Lets.Get<Potato>("/potatoe")
+  Nap.Lets.Get<Potato>("/potato")
           .DoNot.IncludeHeader("sugar")
           .Execute();
 ```
