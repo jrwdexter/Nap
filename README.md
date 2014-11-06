@@ -76,9 +76,9 @@ Nap.Lets.Post<Cake>("/bake-cake")
 And still fully malleable:
 
 ```c#
-  Nap.Lets.Get<Potato>("/potato")
-          .DoNot.IncludeHeader("sugar")
-          .Execute();
+Nap.Lets.Get<Potato>("/potato")
+        .DoNot.IncludeHeader("sugar")
+        .Execute();
 ```
 
 ## Powerful
