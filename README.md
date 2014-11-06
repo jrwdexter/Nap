@@ -32,7 +32,7 @@ var cake = Nap.Lets.Post<Cake>("http://example.com/bake-cake")
                    .Execute();
 ```
 
-## Fast
+## Configurable
 
 **Nap** removes the need to configure stuff over and over again if you don't want to, or the need to create a client if you don't want one.  Your `App.config` or `Web.config` file can include:
 
