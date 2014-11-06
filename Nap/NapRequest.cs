@@ -263,9 +263,9 @@ namespace Napper
         private HttpClient CreateClient()
         {
             var handler = new HttpClientHandler();
-            if (_config.Proxy != null)
+            if (_config.Advanced.Proxy != null)
             {
-                handler.Proxy = new WebProxy(_config.Proxy);
+                handler.Proxy = new WebProxy(_config.Advanced.Proxy);
                 handler.UseProxy = true;
             }
 
@@ -280,7 +280,7 @@ namespace Napper
         private string CreateUrl()
         {
             var urlTemp = _url;
-            if (!_url.StartsWith("http") && _config.BaseUrl != null)
+            if (!_url.StartsWith("http") && !string.IsNullOrEmpty(_config.BaseUrl))
                 urlTemp = new Uri(new Uri(_config.BaseUrl), urlTemp).ToString();
             if (_queryParameters.Any())
             {

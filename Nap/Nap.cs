@@ -22,7 +22,7 @@ namespace Napper
         /// </summary>
         public Nap()
         {
-            Config = new NapConfig();
+            Config = (NapConfig)System.Configuration.ConfigurationManager.GetSection("Nap") ?? new NapConfig();
             Config.Serializers.Add(RequestFormat.Json, new NapJsonSerializer());
             Config.Serializers.Add(RequestFormat.Xml, new NapXmlSerializer());
         }
@@ -31,11 +31,9 @@ namespace Napper
         /// Initializes a new instance of the <see cref="Nap" /> class.
         /// </summary>
         /// <param name="baseUrl">The base URL to use.</param>
-        public Nap(string baseUrl)
+        public Nap(string baseUrl) : this()
         {
-            Config = new NapConfig { BaseUrl = baseUrl };
-            Config.Serializers.Add(RequestFormat.Json, new NapJsonSerializer());
-            Config.Serializers.Add(RequestFormat.Xml, new NapXmlSerializer());
+            Config.BaseUrl = baseUrl;
         }
 
         /// <summary>

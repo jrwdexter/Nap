@@ -35,6 +35,7 @@
       <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
@@ -46,10 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\AdvancedNapConfig.cs" />
     <Compile Include="Configuration\NapConfig.cs" />
     <Compile Include="Nap.cs" />
     <Compile Include="NapRequest.cs" />
-    <Compile Include="Formatters\Base\IEasyFormatter.cs" />
+    <Compile Include="Formatters\Base\INapFormatter.cs" />
     <Compile Include="Formatters\NapFormsSerializer.cs" />
     <Compile Include="Formatters\NapXmlSerializer.cs" />
     <Compile Include="Formatters\NapJsonSerializer.cs" />
