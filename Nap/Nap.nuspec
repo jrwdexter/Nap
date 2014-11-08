@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Nap</id>
+    <version>0.0.0.1</version>
+    <title>Nap</title>
+    <authors>Jonathan Dexter</authors>
+    <owners>Jonathan Dexter</owners>
+    <licenseUrl>https://github.com/mandest/Nap/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/mandest/Nap</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A short and sweet REST client</description>
+    <copyright>Copyright 2014</copyright>
+    <tags>REST Fluent HTTP API JSON XML</tags>
+  </metadata>
+</package>
