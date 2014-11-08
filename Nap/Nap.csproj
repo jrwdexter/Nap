@@ -47,9 +47,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdvancedNapRequest.cs" />
+    <Compile Include="Base\IAdvancedNapRequestComponent.cs" />
+    <Compile Include="Base\IAuthenticatedNapRequestComponent.cs" />
     <Compile Include="Configuration\AdvancedNapConfig.cs" />
+    <Compile Include="Configuration\Base\INapConfig.cs" />
+    <Compile Include="Configuration\Base\IAdvancedNapConfig.cs" />
     <Compile Include="Configuration\NapConfig.cs" />
+    <Compile Include="IAuthenticatedNapRequest.cs" />
     <Compile Include="Nap.cs" />
+    <Compile Include="NapRemovableRequest.cs" />
     <Compile Include="NapRequest.cs" />
     <Compile Include="Formatters\Base\INapFormatter.cs" />
     <Compile Include="Formatters\NapFormsSerializer.cs" />

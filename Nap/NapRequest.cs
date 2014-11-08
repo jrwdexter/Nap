@@ -7,15 +7,15 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using Napper.Base;
 using Napper.Configuration;
+using Napper.Formatters.Base;
 
 namespace Napper
 {
     /// <summary>
     /// An easily configurable request.
     /// </summary>
-    internal partial class NapRequest : INapRequest, INapRemovableRequestComponent
+    internal partial class NapRequest : INapRequest
     {
         private readonly NapConfig _config;
         private readonly string _url;
@@ -53,6 +53,15 @@ namespace Napper
         }
 
         /// <summary>
+        /// Gets the advanced collection of methods for <see cref="INapRequest"/> configuration.
+        /// </summary>
+        public IAdvancedNapRequestComponent Advanced
+        {
+            get
+            { return this; }
+        }
+
+        /// <summary>
         /// Includes the query parameter in the value for the URL.
         /// </summary>
         /// <param name="key">The key for the query parameter to include.</param>
@@ -65,13 +74,13 @@ namespace Napper
         }
 
         /// <summary>
-        /// Includes some content in the body, serialized according to <see cref="NapConfig.ContentFormat"/>.
+        /// Includes some content in the body, serialized according to <see cref="NapConfig.Serializers"/>.
         /// </summary>
         /// <param name="body">The object to serialize into the body.</param>
         /// <returns>The <see cref="INapRequest"/> object.</returns>
         public INapRequest IncludeBody(object body)
         {
-            _content = _config.Serializers[_config.ContentFormat].Serialize(body);
+            _content = _config.Serializers[_config.Serialization].Serialize(body);
             return this;
         }
 
@@ -99,61 +108,6 @@ namespace Napper
             return this;
         }
 
-        /// <summary>
-        /// Excludes the body from the request.
-        /// </summary>
-        /// <returns>The <see cref="INapRequest"/> object.</returns>
-        public INapRequest IncludeBody()
-        {
-            if (_doNot)
-            {
-                _content = null;
-                _doNot = false;
-            }
-
-            return this;
-        }
-
-        /// <summary>
-        /// Excludes the header with key <see cref="headerName"/>.
-        /// </summary>
-        /// <param name="headerName">The header name to be removed.</param>
-        /// <returns>The <see cref="INapRequest"/> object.</returns>
-        public INapRequest IncludeHeader(string headerName)
-        {
-            if (_doNot)
-            {
-                if (_headers.Keys.Any(k => k == headerName))
-                {
-                    _headers.Remove(headerName);
-                }
-
-                _doNot = false;
-            }
-
-            return this;
-        }
-
-        /// <summary>
-        /// Excludes the query with key <see cref="key"/>.
-        /// </summary>
-        /// <param name="key">The key of the query parameter to remove.</param>
-        /// <returns>The <see cref="INapRequest"/> object.</returns>
-        public INapRequest IncludeQueryParameter(string key)
-        {
-            if (_doNot)
-            {
-                if (_queryParameters.Keys.Any(k => k == key))
-                {
-                    _queryParameters.Remove(key);
-                }
-
-                _doNot = false;
-            }
-
-            return this;
-        }
-
         #endregion
 
         #region Execution
@@ -173,12 +127,12 @@ namespace Napper
         /// <typeparam name="T">The type to deserialize the object to.</typeparam>
         /// <returns>
         /// A task, that when run returns the body content deserialized to the object <typeparamref name="T"/>,
-        /// using the serializer matching <see cref="NapConfig.AcceptFormat"/>.
+        /// using the serializer matching <see cref="NapConfig.Serializers"/>.
         /// </returns>
         public async Task<T> ExecuteAsync<T>()
         {
             var responseWithContent = await RunRequest();
-            var toReturn = _config.Serializers[_config.AcceptFormat].Deserialize<T>(responseWithContent.Content);
+            var toReturn = GetSerializer(responseWithContent.Response.Content.Headers.ContentType.MediaType).Deserialize<T>(responseWithContent.Content);
 
             if (_config.FillMetadata)
             {
@@ -207,7 +161,7 @@ namespace Napper
         /// <typeparam name="T">The type to deserialize the object to.</typeparam>
         /// <returns>
         /// The body content deserialized to the object <typeparamref name="T"/>,
-        /// using the serializer matching <see cref="NapConfig.AcceptFormat"/>.
+        /// using the serializer matching <see cref="NapConfig.Serializers"/>.
         /// </returns>
         public T Execute<T>()
         {
@@ -291,6 +245,20 @@ namespace Napper
             }
 
             return urlTemp;
+        }
+
+        /// <summary>
+        /// Gets the serializer for a given content type.
+        /// </summary>
+        /// <param name="contentType">Type of the content (eg. application/json).</param>
+        /// <returns>The serializer matching the content type.</returns>
+        private INapSerializer GetSerializer(string contentType)
+        {
+            if (contentType.ToLower().Contains("/json"))
+                return _config.Serializers[RequestFormat.Json];
+            if (contentType.ToLower().Contains("/xml"))
+                return _config.Serializers[RequestFormat.Xml];
+            return _config.Serializers[RequestFormat.Json];
         }
 
         #endregion

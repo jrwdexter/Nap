@@ -3,26 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 
-using Napper.Base;
 using Napper.Configuration;
 using Napper.Formatters;
 
 namespace Napper
 {
     /// <summary>
-    /// The Easy REST client allows for simple requests to be made and configured.
+    /// Nap is the top level class for performing easy REST requests.
+    /// Requests can be made using <code>new Nap();</code> or <code>Nap.Lets</code>.
     /// </summary>
     public class Nap
     {
         private static Nap _instance;
         private readonly static object _padlock = new object();
+        private readonly NapConfig _config;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Nap"/> class.
         /// </summary>
         public Nap()
         {
-            Config = (NapConfig)System.Configuration.ConfigurationManager.GetSection("Nap") ?? new NapConfig();
+            _config = ((NapConfig)System.Configuration.ConfigurationManager.GetSection("nap") ?? new NapConfig()).Clone();
             Config.Serializers.Add(RequestFormat.Json, new NapJsonSerializer());
             Config.Serializers.Add(RequestFormat.Xml, new NapXmlSerializer());
         }
@@ -31,7 +32,8 @@ namespace Napper
         /// Initializes a new instance of the <see cref="Nap" /> class.
         /// </summary>
         /// <param name="baseUrl">The base URL to use.</param>
-        public Nap(string baseUrl) : this()
+        public Nap(string baseUrl)
+            : this()
         {
             Config.BaseUrl = baseUrl;
         }
@@ -59,7 +61,10 @@ namespace Napper
         /// <summary>
         /// Gets or sets the configuration that is used as the base for all requests.
         /// </summary>
-        public NapConfig Config { get; set; }
+        public INapConfig Config
+        {
+            get { return _config; }
+        }
 
         /// <summary>
         /// Performs a GET request against the <see cref="url"/>.
@@ -68,7 +73,7 @@ namespace Napper
         /// <returns>The configurable request object.  Run <see cref="INapRequest.ExecuteAsync{T}"/> or equivalent method.</returns>
         public INapRequest Get(string url)
         {
-            return new NapRequest(Config.Clone(), url, HttpMethod.Get);
+            return new NapRequest(_config.Clone(), url, HttpMethod.Get);
         }
 
         /// <summary>
@@ -78,7 +83,7 @@ namespace Napper
         /// <returns>The configurable request object.  Run <see cref="INapRequest.ExecuteAsync{T}"/> or equivalent method.</returns>
         public INapRequest Post(string url)
         {
-            return new NapRequest(Config.Clone(), url, HttpMethod.Post);
+            return new NapRequest(_config.Clone(), url, HttpMethod.Post);
         }
 
         /// <summary>
@@ -88,7 +93,7 @@ namespace Napper
         /// <returns>The configurable request object.  Run <see cref="INapRequest.ExecuteAsync{T}"/> or equivalent method.</returns>
         public INapRequest Delete(string url)
         {
-            return new NapRequest(Config.Clone(), url, HttpMethod.Delete);
+            return new NapRequest(_config.Clone(), url, HttpMethod.Delete);
         }
 
         /// <summary>
@@ -98,7 +103,7 @@ namespace Napper
         /// <returns>The configurable request object.  Run <see cref="INapRequest.ExecuteAsync{T}"/> or equivalent method.</returns>
         public INapRequest Put(string url)
         {
-            return new NapRequest(Config.Clone(), url, HttpMethod.Put);
+            return new NapRequest(_config.Clone(), url, HttpMethod.Put);
         }
     }
 }

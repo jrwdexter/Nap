@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Napper.Configuration
 {
-    public class AdvancedNapConfig : ConfigurationElement
+    public class AdvancedNapConfig : ConfigurationElement, IAdvancedNapConfig
     {
         /// <summary>
         /// Gets or sets the optional proxy for requests.
@@ -16,7 +16,11 @@ namespace Napper.Configuration
             get { return (Uri)this["Proxy"]; }
             set { this["Proxy"] = value; }
         }
-
+        
+        /// <summary>
+        /// Creates a copy of the <see cref="NapConfig"/> configuration.
+        /// </summary>
+        /// <returns>A copy of the current instance.</returns>
         internal AdvancedNapConfig Clone()
         {
             var advancedNapConfig = new AdvancedNapConfig
@@ -25,6 +29,17 @@ namespace Napper.Configuration
             };
 
             return advancedNapConfig;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only.
+        /// </summary>
+        /// <returns>
+        /// true if the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only; otherwise, false.
+        /// </returns>
+        public override bool IsReadOnly()
+        {
+            return false;
         }
     }
 }

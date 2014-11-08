@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using Napper.Configuration;
 
-namespace Napper.Base
+namespace Napper
 {
     /// <summary>
     /// Represents a request which can be configured fluently.
@@ -16,6 +16,11 @@ namespace Napper.Base
         /// Gets a set of methods to perform some removal of data from the request.
         /// </summary>
         INapRemovableRequestComponent DoNot { get; }
+
+        /// <summary>
+        /// Gets the advanced collection of methods for <see cref="INapRequest"/> configuration.
+        /// </summary>
+        IAdvancedNapRequestComponent Advanced { get; }
 
         /// <summary>
         /// Includes the query parameter in the value for the URL.

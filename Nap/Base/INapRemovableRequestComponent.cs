@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Napper.Base
+namespace Napper
 {
     /// <summary>
     /// An interface that exposes removal methods from the request.
