@@ -7,7 +7,7 @@ namespace Napper
 {
     internal partial class NapRequest : IAuthenticatedNapRequestComponent
     {
-        public IAdvancedNapRequestComponent Basic(string username, SecureString password)
+        public IAdvancedNapRequestComponent Basic(string username, string password)
         {
             return this;
         }

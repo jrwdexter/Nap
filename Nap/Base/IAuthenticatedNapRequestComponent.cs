@@ -7,6 +7,6 @@ namespace Napper
 {
     public interface IAuthenticatedNapRequestComponent
     {
-        IAdvancedNapRequestComponent Basic(string username, SecureString password);
+        IAdvancedNapRequestComponent Basic(string username, string password);
     }
 }
