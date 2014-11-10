@@ -16,14 +16,15 @@ namespace Napper
     {
         private static Nap _instance;
         private readonly static object _padlock = new object();
-        private readonly NapConfig _config;
+        private readonly INapConfig _config;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Nap"/> class.
         /// </summary>
         public Nap()
         {
-            _config = ((NapConfig)System.Configuration.ConfigurationManager.GetSection("nap") ?? new NapConfig()).Clone();
+            _config = new EmptyNapConfig();
+            //_config = ((INapConfig)System.Configuration.ConfigurationManager.GetSection("nap") ?? new NapConfig()).Clone();
             Config.Serializers.Add(RequestFormat.Json, new NapJsonSerializer());
             Config.Serializers.Add(RequestFormat.Xml, new NapXmlSerializer());
         }

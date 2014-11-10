@@ -16,6 +16,7 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -59,6 +60,10 @@
     <Compile Include="TestClass.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nap.Configuration\Nap.Configuration.csproj">
+      <Project>{7d733248-2081-41eb-8c66-dd4bbacec1e8}</Project>
+      <Name>Nap.Configuration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nap\Nap.csproj">
       <Project>{2D0869E5-CEB3-4719-BFC3-3FAACC721384}</Project>
       <Name>Nap</Name>

@@ -2,7 +2,7 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{2D0869E5-CEB3-4719-BFC3-3FAACC721384}</ProjectGuid>
@@ -13,8 +13,8 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile151</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,10 +49,10 @@
     <Compile Include="AdvancedNapRequest.cs" />
     <Compile Include="Base\IAdvancedNapRequestComponent.cs" />
     <Compile Include="Base\IAuthenticatedNapRequestComponent.cs" />
-    <Compile Include="Configuration\AdvancedNapConfig.cs" />
     <Compile Include="Configuration\Base\INapConfig.cs" />
     <Compile Include="Configuration\Base\IAdvancedNapConfig.cs" />
-    <Compile Include="Configuration\NapConfig.cs" />
+    <Compile Include="Configuration\ConfigFormat.cs" />
+    <Compile Include="Configuration\EmptyNapConfig.cs" />
     <Compile Include="IAuthenticatedNapRequest.cs" />
     <Compile Include="Nap.cs" />
     <Compile Include="NapRemovableRequest.cs" />
@@ -65,6 +65,7 @@
     <Compile Include="Base\INapRemovableRequestComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\RequestFormat.cs" />
+    <Compile Include="Proxies\NapWebProxy.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

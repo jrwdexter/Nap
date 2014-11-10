@@ -18,7 +18,7 @@ namespace Napper.Formatters
         public string Serialize(object graph)
         {
             var sb = new StringBuilder();
-            foreach (var prop in graph.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            foreach (var prop in graph.GetType().GetRuntimeProperties())
             {
                 sb.AppendFormat("{0}{1}&", prop.Name, prop.GetValue(graph));
             }

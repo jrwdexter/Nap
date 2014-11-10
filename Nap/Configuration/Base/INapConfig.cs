@@ -33,5 +33,11 @@ namespace Napper.Configuration
         /// Gets or sets a value indicating whether or not to fill "Special Values" such as StatusCode on the deserialized object.
         /// </summary>
         bool FillMetadata { get; set; }
+
+        /// <summary>
+        /// Returns a new instance of the current Nap configuration
+        /// </summary>
+        /// <returns></returns>
+        INapConfig Clone();
     }
 }

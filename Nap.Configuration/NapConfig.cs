@@ -81,7 +81,7 @@ namespace Napper.Configuration
         /// Creates a copy of the <see cref="NapConfig"/> configuration.
         /// </summary>
         /// <returns>A copy of the current instance.</returns>
-        internal NapConfig Clone()
+        public INapConfig Clone()
         {
             var easyConfig = new NapConfig
             {
