@@ -51,8 +51,8 @@
     <Compile Include="Base\IAuthenticatedNapRequestComponent.cs" />
     <Compile Include="Configuration\Base\INapConfig.cs" />
     <Compile Include="Configuration\Base\IAdvancedNapConfig.cs" />
-    <Compile Include="Configuration\ConfigFormat.cs" />
     <Compile Include="Configuration\EmptyNapConfig.cs" />
+    <Compile Include="Configuration\NapSetup.cs" />
     <Compile Include="IAuthenticatedNapRequest.cs" />
     <Compile Include="Nap.cs" />
     <Compile Include="NapRemovableRequest.cs" />

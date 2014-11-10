@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-
+using Napper.Formatters;
 using Napper.Formatters.Base;
 
 namespace Napper.Configuration
@@ -20,6 +20,9 @@ namespace Napper.Configuration
             Serializers = new Dictionary<RequestFormat, INapSerializer>();
             Serialization = RequestFormat.Json;
             FillMetadata = false;
+
+            Serializers.Add(RequestFormat.Json, new NapJsonSerializer());
+            Serializers.Add(RequestFormat.Xml, new NapXmlSerializer());
         }
 
         /// <summary>
@@ -104,6 +107,11 @@ namespace Napper.Configuration
         public override bool IsReadOnly()
         {
             return false;
+        }
+
+        public static NapConfig GetCurrent()
+        {
+            return (NapConfig) ConfigurationManager.GetSection("nap");
         }
     }
 }

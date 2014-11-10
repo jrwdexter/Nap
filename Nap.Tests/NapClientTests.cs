@@ -14,6 +14,8 @@ namespace Napper.Tests
         public void Nap_ConfigurationFromAppConfig_MatchesExpectation()
         {
             var nap = new Nap();
+            NapSetup.AddConfig(NapConfig.GetCurrent());
+
             Assert.AreEqual("http://example.com", nap.Config.BaseUrl);
             Assert.AreEqual(true, nap.Config.FillMetadata);
             Assert.AreEqual(RequestFormat.Xml, nap.Config.Serialization);
