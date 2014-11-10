@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Nap.Configuration
 {
@@ -11,7 +12,7 @@ namespace Nap.Configuration
         private static INapConfig _currentConfig;
 
         /// <summary>
-        /// Gets the default (first) configuration loaded into the system.  If non is defined it returns a new <see cref="EmptyNapConfig"/> instance.
+        /// Gets the default (first) configuration loaded into the system.  If none is defined it returns a new <see cref="EmptyNapConfig"/> instance.
         /// </summary>
         /// <value>The default.</value>
         public static INapConfig Default
@@ -20,7 +21,7 @@ namespace Nap.Configuration
             {
                 if (_currentConfig == null)
                 {
-                    _currentConfig = new EmptyNapConfig();
+                    _currentConfig = _enabledConfigs.Any() ? _enabledConfigs[0] : new EmptyNapConfig();
                 }
 
                 return _currentConfig;
