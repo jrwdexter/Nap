@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Napper.Configuration
+namespace Nap.Configuration
 {
     /// <summary>
     /// Advanced configuration propreties for Nap REST requests.

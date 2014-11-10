@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security;
-
-namespace Napper
+﻿namespace Nap
 {
     public interface IAuthenticatedNapRequestComponent
     {

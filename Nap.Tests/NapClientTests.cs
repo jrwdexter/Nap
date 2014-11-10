@@ -1,11 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-
+﻿using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nap.Configuration;
 
-using Napper.Configuration;
-
-namespace Napper.Tests
+namespace Nap.Tests
 {
     [TestClass]
     public class NapClientTests

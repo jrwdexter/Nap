@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
+using Nap.Configuration;
 
-using Napper.Configuration;
-using Napper.Formatters;
-
-namespace Napper
+namespace Nap
 {
     /// <summary>
     /// Nap is the top level class for performing easy REST requests.

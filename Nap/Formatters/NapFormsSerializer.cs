@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
+using Nap.Formatters.Base;
 
-using Napper.Formatters.Base;
-
-namespace Napper.Formatters
+namespace Nap.Formatters
 {
     public class NapFormsSerializer : INapSerializer
     {

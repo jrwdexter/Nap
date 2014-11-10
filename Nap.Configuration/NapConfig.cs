@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using Napper.Formatters;
-using Napper.Formatters.Base;
+using Nap.Formatters;
+using Nap.Formatters.Base;
 
-namespace Napper.Configuration
+namespace Nap.Configuration
 {
     /// <summary>
     /// The configuration class for clients and requests.

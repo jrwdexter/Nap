@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 
-namespace Napper.Configuration
+namespace Nap.Configuration
 {
     public class AdvancedNapConfig : ConfigurationElement, IAdvancedNapConfig
     {

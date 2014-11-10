@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace Napper.Proxies
+namespace Nap.Proxies
 {
     /// <summary>
     /// Creates a PCL-compliant instance of the <see cref="IWebProxy" /> interface.

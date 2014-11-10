@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Xml.Serialization;
+using Nap.Formatters.Base;
 
-using Napper.Formatters.Base;
-
-namespace Napper.Formatters
+namespace Nap.Formatters
 {
     public class NapXmlSerializer : INapSerializer
     {

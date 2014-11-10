@@ -6,7 +6,7 @@
     <ProjectGuid>{A9CC8956-2590-4DFC-B7A8-CB42F5ED26DE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Napper.Tests</RootNamespace>
+    <RootNamespace>Nap.Tests</RootNamespace>
     <AssemblyName>Nap.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

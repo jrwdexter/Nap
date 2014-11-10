@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Napper.Formatters.Base;
+using Nap.Formatters.Base;
 
-namespace Napper.Configuration
+namespace Nap.Configuration
 {
     /// <summary>
     /// Class EmptyNapConfig.

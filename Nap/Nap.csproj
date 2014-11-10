@@ -8,7 +8,7 @@
     <ProjectGuid>{2D0869E5-CEB3-4719-BFC3-3FAACC721384}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Napper</RootNamespace>
+    <RootNamespace>Nap</RootNamespace>
     <AssemblyName>Nap</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>

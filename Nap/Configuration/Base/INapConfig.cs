@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
+using Nap.Formatters.Base;
 
-using Napper.Formatters.Base;
-
-namespace Napper.Configuration
+namespace Nap.Configuration
 {
     /// <summary>
     /// Configuration properties for Nap REST requests.

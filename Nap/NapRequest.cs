@@ -6,12 +6,11 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using Nap.Configuration;
+using Nap.Formatters.Base;
+using Nap.Proxies;
 
-using Napper.Configuration;
-using Napper.Formatters.Base;
-using Napper.Proxies;
-
-namespace Napper
+namespace Nap
 {
     /// <summary>
     /// An easily configurable request.
