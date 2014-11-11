@@ -1,6 +1,12 @@
 Nap
 ========
 
+## Disclaimer
+
+Nap is in Beta, and not ready to be used on production projects yet.
+
+## Summary
+
 **Nap** is a short and sweet REST client.  It was made with the purpose of streamlining REST requests *as much as possible*.
 
 ## Short
