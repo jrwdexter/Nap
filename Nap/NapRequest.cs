@@ -6,18 +6,18 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using Nap.Configuration;
+using Nap.Formatters.Base;
+using Nap.Proxies;
 
-using Napper.Configuration;
-using Napper.Formatters.Base;
-
-namespace Napper
+namespace Nap
 {
     /// <summary>
     /// An easily configurable request.
     /// </summary>
     internal partial class NapRequest : INapRequest
     {
-        private readonly NapConfig _config;
+        private readonly INapConfig _config;
         private readonly string _url;
         private readonly HttpMethod _method;
         private readonly Dictionary<string, string> _queryParameters = new Dictionary<string, string>();
@@ -31,7 +31,7 @@ namespace Napper
         /// <param name="initialConfiguration">The initial configuration for the request.</param>
         /// <param name="url">The URL to perform the request against.  Can be a full URL or a partial.</param>
         /// <param name="method">The method to use in the request.</param>
-        internal NapRequest(NapConfig initialConfiguration, string url, HttpMethod method)
+        internal NapRequest(INapConfig initialConfiguration, string url, HttpMethod method)
         {
             _config = initialConfiguration;
             _url = url;
@@ -136,7 +136,7 @@ namespace Napper
 
             if (_config.FillMetadata)
             {
-                var property = typeof(T).GetProperty("StatusCode", BindingFlags.Instance | BindingFlags.Public);
+                var property = typeof(T).GetRuntimeProperty("StatusCode");
                 if (property != null)
                     property.SetValue(toReturn, Convert.ChangeType(responseWithContent.Response.StatusCode, property.PropertyType));
 
@@ -219,7 +219,7 @@ namespace Napper
             var handler = new HttpClientHandler();
             if (_config.Advanced.Proxy != null)
             {
-                handler.Proxy = new WebProxy(_config.Advanced.Proxy);
+                handler.Proxy = new NapWebProxy(_config.Advanced.Proxy);
                 handler.UseProxy = true;
             }
 

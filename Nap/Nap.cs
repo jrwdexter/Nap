@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
+using Nap.Configuration;
 
-using Napper.Configuration;
-using Napper.Formatters;
-
-namespace Napper
+namespace Nap
 {
     /// <summary>
     /// Nap is the top level class for performing easy REST requests.
@@ -16,16 +11,12 @@ namespace Napper
     {
         private static Nap _instance;
         private readonly static object _padlock = new object();
-        private readonly NapConfig _config;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Nap"/> class.
         /// </summary>
         public Nap()
         {
-            _config = ((NapConfig)System.Configuration.ConfigurationManager.GetSection("nap") ?? new NapConfig()).Clone();
-            Config.Serializers.Add(RequestFormat.Json, new NapJsonSerializer());
-            Config.Serializers.Add(RequestFormat.Xml, new NapXmlSerializer());
         }
 
         /// <summary>
@@ -63,7 +54,7 @@ namespace Napper
         /// </summary>
         public INapConfig Config
         {
-            get { return _config; }
+            get { return NapSetup.Default; }
         }
 
         /// <summary>
@@ -73,7 +64,7 @@ namespace Napper
         /// <returns>The configurable request object.  Run <see cref="INapRequest.ExecuteAsync{T}"/> or equivalent method.</returns>
         public INapRequest Get(string url)
         {
-            return new NapRequest(_config.Clone(), url, HttpMethod.Get);
+            return new NapRequest(Config.Clone(), url, HttpMethod.Get);
         }
 
         /// <summary>
@@ -83,7 +74,7 @@ namespace Napper
         /// <returns>The configurable request object.  Run <see cref="INapRequest.ExecuteAsync{T}"/> or equivalent method.</returns>
         public INapRequest Post(string url)
         {
-            return new NapRequest(_config.Clone(), url, HttpMethod.Post);
+            return new NapRequest(Config.Clone(), url, HttpMethod.Post);
         }
 
         /// <summary>
@@ -93,7 +84,7 @@ namespace Napper
         /// <returns>The configurable request object.  Run <see cref="INapRequest.ExecuteAsync{T}"/> or equivalent method.</returns>
         public INapRequest Delete(string url)
         {
-            return new NapRequest(_config.Clone(), url, HttpMethod.Delete);
+            return new NapRequest(Config.Clone(), url, HttpMethod.Delete);
         }
 
         /// <summary>
@@ -103,7 +94,7 @@ namespace Napper
         /// <returns>The configurable request object.  Run <see cref="INapRequest.ExecuteAsync{T}"/> or equivalent method.</returns>
         public INapRequest Put(string url)
         {
-            return new NapRequest(_config.Clone(), url, HttpMethod.Put);
+            return new NapRequest(Config.Clone(), url, HttpMethod.Put);
         }
     }
 }

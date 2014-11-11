@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security;
-
-namespace Napper
+﻿namespace Nap
 {
     public interface IAuthenticatedNapRequestComponent
     {
-        IAdvancedNapRequestComponent Basic(string username, SecureString password);
+        IAdvancedNapRequestComponent Basic(string username, string password);
     }
 }

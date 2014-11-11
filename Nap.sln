@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap", "Nap\Nap.csproj", "{2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Tests", "Nap.Tests\Nap.Tests.csproj", "{A9CC8956-2590-4DFC-B7A8-CB42F5ED26DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Configuration", "Nap.Configuration\Nap.Configuration.csproj", "{7D733248-2081-41EB-8C66-DD4BBACEC1E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A9CC8956-2590-4DFC-B7A8-CB42F5ED26DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9CC8956-2590-4DFC-B7A8-CB42F5ED26DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9CC8956-2590-4DFC-B7A8-CB42F5ED26DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D733248-2081-41EB-8C66-DD4BBACEC1E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D733248-2081-41EB-8C66-DD4BBACEC1E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D733248-2081-41EB-8C66-DD4BBACEC1E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D733248-2081-41EB-8C66-DD4BBACEC1E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

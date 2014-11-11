@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using Napper.Formatters.Base;
-
+﻿using Nap.Formatters.Base;
 using Newtonsoft.Json;
 
-namespace Napper.Formatters
+namespace Nap.Formatters
 {
     public class NapJsonSerializer : INapSerializer
     {

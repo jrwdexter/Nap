@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Napper
+namespace Nap
 {
     internal partial class NapRequest : IAdvancedNapRequestComponent
     {

@@ -184,3 +184,6 @@ FakesAssemblies/
 
 # Nuget
 .nupkg
+
+#GhostDoc
+*.sln.GhostDoc.xml

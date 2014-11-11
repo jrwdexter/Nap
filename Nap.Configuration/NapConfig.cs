@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using Nap.Formatters;
+using Nap.Formatters.Base;
 
-using Napper.Formatters.Base;
-
-namespace Napper.Configuration
+namespace Nap.Configuration
 {
     /// <summary>
     /// The configuration class for clients and requests.
@@ -20,6 +19,9 @@ namespace Napper.Configuration
             Serializers = new Dictionary<RequestFormat, INapSerializer>();
             Serialization = RequestFormat.Json;
             FillMetadata = false;
+
+            Serializers.Add(RequestFormat.Json, new NapJsonSerializer());
+            Serializers.Add(RequestFormat.Xml, new NapXmlSerializer());
         }
 
         /// <summary>
@@ -81,7 +83,7 @@ namespace Napper.Configuration
         /// Creates a copy of the <see cref="NapConfig"/> configuration.
         /// </summary>
         /// <returns>A copy of the current instance.</returns>
-        internal NapConfig Clone()
+        public INapConfig Clone()
         {
             var easyConfig = new NapConfig
             {
@@ -104,6 +106,11 @@ namespace Napper.Configuration
         public override bool IsReadOnly()
         {
             return false;
+        }
+
+        public static NapConfig GetCurrent()
+        {
+            return (NapConfig) ConfigurationManager.GetSection("nap");
         }
     }
 }

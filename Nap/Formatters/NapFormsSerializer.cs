@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
+using Nap.Formatters.Base;
 
-using Napper.Formatters.Base;
-
-namespace Napper.Formatters
+namespace Nap.Formatters
 {
     public class NapFormsSerializer : INapSerializer
     {
@@ -18,7 +15,7 @@ namespace Napper.Formatters
         public string Serialize(object graph)
         {
             var sb = new StringBuilder();
-            foreach (var prop in graph.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            foreach (var prop in graph.GetType().GetRuntimeProperties())
             {
                 sb.AppendFormat("{0}{1}&", prop.Name, prop.GetValue(graph));
             }

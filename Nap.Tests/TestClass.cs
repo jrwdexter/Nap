@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Napper.Tests
+﻿namespace Nap.Tests
 {
     public class TestClass
     {

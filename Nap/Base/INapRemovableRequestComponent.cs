@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Napper
+namespace Nap
 {
     /// <summary>
     /// An interface that exposes removal methods from the request.

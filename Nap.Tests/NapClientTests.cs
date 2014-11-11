@@ -1,11 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-
+﻿using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nap.Configuration;
 
-using Napper.Configuration;
-
-namespace Napper.Tests
+namespace Nap.Tests
 {
     [TestClass]
     public class NapClientTests
@@ -14,6 +11,8 @@ namespace Napper.Tests
         public void Nap_ConfigurationFromAppConfig_MatchesExpectation()
         {
             var nap = new Nap();
+            NapSetup.AddConfig(NapConfig.GetCurrent());
+
             Assert.AreEqual("http://example.com", nap.Config.BaseUrl);
             Assert.AreEqual(true, nap.Config.FillMetadata);
             Assert.AreEqual(RequestFormat.Xml, nap.Config.Serialization);

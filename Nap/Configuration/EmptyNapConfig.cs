@@ -4,39 +4,47 @@ using Nap.Formatters.Base;
 namespace Nap.Configuration
 {
     /// <summary>
-    /// Configuration properties for Nap REST requests.
+    /// Class EmptyNapConfig.
     /// </summary>
-    public interface INapConfig
+    public class EmptyNapConfig : INapConfig
     {
         /// <summary>
         /// Gets or sets the serializers that can be used to both serialize and deserialize content.
         /// </summary>
-        Dictionary<RequestFormat, INapSerializer> Serializers { get; set; }
+        /// <value>The serializers.</value>
+        public Dictionary<RequestFormat, INapSerializer> Serializers { get; set; }
 
         /// <summary>
         /// Gets or sets the optional base URL for easy requests.
         /// </summary>
-        string BaseUrl { get; set; }
+        /// <value>The base URL.</value>
+        public string BaseUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the accept-type format.
         /// </summary>
-        RequestFormat Serialization { get; set; }
+        /// <value>The serialization.</value>
+        public RequestFormat Serialization { get; set; }
 
         /// <summary>
         /// Gets or sets the advanced portion of the configuration.
         /// </summary>
-        IAdvancedNapConfig Advanced { get; set; }
+        /// <value>The advanced.</value>
+        public IAdvancedNapConfig Advanced { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not to fill "Special Values" such as StatusCode on the deserialized object.
         /// </summary>
-        bool FillMetadata { get; set; }
+        /// <value><c>true</c> if [fill metadata]; otherwise, <c>false</c>.</value>
+        public bool FillMetadata { get; set; }
 
         /// <summary>
         /// Returns a new instance of the current Nap configuration
         /// </summary>
-        /// <returns></returns>
-        INapConfig Clone();
+        /// <returns>INapConfig.</returns>
+        public INapConfig Clone()
+        {
+            return this;
+        }
     }
 }

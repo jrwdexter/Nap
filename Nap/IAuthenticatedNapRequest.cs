@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security;
-
-namespace Napper
+﻿namespace Nap
 {
     internal partial class NapRequest : IAuthenticatedNapRequestComponent
     {
-        public IAdvancedNapRequestComponent Basic(string username, SecureString password)
+        public IAdvancedNapRequestComponent Basic(string username, string password)
         {
             return this;
         }

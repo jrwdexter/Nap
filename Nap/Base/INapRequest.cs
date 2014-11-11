@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-using Napper.Configuration;
-
-namespace Napper
+namespace Nap
 {
     /// <summary>
     /// Represents a request which can be configured fluently.
