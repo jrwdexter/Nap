@@ -71,5 +71,26 @@ namespace Nap
 
             return this;
         }
+
+        /// <summary>
+        /// Excludes the cookie with key <see cref="cookieName"/>.
+        /// </summary>
+        /// <param name="cookieName">The name of the cookie to remove.</param>
+        /// <returns>The <see cref="INapRequest"/> object.</returns>
+        public INapRequest IncludeCookie(string cookieName)
+        {
+            if(_doNot)
+            {
+                var cookie = _cookies.FirstOrDefault(c => c.Item2.Name == cookieName);
+                if(cookie != null)
+                {
+                        _cookies.Remove(cookie);
+                }
+
+                _doNot = false;
+            }
+
+            return this;
+        }
     }
 }

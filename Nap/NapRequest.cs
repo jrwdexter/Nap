@@ -22,6 +22,7 @@ namespace Nap
         private readonly HttpMethod _method;
         private readonly Dictionary<string, string> _queryParameters = new Dictionary<string, string>();
         private readonly Dictionary<string, string> _headers = new Dictionary<string, string>();
+        private readonly List<Tuple<Uri, Cookie>> _cookies = new List<Tuple<Uri, Cookie>>();
         private string _content;
         private bool _doNot;
 
@@ -97,6 +98,18 @@ namespace Nap
         }
 
         /// <summary>
+        /// Includes a cookie in the request.
+        /// </summary>
+        /// <param name="cookieName">The name of the cookie to include.</param>
+        /// <param name="value">The value of the cookie to include.</param>
+        /// <returns>The <see cref="INapRequest"/> object.</returns>
+        public INapRequest IncludeCookie(string uri, string cookieName, string value)
+        {
+            _cookies.Add(new Tuple<Uri, Cookie>(new Uri(uri), new Cookie(cookieName, value)));
+            return this;
+        }
+
+        /// <summary>
         /// Fills the response object with metadata using special keys, such as "StatusCode".
         /// If used after <see cref="DoNot"/>, instead removes the fill metadata flag.
         /// </summary>
@@ -139,6 +152,12 @@ namespace Nap
                 var property = typeof(T).GetRuntimeProperty("StatusCode");
                 if (property != null)
                     property.SetValue(toReturn, Convert.ChangeType(responseWithContent.Response.StatusCode, property.PropertyType));
+
+                property = typeof(T).GetRuntimeProperty("Cookies");
+                var cookies = responseWithContent.Response.Headers.Where(h => h.Key.StartsWith("set-cookie", StringComparison.OrdinalIgnoreCase));
+                var simpleCookies = cookies.Select(c => new KeyValuePair<string, string>(c.Key, c.Value.FirstOrDefault()));
+                if (property != null)
+                    property.SetValue(toReturn, simpleCookies);
 
                 // TODO: Populate items with defaults (statuscode, etc)
             }
@@ -221,6 +240,10 @@ namespace Nap
             {
                 handler.Proxy = new NapWebProxy(_config.Advanced.Proxy);
                 handler.UseProxy = true;
+            }
+            foreach (var cookie in _cookies)
+            {
+                handler.CookieContainer.Add(cookie.Item1, cookie.Item2);
             }
 
             var client = new HttpClient(handler);

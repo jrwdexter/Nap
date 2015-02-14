@@ -21,7 +21,7 @@ namespace Nap.Tests
         [TestMethod]
         public async Task Something()
         {
-            var response = await Nap.Lets.Get("http://example.com/")
+            var response = await Nap.Lets.Post("http://example.com/")
                                          .IncludeQueryParameter("q", "v")
                                          .IncludeHeader("aHeader", "aValue")
                                          .IncludeBody(new TestClass { FirstName = "John", LastName = "Doe" })

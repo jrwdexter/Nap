@@ -7,6 +7,14 @@ namespace Nap.Formatters
 {
     public class NapFormsSerializer : INapSerializer
     {
+        public string ContentType
+        {
+            get
+            {
+                return "application/x-www-form-urlencoded";
+            }
+        }
+
         public T Deserialize<T>(string serialized)
         {
             throw new NotSupportedException("Forms deserialization is not supported.");

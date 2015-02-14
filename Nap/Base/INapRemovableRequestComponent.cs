@@ -23,6 +23,13 @@ namespace Nap
         /// <param name="headerName">The header name to be removed.</param>
         /// <returns>The <see cref="INapRequest"/> object.</returns>
         INapRequest IncludeHeader(string headerName);
+        
+        /// <summary>
+        /// Excludes the cookie with key <see cref="cookieName"/>.
+        /// </summary>
+        /// <param name="cookieName">The name of the cookie to remove.</param>
+        /// <returns>The <see cref="INapRequest"/> object.</returns>
+        INapRequest IncludeCookie(string cookieName);
 
         /// <summary>
         /// Excludes the query with key <see cref="key"/>.
