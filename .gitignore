@@ -187,3 +187,6 @@ FakesAssemblies/
 
 #GhostDoc
 *.sln.GhostDoc.xml
+
+# Sublime
+*.sublime-workspace
