@@ -104,7 +104,7 @@ namespace Nap.Tests.Configuration
         [TestCategory("Performance")]
         public void Instantiation_TimedTests()
         {
-            var iterations = 1000000;
+            const int iterations = 1000000;
 
             var sw = Stopwatch.StartNew();
             INapConfig test;
@@ -112,6 +112,7 @@ namespace Nap.Tests.Configuration
             for (int i = 0; i < iterations; i++)
             {
                 test = NapSetup.Default;
+                Assert.IsNotNull(test);
             }
             Console.WriteLine("Generic instantiation: \{sw.ElapsedMilliseconds}");
 
@@ -120,6 +121,7 @@ namespace Nap.Tests.Configuration
             for (int i = 0; i < iterations; i++)
             {
                 test = NapSetup.Default;
+                Assert.IsNotNull(test);
             }
             Console.WriteLine("Typed instantiation: \{sw.ElapsedMilliseconds}");
 
@@ -128,11 +130,12 @@ namespace Nap.Tests.Configuration
             for (int i = 0; i < iterations; i++)
             {
                 test = NapSetup.Default;
+                Assert.IsNotNull(test);
             }
             Console.WriteLine("Lambda instantiation: \{sw.ElapsedMilliseconds}");
         }
 
-        private class TestNapConfig : INapConfig
+        private sealed class TestNapConfig : INapConfig
         {
             public Dictionary<RequestFormat, INapSerializer> Serializers { get; set; }
 
