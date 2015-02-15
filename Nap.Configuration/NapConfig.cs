@@ -85,7 +85,7 @@ namespace Nap.Configuration
         /// <returns>A copy of the current instance.</returns>
         public INapConfig Clone()
         {
-            var easyConfig = new NapConfig
+            var clone = new NapConfig
             {
                 Serializers = Serializers.ToArray().ToDictionary(s => s.Key, s => s.Value),
                 BaseUrl = BaseUrl,
@@ -94,7 +94,7 @@ namespace Nap.Configuration
                 Advanced = ((AdvancedNapConfig)Advanced).Clone()
             };
 
-            return easyConfig;
+            return clone;
         }
 
         /// <summary>

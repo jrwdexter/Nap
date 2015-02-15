@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+
 using Nap.Formatters.Base;
 
 namespace Nap.Configuration
@@ -44,7 +46,17 @@ namespace Nap.Configuration
         /// <returns>INapConfig.</returns>
         public INapConfig Clone()
         {
-            return this;
+            var clone = new EmptyNapConfig
+            {
+                Serializers = Serializers.ToArray().ToDictionary(s => s.Key, s => s.Value),
+                BaseUrl = BaseUrl,
+                FillMetadata = FillMetadata,
+                Serialization = Serialization,
+                //Advanced = ((IAdvancedNapConfig)Advanced).Clone()
+                // TODO: Clone advanced.
+            };
+
+            return clone;
         }
     }
 }
