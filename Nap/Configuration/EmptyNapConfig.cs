@@ -4,7 +4,7 @@ using Nap.Formatters.Base;
 namespace Nap.Configuration
 {
     /// <summary>
-    /// Class EmptyNapConfig.
+    /// An empty implementation of <see cref="INapConfig"/> with default values populated.
     /// </summary>
     public class EmptyNapConfig : INapConfig
     {
@@ -12,7 +12,7 @@ namespace Nap.Configuration
         /// Gets or sets the serializers that can be used to both serialize and deserialize content.
         /// </summary>
         /// <value>The serializers.</value>
-        public Dictionary<RequestFormat, INapSerializer> Serializers { get; set; }
+        public Dictionary<RequestFormat, INapSerializer> Serializers { get; set; } = new Dictionary<RequestFormat, INapSerializer>();
 
         /// <summary>
         /// Gets or sets the optional base URL for easy requests.
@@ -39,7 +39,7 @@ namespace Nap.Configuration
         public bool FillMetadata { get; set; }
 
         /// <summary>
-        /// Returns a new instance of the current Nap configuration
+        /// Returns a new instance of the current Nap configuration, with identical properties filled out.
         /// </summary>
         /// <returns>INapConfig.</returns>
         public INapConfig Clone()

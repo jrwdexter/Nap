@@ -75,7 +75,7 @@ namespace Nap
         }
 
         /// <summary>
-        /// Includes some content in the body, serialized according to <see cref="NapConfig.Serializers"/>.
+        /// Includes some content in the body, serialized according to <see cref="NapSetup.Serializers"/>.
         /// </summary>
         /// <param name="body">The object to serialize into the body.</param>
         /// <returns>The <see cref="INapRequest"/> object.</returns>
@@ -100,6 +100,7 @@ namespace Nap
         /// <summary>
         /// Includes a cookie in the request.
         /// </summary>
+        /// <param name="uri">The URL the cookie corresponds to.</param>
         /// <param name="cookieName">The name of the cookie to include.</param>
         /// <param name="value">The value of the cookie to include.</param>
         /// <returns>The <see cref="INapRequest"/> object.</returns>

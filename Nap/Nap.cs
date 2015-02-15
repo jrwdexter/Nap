@@ -11,6 +11,7 @@ namespace Nap
     {
         private static Nap _instance;
         private readonly static object _padlock = new object();
+        private INapConfig _config;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Nap"/> class.
@@ -54,7 +55,19 @@ namespace Nap
         /// </summary>
         public INapConfig Config
         {
-            get { return NapSetup.Default; }
+            get
+            {
+                if (_config == null)
+                {
+                    lock (_padlock)
+                    {
+                        if (_config == null)
+                            _config = NapSetup.Default;
+                    }
+                }
+
+                return _config;
+            }
         }
 
         /// <summary>

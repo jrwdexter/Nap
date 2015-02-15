@@ -1,45 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Nap.Configuration
 {
     /// <summary>
-    /// Class NapConfig.
+    /// The setup class for nap, which provides methods for obtaining a proper configuration class (depending on deployment target - portable or non-portable).
     /// </summary>
     public static class NapSetup
     {
-        private static readonly IList<INapConfig> _enabledConfigs = new List<INapConfig>();
-        private static INapConfig _currentConfig;
+        private static readonly IDictionary<Type, Func<INapConfig>> _enabledConfigs = new Dictionary<Type, Func<INapConfig>>();
 
         /// <summary>
         /// Gets the default (first) configuration loaded into the system.  If none is defined it returns a new <see cref="EmptyNapConfig"/> instance.
         /// </summary>
-        /// <value>The default.</value>
-        public static INapConfig Default
-        {
-            get
-            {
-                if (_currentConfig == null)
-                {
-                    _currentConfig = _enabledConfigs.Any() ? _enabledConfigs[0] : new EmptyNapConfig();
-                }
+        public static INapConfig Default => _enabledConfigs.Any() ? _enabledConfigs.First().Value() : new EmptyNapConfig();
 
-                return _currentConfig;
-            }
+        /// <summary>
+        /// Adds a configuration type into the system, allowing the configuration to be used instead of <see cref="EmptyNapConfig"/>.
+        /// </summary>
+        public static void AddConfig<T>() where T : INapConfig
+        {
+            _enabledConfigs.Add(typeof(T), () => Activator.CreateInstance<T>());
         }
 
         /// <summary>
-        /// Adds a configuration into the system.
+        /// Adds a configuration type into the system, allowing the configuration to be used instead of <see cref="EmptyNapConfig"/>.
         /// </summary>
-        /// <param name="config">The configuration.</param>
-        public static void AddConfig(INapConfig config)
+        public static void AddConfig<T>(Expression<Func<T>> instanceCreator) where T : INapConfig
         {
-            _enabledConfigs.Add(config);
-
-            if (_currentConfig == null)
-            {
-                _currentConfig = config;
-            }
+            var castingExpression = Expression.Lambda<Func<INapConfig>>(Expression.Convert(instanceCreator, typeof(INapConfig)));
+            _enabledConfigs.Add(typeof(T), castingExpression.Compile());
         }
     }
 }
