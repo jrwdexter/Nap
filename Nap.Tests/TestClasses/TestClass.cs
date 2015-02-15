@@ -1,4 +1,8 @@
-﻿namespace Nap.Tests
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Nap.Tests.TestClasses
 {
     public class TestClass
     {

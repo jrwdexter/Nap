@@ -150,14 +150,12 @@ namespace Nap
             if (_config.FillMetadata)
             {
                 var property = typeof(T).GetRuntimeProperty("StatusCode");
-                if (property != null)
-                    property.SetValue(toReturn, Convert.ChangeType(responseWithContent.Response.StatusCode, property.PropertyType));
+                property?.SetValue(toReturn, Convert.ChangeType(responseWithContent.Response.StatusCode, property.PropertyType));
 
                 property = typeof(T).GetRuntimeProperty("Cookies");
                 var cookies = responseWithContent.Response.Headers.Where(h => h.Key.StartsWith("set-cookie", StringComparison.OrdinalIgnoreCase));
                 var simpleCookies = cookies.Select(c => new KeyValuePair<string, string>(c.Key, c.Value.FirstOrDefault()));
-                if (property != null)
-                    property.SetValue(toReturn, simpleCookies);
+                property?.SetValue(toReturn, simpleCookies);
 
                 // TODO: Populate items with defaults (statuscode, etc)
             }
@@ -205,6 +203,9 @@ namespace Nap
                 {
                     client.DefaultRequestHeaders.Add(header.Key, header.Value);
                 }
+
+                //if(!client.DefaultRequestHeaders.Any(kv => kv.Key.Equals("content-type", StringComparison.OrdinalIgnoreCase)))
+                //    client.DefaultRequestHeaders.Add("content-type", );
 
                 HttpResponseMessage response = null;
                 if (_method == HttpMethod.Get)
@@ -257,12 +258,12 @@ namespace Nap
         private string CreateUrl()
         {
             var urlTemp = _url;
-            if (!_url.StartsWith("http") && !string.IsNullOrEmpty(_config.BaseUrl))
+            if (!_url.StartsWith("http", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(_config.BaseUrl))
                 urlTemp = new Uri(new Uri(_config.BaseUrl), urlTemp).ToString();
             if (_queryParameters.Any())
             {
                 urlTemp = _url.Contains("?") ?
-                    (_url.EndsWith("?") ? _url : _url + "&") :
+                    (_url.EndsWith("?", StringComparison.OrdinalIgnoreCase) ? _url : _url + "&") :
                     _url + "?";
                 urlTemp += string.Join("&", _queryParameters.Select(x => string.Format("{0}={1}", x.Key, WebUtility.UrlEncode(x.Value))));
             }

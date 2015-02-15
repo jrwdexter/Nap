@@ -43,10 +43,11 @@ namespace Nap
         /// <summary>
         /// Includes a cookie in the request.
         /// </summary>
+        /// <param name="uri">The URL the cookie corresponds to.</param>
         /// <param name="cookieName">The name of the cookie to include.</param>
         /// <param name="value">The value of the cookie to include.</param>
         /// <returns>The <see cref="INapRequest"/> object.</returns>
-        INapRequest IncludeCookie(string cookieName, string value);
+        INapRequest IncludeCookie(string uri, string cookieName, string value);
 
         /// <summary>
         /// Fills the response object with metadata using special keys, such as "StatusCode".
