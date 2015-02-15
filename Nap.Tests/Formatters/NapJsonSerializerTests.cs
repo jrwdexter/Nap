@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -41,6 +40,24 @@ namespace Nap.Tests.Formatters
         {
             // Act
             _jsonFormatter.Serialize(null);
+        }
+
+        [TestMethod]
+        [TestCategory("Formatters")]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Deserialize_Null_ThrowsException()
+        {
+            // Act
+            _jsonFormatter.Deserialize<TestClass>(null);
+        }
+
+        [TestMethod]
+        [TestCategory("Formatters")]
+        [ExpectedException(typeof(ConstructorNotFoundException))]
+        public void Deserialize_IntoClassWithoutParameterlessConstructor_ThrowsException()
+        {
+            // Act
+            _jsonFormatter.Deserialize<RequiresParameters_TestClass>("");
         }
 
         [TestMethod]
@@ -140,24 +157,6 @@ namespace Nap.Tests.Formatters
             }
             Assert.AreEqual(input.Spouse.FirstName, output.Spouse.FirstName);
             Assert.AreEqual(input.Spouse.LastName, output.Spouse.LastName);
-        }
-
-        [TestMethod]
-        [TestCategory("Formatters")]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Deserialize_Null_ThrowsException()
-        {
-            // Act
-            _jsonFormatter.Deserialize<TestClass>(null);
-        }
-
-        [TestMethod]
-        [TestCategory("Formatters")]
-        [ExpectedException(typeof(ConstructorNotFoundException))]
-        public void Deserialize_IntoClassWithoutParameterlessConstructor_ThrowsException()
-        {
-            // Act
-            _jsonFormatter.Deserialize<RequiresParameters_TestClass>("");
         }
     }
 }

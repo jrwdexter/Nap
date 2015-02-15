@@ -62,6 +62,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Formatters\Base\NapSerializerTestBase.cs" />
+    <Compile Include="Formatters\NapFormsSerializerTests.cs" />
     <Compile Include="Formatters\NapXmlSerializerTests.cs" />
     <Compile Include="Formatters\NapJsonSerializerTests.cs" />
     <Compile Include="NapClientTests.cs" />
@@ -83,18 +84,32 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Assets\ParentTestClass.schema.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\ParentTestClass.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Assets\TestClass.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Assets\TestClass.schema.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Assets\ParentTestClass.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\TestClass.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\ParentTestClass.xml" />
+    <Content Include="Assets\TestClass.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
