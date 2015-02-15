@@ -55,7 +55,7 @@
     <Compile Include="Configuration\NapSetup.cs" />
     <Compile Include="Exceptions\Base\NapException.cs" />
     <Compile Include="Exceptions\ConstructorNotFoundException.cs" />
-    <Compile Include="IAuthenticatedNapRequest.cs" />
+    <Compile Include="AuthenticatedNapRequest.cs" />
     <Compile Include="Nap.cs" />
     <Compile Include="NapRemovableRequest.cs" />
     <Compile Include="NapRequest.cs" />

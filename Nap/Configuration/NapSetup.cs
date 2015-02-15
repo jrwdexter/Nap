@@ -10,28 +10,48 @@ namespace Nap.Configuration
     /// </summary>
     public static class NapSetup
     {
-        private static readonly IDictionary<Type, Func<INapConfig>> _enabledConfigs = new Dictionary<Type, Func<INapConfig>>();
+        private static Func<INapConfig> _napConfigCreator = null;
 
         /// <summary>
         /// Gets the default (first) configuration loaded into the system.  If none is defined it returns a new <see cref="EmptyNapConfig"/> instance.
         /// </summary>
-        public static INapConfig Default => _enabledConfigs.Any() ? _enabledConfigs.First().Value() : new EmptyNapConfig();
+        public static INapConfig Default => _napConfigCreator != null ? _napConfigCreator() : new EmptyNapConfig();
 
         /// <summary>
-        /// Adds a configuration type into the system, allowing the configuration to be used instead of <see cref="EmptyNapConfig"/>.
+        /// Adds a configuration type into the system, allowing the configuration to be used instead of <see cref="EmptyNapConfig" />.
+        /// For performance, prefer <see cref="AddConfig(Func{INapConfig})"/>.
         /// </summary>
+        /// <typeparam name="T">The type of configuration to use for nap configuration.</typeparam>
         public static void AddConfig<T>() where T : INapConfig
         {
-            _enabledConfigs.Add(typeof(T), () => Activator.CreateInstance<T>());
+            _napConfigCreator = () => Activator.CreateInstance<T>();
         }
 
         /// <summary>
         /// Adds a configuration type into the system, allowing the configuration to be used instead of <see cref="EmptyNapConfig"/>.
+        /// For performance, prefer <see cref="AddConfig(Func{INapConfig})"/>.
         /// </summary>
-        public static void AddConfig<T>(Expression<Func<T>> instanceCreator) where T : INapConfig
+        /// <param name="t">The type of configuration to use for nap configuration.  Needs to inherit from <see cref="INapConfig"/>.</param>
+        public static void AddConfig(Type t)
         {
-            var castingExpression = Expression.Lambda<Func<INapConfig>>(Expression.Convert(instanceCreator, typeof(INapConfig)));
-            _enabledConfigs.Add(typeof(T), castingExpression.Compile());
+            _napConfigCreator = () => Activator.CreateInstance(t) as INapConfig;
+        }
+
+        /// <summary>
+        /// Adds a configuration type into the system, allowing the configuration to be used instead of <see cref="EmptyNapConfig" />.
+        /// </summary>
+        /// <param name="instanceCreator">The lambda function (or expression) used to create an instance of an <see cref="INapConfig"/> for configuration.</param>
+        public static void AddConfig(Func<INapConfig> instanceCreator)
+        {
+            _napConfigCreator = instanceCreator;
+        }
+
+        /// <summary>
+        /// Resets the configuration to use the default internal configuration.
+        /// </summary>
+        public static void ResetConfig()
+        {
+            _napConfigCreator = null;
         }
     }
 }

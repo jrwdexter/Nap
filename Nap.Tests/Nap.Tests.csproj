@@ -61,6 +61,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Configuration\NapSetupTests.cs" />
     <Compile Include="Formatters\Base\NapSerializerTestBase.cs" />
     <Compile Include="Formatters\NapFormsSerializerTests.cs" />
     <Compile Include="Formatters\NapXmlSerializerTests.cs" />
@@ -111,6 +112,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
