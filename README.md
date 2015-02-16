@@ -46,7 +46,7 @@ var cake = Nap.Lets.Post<Cake>("http://example.com/bake-cake")
 <configuration>
   <configSections>
     <section 
-      name="Nap" 
+      name="nap" 
       type="Nap.Configuration.NapConfig" 
       allowLocation="true" 
       allowDefinition="Everywhere"
@@ -94,15 +94,14 @@ Nap supports 3 levels of cascading configuration: *.config < Nap() < Fluent.  In
 
 ```xml
 ...
-<Nap>
-  <BaseUrl>http://example.com</BaseUrl>
-  <Headers>
-    <Header key="sugar" value="100g" />
-  </Headers>
-  <QueryParameters>
-    <QueryParameter key="temp" value="425F" />
-  </QueryParameters>
-</Nap>
+<nap baseUrl="http://example.com">
+  <headers>
+    <add key="sugar" value="100g" />
+  </headers>
+  <queryParameters>
+    <add key="temp" value="425F" />
+  </queryParameters>
+</nap>
 ...
 ```
 
