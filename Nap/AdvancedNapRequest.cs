@@ -16,7 +16,7 @@ namespace Nap
         /// <returns>An <see cref="IAdvancedNapRequestComponent"/> object on success, which can be further configured.</returns>
         public IAdvancedNapRequestComponent UseProxy(Uri uri)
         {
-            _config.Advanced.Proxy = uri;
+            _config.Advanced.Proxy.Address = uri;
             return this;
         }
 

@@ -10,6 +10,16 @@ namespace Nap.Configuration
         /// <summary>
         /// Gets or sets the optional proxy for requests.
         /// </summary>
-        Uri Proxy { get; set; }
+        IProxyNapConfig Proxy { get; }
+
+        /// <summary>
+        /// Gets or sets the authentication configuration properties.
+        /// </summary>
+        IAuthenticationNapConfig Authentication { get; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to use SSL during requests.
+        /// </summary>
+        bool UseSsl { get; set; }
     }
 }

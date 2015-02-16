@@ -41,9 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdvancedNapConfig.cs" />
+    <Compile Include="Sections\AdvancedNapConfig.cs" />
+    <Compile Include="Sections\AuthenticationNapConfig.cs" />
+    <Compile Include="Utilities\ConfigurationEnumeratorWrapper.cs" />
+    <Compile Include="Sections\QueryParameters.cs" />
+    <Compile Include="Sections\QueryParameter.cs" />
+    <Compile Include="Sections\Header.cs" />
+    <Compile Include="Sections\Headers.cs" />
     <Compile Include="NapConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sections\ProxyNapConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nap\Nap.csproj">

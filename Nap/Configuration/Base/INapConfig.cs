@@ -19,14 +19,24 @@ namespace Nap.Configuration
         string BaseUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets the accept-type format.
+        /// Gets or sets the headers to use as a starting point to configure each request.
+        /// </summary>
+        IHeaders Headers { get; }
+
+        /// <summary>
+        /// Gets or sets the query parameters to use as a starting point to configure each request.
+        /// </summary>
+        IQueryParameters QueryParameters { get; }
+
+        /// <summary>
+        /// Gets or sets the Content-Type format, and which serializer to use on serialization.
         /// </summary>
         RequestFormat Serialization { get; set; }
 
         /// <summary>
         /// Gets or sets the advanced portion of the configuration.
         /// </summary>
-        IAdvancedNapConfig Advanced { get; set; }
+        IAdvancedNapConfig Advanced { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not to fill "Special Values" such as StatusCode on the deserialized object.

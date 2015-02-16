@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+
+using Nap.Configuration.Sections;
 using Nap.Formatters;
 using Nap.Formatters.Base;
 
@@ -16,18 +19,14 @@ namespace Nap.Configuration
         /// </summary>
         public NapConfig()
         {
-            Serializers = new Dictionary<RequestFormat, INapSerializer>();
-            Serialization = RequestFormat.Json;
-            FillMetadata = false;
-
-            Serializers.Add(RequestFormat.Json, new NapJsonSerializer());
-            Serializers.Add(RequestFormat.Xml, new NapXmlSerializer());
+            Headers = new Headers();
+            QueryParameters = new QueryParameters();
         }
 
         /// <summary>
         /// Gets or sets the serializers that can be used to both serialize and deserialize content.
         /// </summary>
-        public Dictionary<RequestFormat, INapSerializer> Serializers { get; set; }
+        public Dictionary<RequestFormat, INapSerializer> Serializers { get; set; } = new Dictionary<RequestFormat, INapSerializer> { { RequestFormat.Form, new NapFormsSerializer() }, { RequestFormat.Json, new NapJsonSerializer() }, { RequestFormat.Xml, new NapXmlSerializer() } };
 
         /// <summary>
         /// Gets or sets the optional base URL for easy requests.
@@ -38,6 +37,38 @@ namespace Nap.Configuration
             get { return (string)this["baseUrl"]; }
             set { this["baseUrl"] = value; }
         }
+
+        /// <summary>
+        /// Gets or sets the headers to use as a starting point to configure each request.
+        /// </summary>
+        [ConfigurationProperty("headers", IsDefaultCollection = false)]
+        [ConfigurationCollection(typeof(Headers), AddItemName = "add", RemoveItemName = "remove", ClearItemsName = "clear")]
+        public Headers Headers
+        {
+            get { return (Headers)this["headers"]; }
+            private set { this["headers"] = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the headers to use as a starting point to configure each request.
+        /// </summary>
+        IHeaders INapConfig.Headers => Headers;
+
+        /// <summary>
+        /// Gets or sets the query parameters to use as a starting point to configure each request.
+        /// </summary>
+        [ConfigurationProperty("queryParameters", IsDefaultCollection = false)]
+        [ConfigurationCollection(typeof(QueryParameter), AddItemName = "add", RemoveItemName = "remove", ClearItemsName = "clear")]
+        public QueryParameters QueryParameters
+        {
+            get { return (QueryParameters)this["queryParameters"]; }
+            private set { this["queryParameters"] = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the query parameters to use as a starting point to configure each request.
+        /// </summary>
+        IQueryParameters INapConfig.QueryParameters => QueryParameters;
 
         /// <summary>
         /// Gets or sets the content-type format.
@@ -52,12 +83,12 @@ namespace Nap.Configuration
         /// <summary>
         /// Gets or sets the advanced portion of the configuration.
         /// </summary>
-        [ConfigurationProperty("advanced")]
-        public IAdvancedNapConfig Advanced
+        [ConfigurationProperty("advanced", DefaultValue = null, IsRequired = false)]
+        public AdvancedNapConfig Advanced
         {
             get
             {
-                var advancedConfig = (AdvancedNapConfig)this["advanced"];
+                var advancedConfig = this["advanced"] as AdvancedNapConfig;
                 if (advancedConfig == null)
                 {
                     advancedConfig = new AdvancedNapConfig();
@@ -70,9 +101,14 @@ namespace Nap.Configuration
         }
 
         /// <summary>
+        /// Gets or sets the advanced portion of the configuration.
+        /// </summary>
+        IAdvancedNapConfig INapConfig.Advanced => Advanced;
+
+        /// <summary>
         /// Gets or sets a value indicating whether or not to fill "Special Values" such as StatusCode on the deserialized object.
         /// </summary>
-        [ConfigurationProperty("fillMetadata", DefaultValue = false, IsRequired = false)]
+        [ConfigurationProperty("fillMetadata", DefaultValue = true, IsRequired = false)]
         public bool FillMetadata
         {
             get { return (bool)this["fillMetadata"]; }
@@ -91,7 +127,9 @@ namespace Nap.Configuration
                 BaseUrl = BaseUrl,
                 FillMetadata = FillMetadata,
                 Serialization = Serialization,
-                Advanced = ((AdvancedNapConfig)Advanced).Clone()
+                Advanced = Advanced.Clone(),
+                Headers = new Headers(Headers),
+                QueryParameters = new QueryParameters(QueryParameters)
             };
 
             return clone;
@@ -108,9 +146,13 @@ namespace Nap.Configuration
             return false;
         }
 
+        /// <summary>
+        /// Gets the current nap configuration from the *.config file.
+        /// </summary>
+        /// <returns>A new NapConfig object populated with data from a *.config file, if possible.</returns>
         public static NapConfig GetCurrent()
         {
-            return (NapConfig) ConfigurationManager.GetSection("nap");
+            return ConfigurationManager.GetSection("nap") as NapConfig ?? new NapConfig();
         }
     }
 }

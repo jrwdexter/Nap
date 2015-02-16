@@ -7,7 +7,7 @@ namespace Nap.Configuration
     /// </summary>
     public static class NapSetup
     {
-        private static Func<INapConfig> _napConfigCreator = null;
+        private static Func<INapConfig> _napConfigCreator;
 
         /// <summary>
         /// Gets the default (first) configuration loaded into the system.  If none is defined it returns a new <see cref="EmptyNapConfig"/> instance.

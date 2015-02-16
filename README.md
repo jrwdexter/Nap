@@ -47,25 +47,23 @@ var cake = Nap.Lets.Post<Cake>("http://example.com/bake-cake")
   <configSections>
     <section 
       name="Nap" 
-      type="Napper.Configuration.NapConfig" 
+      type="Nap.Configuration.NapConfig" 
       allowLocation="true" 
       allowDefinition="Everywhere"
     />
   </configSections>
 </configuration>
 ...
-<Nap>
-  <BaseUrl>http://example.com</BaseUrl>
+<Nap baseUrl="http://example.com" fillMetada="true">
   <Headers>
-    <Header key="sugar" value="100g" />
+    <add key="sugar" value="100g" />
   </Headers>
   <QueryParameters>
-    <QueryParameter key="temp" value="425F" />
+    <add key="temp" value="425F" />
   </QueryParameters>
-  <Advanced>
-    <Proxy>...</Proxy>
-    <Credentials>...</Credentials>
-    <UseSSL>true</UseSSL>
+  <Advanced useSsl="true">
+    <Proxy address="http://localhost:8080" />
+    <Authentication username="jdoe" password="password123" />
   </Advanced>
 </Nap>
 ```

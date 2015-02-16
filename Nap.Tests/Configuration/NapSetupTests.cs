@@ -141,6 +141,10 @@ namespace Nap.Tests.Configuration
 
             public string BaseUrl { get; set; }
 
+            public IHeaders Headers { get; set; }
+
+            public IQueryParameters QueryParameters { get; set; }
+
             public RequestFormat Serialization { get; set; }
 
             public IAdvancedNapConfig Advanced { get; set; }

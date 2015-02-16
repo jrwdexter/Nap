@@ -34,7 +34,17 @@ namespace Nap
         /// <param name="method">The method to use in the request.</param>
         internal NapRequest(INapConfig initialConfiguration, string url, HttpMethod method)
         {
+            // Set up initial configuration parameters.
             _config = initialConfiguration;
+            foreach (var header in _config.Headers)
+                _headers.Add(header.Key, header.Value);
+            foreach (var queryParameter in _config.QueryParameters)
+                _queryParameters.Add(queryParameter.Key, queryParameter.Value);
+            if (_config.Advanced.Proxy.Address != null)
+                Advanced.UseProxy(_config.Advanced.Proxy.Address);
+            if (!string.IsNullOrEmpty(_config.Advanced.Authentication.Username) && !string.IsNullOrEmpty(_config.Advanced.Authentication.Password))
+                Advanced.Authentication.Basic(_config.Advanced.Authentication.Username, _config.Advanced.Authentication.Password);
+
             _url = url;
             _method = method;
         }
@@ -141,7 +151,7 @@ namespace Nap
         /// <typeparam name="T">The type to deserialize the object to.</typeparam>
         /// <returns>
         /// A task, that when run returns the body content deserialized to the object <typeparamref name="T"/>,
-        /// using the serializer matching <see cref="NapConfig.Serializers"/>.
+        /// using the serializer matching <see cref="INapConfig.Serializers"/>.
         /// </returns>
         public async Task<T> ExecuteAsync<T>()
         {
@@ -179,7 +189,7 @@ namespace Nap
         /// <typeparam name="T">The type to deserialize the object to.</typeparam>
         /// <returns>
         /// The body content deserialized to the object <typeparamref name="T"/>,
-        /// using the serializer matching <see cref="NapConfig.Serializers"/>.
+        /// using the serializer matching <see cref="INapConfig.Serializers"/>.
         /// </returns>
         public T Execute<T>()
         {
@@ -238,9 +248,9 @@ namespace Nap
         private HttpClient CreateClient()
         {
             var handler = new HttpClientHandler();
-            if (_config.Advanced.Proxy != null)
+            if (_config.Advanced.Proxy?.Address != null)
             {
-                handler.Proxy = new NapWebProxy(_config.Advanced.Proxy);
+                handler.Proxy = new NapWebProxy(_config.Advanced.Proxy.Address);
                 handler.UseProxy = true;
             }
             foreach (var cookie in _cookies)
@@ -253,7 +263,7 @@ namespace Nap
         }
 
         /// <summary>
-        /// Creates the URL from an (optional) <see cref="NapConfig.BaseUrl"/>, URL and query parameters.
+        /// Creates the URL from an (optional) <see cref="INapConfig.BaseUrl"/>, URL and query parameters.
         /// </summary>
         /// <returns>The fully formed URL.</returns>
         private string CreateUrl()

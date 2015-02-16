@@ -15,6 +15,11 @@ namespace Nap.Configuration
         /// <summary>
         /// The XML content format, 'application/xml'
         /// </summary>
-        Xml
+        Xml,
+
+        /// <summary>
+        /// The type corresponding to other, or unused, (de/)serialization.
+        /// </summary>
+        Other
     }
 }
