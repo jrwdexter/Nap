@@ -15,14 +15,14 @@ Nap is in Beta, and not ready to be used on production projects yet.
 
 ```c#
 var nap = new Nap("http://example.com/");
-var dogs = await nap.Get<Dogs>("/dogs").ExecuteAsync();
-var cats = await nap.Get<Cats>("http://otherexample.com/cats").ExecuteAsync();
+var dogs = await nap.Get("/dogs").ExecuteAsync<Dogs>();
+var cats = await nap.Get("http://otherexample.com/cats").ExecuteAsync<Cats>();
 ```
 
 Or, even shorter!
 
 ```c#
-var dogs = Nap.Lets.Get<Dogs>("http://example.com/dogs").ExecuteAsync()
+var dogs = Nap.Lets.Get("http://example.com/dogs").ExecuteAsync<Dogs>()
 ```
 
 ## Sweet
@@ -31,11 +31,11 @@ var dogs = Nap.Lets.Get<Dogs>("http://example.com/dogs").ExecuteAsync()
 
 ```c#
 var ingredients = new { Flour = 10, Eggs = 2, CakeMix = 1 };
-var cake = Nap.Lets.Post<Cake>("http://example.com/bake-cake")
+var cake = Nap.Lets.Post("http://example.com/bake-cake")
                    .IncludeQueryParameter("temp", "425F")
                    .IncludeHeader("sugar", "100g")
                    .IncludeBody(ingredients)
-                   .Execute();
+                   .Execute<Cake>();
 ```
 
 ## Configurable
@@ -54,18 +54,18 @@ var cake = Nap.Lets.Post<Cake>("http://example.com/bake-cake")
   </configSections>
 </configuration>
 ...
-<Nap baseUrl="http://example.com" fillMetada="true">
-  <Headers>
+<nap baseUrl="http://example.com" fillMetada="true">
+  <headers>
     <add key="sugar" value="100g" />
-  </Headers>
-  <QueryParameters>
+  </headers>
+  <queryParameters>
     <add key="temp" value="425F" />
-  </QueryParameters>
-  <Advanced useSsl="true">
-    <Proxy address="http://localhost:8080" />
-    <Authentication username="jdoe" password="password123" />
-  </Advanced>
-</Nap>
+  </queryParameters>
+  <advanced useSsl="true">
+    <proxy address="http://localhost:8080" />
+    <authentication username="jdoe" password="password123" />
+  </advanced>
+</nap>
 ```
 
 Along with a simple Configuration declaration:
@@ -77,17 +77,17 @@ And make your **Naps** even easier:
 
 ```c#
 var ingredients = new { Flour = 10, Eggs = 2, CakeMix = 1 };
-Nap.Lets.Post<Cake>("/bake-cake")
+Nap.Lets.Post("/bake-cake")
         .IncludeBody(ingredients)
-        .Execute();
+        .Execute<Cake>();
 ```
 
 And still fully malleable:
 
 ```c#
-Nap.Lets.Get<Potato>("/potato")
+Nap.Lets.Get("/potato")
         .DoNot.IncludeHeader("sugar")
-        .Execute();
+        .Execute<Potato>();
 ```
 
 Nap supports 3 levels of cascading configuration: *.config < Nap() < Fluent.  In this example:
@@ -108,9 +108,9 @@ Nap supports 3 levels of cascading configuration: *.config < Nap() < Fluent.  In
 ```c#
 var nap = new Nap();
 nap.Config.QueryParameters["temp"] = "300F";
-var cake = nap.Get<Cake>("/cake")
+var cake = nap.Get("/cake")
               .IncludeHeader("sugar", "10g")
-              .Execute();
+              .Execute<Cake>();
 ```
 
 The end result would perform an HTTP GET Request to `http://example.com/cake` (from *.config), using a query parameter of "temp=300F" (Nap() configuration level) and a Header of "sugar: 10g" (Fluent level).  This allows for a high degree of customization on a per-request or per-scope basis.
@@ -120,12 +120,12 @@ The end result would perform an HTTP GET Request to `http://example.com/cake` (f
 Most of all, **Nap** is aimed at bringing the full power of the RESTful requests to your projects.  Although few methods are exposed at the `INapRequest` level, the `INapRequest.Advanced` property quickly allows access to many more features:
 
 ```c#
-var cake = Nap.Lets.Get<Cake>("http://example.com/cake")
+var cake = Nap.Lets.Get("http://example.com/cake")
                    .Advanced
                    .Proxy("http://localhost:8888")
                    .Authentication.Basic("jdoe@example.com", "Password")
                    .UseSSL()
-                   .Execute()
+                   .Execute<Cake>()
 ```
 
 Metadata properties are supported!
@@ -138,9 +138,9 @@ class Cake
   public int StatusCode { get; set; }
 }
 
-var cake = Nap.Lets.Get<Cake>("http://example.com/cake")
+var cake = Nap.Lets.Get("http://example.com/cake")
                    .FillMetadata()
-                   .Execute()
+                   .Execute<Cake>()
 ```
 
 In the above example, if the URL cake has no property called "Status Code", it would be populated by the `FillMetadata()` flag, and result in the status code of the request.
