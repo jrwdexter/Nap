@@ -137,7 +137,7 @@ namespace Nap.Tests.Configuration
 
         private sealed class TestNapConfig : INapConfig
         {
-            public Dictionary<RequestFormat, INapSerializer> Serializers { get; set; }
+            public Dictionary<RequestFormat, INapFormatter> Serializers { get; set; }
 
             public string BaseUrl { get; set; }
 

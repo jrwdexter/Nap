@@ -26,7 +26,7 @@ namespace Nap.Configuration
         /// <summary>
         /// Gets or sets the serializers that can be used to both serialize and deserialize content.
         /// </summary>
-        public Dictionary<RequestFormat, INapSerializer> Serializers { get; set; } = new Dictionary<RequestFormat, INapSerializer> { { RequestFormat.Form, new NapFormsSerializer() }, { RequestFormat.Json, new NapJsonSerializer() }, { RequestFormat.Xml, new NapXmlSerializer() } };
+        public Dictionary<RequestFormat, INapFormatter> Serializers { get; set; } = new Dictionary<RequestFormat, INapFormatter> { { RequestFormat.Form, new NapFormsFormatter() }, { RequestFormat.Json, new NapJsonFormatter() }, { RequestFormat.Xml, new NapXmlFormatter() } };
 
         /// <summary>
         /// Gets or sets the optional base URL for easy requests.

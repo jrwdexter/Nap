@@ -5,12 +5,12 @@ namespace Nap.Formatters.Base
     /// Serializers in Nap can be used on both request and response objects seperately.
     /// (for example, a request could be serialized using JSON, while a response could be deserialized using XML).
     /// </summary>
-    public interface INapSerializer
+    public interface INapFormatter
     {
         /// <summary>
-        /// Gets the MIME type corresponding to a given implementation of the <see cref="INapSerializer"/> interface.
+        /// Gets the MIME type corresponding to a given implementation of the <see cref="INapFormatter"/> interface.
         /// </summary>
-        /// <example>A <see cref="NapJsonSerializer"/> would return "application/json".</example>
+        /// <example>A <see cref="NapJsonFormatter"/> would return "application/json".</example>
         string ContentType { get; }
 
         /// <summary>

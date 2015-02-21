@@ -17,12 +17,12 @@ namespace Nap.Tests.Formatters
     [TestClass]
     public class NapJsonSerializerTests : NapSerializerTestBase
     {
-        private NapJsonSerializer _jsonFormatter;
+        private NapJsonFormatter _jsonFormatter;
 
         [TestInitialize]
         public void Setup()
         {
-            _jsonFormatter = new NapJsonSerializer();
+            _jsonFormatter = new NapJsonFormatter();
         }
 
         [TestMethod]

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
+﻿using System.Configuration;
 
 namespace Nap.Configuration.Sections
 {
@@ -58,16 +55,6 @@ namespace Nap.Configuration.Sections
         IAuthenticationNapConfig IAdvancedNapConfig.Authentication => Authentication;
 
         /// <summary>
-        /// Gets or sets a value indicating whether to use SSL during requests.
-        /// </summary>
-        [ConfigurationProperty("useSsl", DefaultValue = false, IsRequired = false)]
-        public bool UseSsl
-        {
-            get { return (bool)this["useSsl"]; }
-            set { this["useSsl"] = value; }
-        }
-
-        /// <summary>
         /// Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only.
         /// </summary>
         /// <returns>
@@ -87,8 +74,7 @@ namespace Nap.Configuration.Sections
             var advancedNapConfig = new AdvancedNapConfig
             {
                 Authentication = Authentication.Clone(),
-                Proxy = Proxy.Clone(),
-                UseSsl = UseSsl
+                Proxy = Proxy.Clone()
             };
 
             return advancedNapConfig;

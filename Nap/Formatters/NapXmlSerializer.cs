@@ -13,10 +13,10 @@ namespace Nap.Formatters
     /// The serializer corresponding to the "application/xml" MIME type.
     /// Utilizes <see cref="XmlSerializer"/> to perform serialization/deserialization.
     /// </summary>
-    public class NapXmlSerializer : INapSerializer
+    public class NapXmlFormatter : INapFormatter
     {
         /// <summary>
-        /// Gets the MIME type corresponding to a given implementation of the <see cref="INapSerializer"/> interface.
+        /// Gets the MIME type corresponding to a given implementation of the <see cref="INapFormatter"/> interface.
         /// Returns "application/xml".
         /// </summary>
         public string ContentType => "application/xml";

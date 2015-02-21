@@ -85,7 +85,7 @@ namespace Nap
         }
 
         /// <summary>
-        /// Includes some content in the body, serialized according to <see cref="NapSetup.Serializers"/>.
+        /// Includes some content in the body, serialized according to <see cref="NapSetup.Formatters.Base.INapFormatter"/>s.
         /// </summary>
         /// <param name="body">The object to serialize into the body.</param>
         /// <returns>The <see cref="INapRequest"/> object.</returns>
@@ -287,7 +287,7 @@ namespace Nap
         /// </summary>
         /// <param name="contentType">Type of the content (eg. application/json).</param>
         /// <returns>The serializer matching the content type.</returns>
-        private INapSerializer GetSerializer(string contentType)
+        private INapFormatter GetSerializer(string contentType)
         {
             if (contentType.ToLower().Contains("/json"))
                 return _config.Serializers[RequestFormat.Json];

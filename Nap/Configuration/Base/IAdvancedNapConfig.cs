@@ -16,10 +16,5 @@ namespace Nap.Configuration
         /// Gets or sets the authentication configuration properties.
         /// </summary>
         IAuthenticationNapConfig Authentication { get; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to use SSL during requests.
-        /// </summary>
-        bool UseSsl { get; set; }
     }
 }

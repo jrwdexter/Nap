@@ -12,10 +12,10 @@ namespace Nap.Formatters
     /// The serializer corresponding to the "application/json" MIME type.
     /// Utilizes the Newtonsoft.Json library for serialization/deserialization.
     /// </summary>
-    public class NapJsonSerializer : INapSerializer
+    public class NapJsonFormatter : INapFormatter
     {
         /// <summary>
-        /// Gets the MIME type corresponding to a given implementation of the <see cref="INapSerializer"/> interface.
+        /// Gets the MIME type corresponding to a given implementation of the <see cref="INapFormatter"/> interface.
         /// Returns "application/json".
         /// </summary>
         public string ContentType => "application/json";

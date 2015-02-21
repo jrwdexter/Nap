@@ -9,10 +9,10 @@ namespace Nap.Formatters
     /// The serializer corresponding to the "application/x-www-form-urlencoded" MIME type.
     /// </summary>
     /// <remarks>Does not support the <see cref="Deserialize{T}"/> method.</remarks>
-    public class NapFormsSerializer : INapSerializer
+    public class NapFormsFormatter : INapFormatter
     {
         /// <summary>
-        /// Gets the MIME type corresponding to a given implementation of the <see cref="INapSerializer"/> interface.
+        /// Gets the MIME type corresponding to a given implementation of the <see cref="INapFormatter"/> interface.
         /// Returns "application/x-www-form-urlencoded".
         /// </summary>
         public string ContentType => "application/x-www-form-urlencoded";

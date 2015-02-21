@@ -11,12 +11,12 @@ namespace Nap.Tests.Formatters
     [TestClass]
     public class NapFormsSerializerTests : NapSerializerTestBase
     {
-        private NapFormsSerializer _formsSerializer;
+        private NapFormsFormatter _formsFormatter;
 
         [TestInitialize]
         public void Setup()
         {
-            _formsSerializer = new NapFormsSerializer();
+            _formsFormatter = new NapFormsFormatter();
         }
 
         [TestMethod]
@@ -24,7 +24,7 @@ namespace Nap.Tests.Formatters
         public void GetContentType_EqualsApplicationJson()
         {
             // Assert
-            Assert.AreEqual("application/x-www-form-urlencoded", _formsSerializer.ContentType);
+            Assert.AreEqual("application/x-www-form-urlencoded", _formsFormatter.ContentType);
         }
 
         [TestMethod]
@@ -33,7 +33,7 @@ namespace Nap.Tests.Formatters
         public void Serialize_WhenNull_ThenExceptionIsThrown()
         {
             // Act
-            _formsSerializer.Serialize(null);
+            _formsFormatter.Serialize(null);
         }
 
         [TestMethod]
@@ -42,7 +42,7 @@ namespace Nap.Tests.Formatters
         public void Deserialize_Null_ThrowsNotSupprtedException()
         {
             // Act
-            _formsSerializer.Deserialize<TestClass>("anything");
+            _formsFormatter.Deserialize<TestClass>("anything");
         }
 
         [TestMethod]
@@ -53,7 +53,7 @@ namespace Nap.Tests.Formatters
             var test = new TestClass { FirstName = "John", LastName = "Doe" };
 
             // Act
-            var serialized = _formsSerializer.Serialize(test);
+            var serialized = _formsFormatter.Serialize(test);
 
             // Assert
             Assert.AreEqual("FirstName=John&LastName=Doe", serialized);

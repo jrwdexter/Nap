@@ -17,12 +17,12 @@ namespace Nap.Tests.Formatters
     [TestClass]
     public class NapXmlSerializerTests : NapSerializerTestBase
     {
-        private NapXmlSerializer _xmlFormatter;
+        private NapXmlFormatter _xmlFormatter;
 
         [TestInitialize]
         public void Setup()
         {
-            _xmlFormatter = new NapXmlSerializer();
+            _xmlFormatter = new NapXmlFormatter();
         }
 
         [TestMethod]
