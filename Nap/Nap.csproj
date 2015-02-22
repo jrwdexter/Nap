@@ -59,10 +59,14 @@
     <Compile Include="Configuration\Base\IProxyNapConfig.cs" />
     <Compile Include="Configuration\Base\IQueryParameter.cs" />
     <Compile Include="Configuration\Base\IQueryParameters.cs" />
-    <Compile Include="Configuration\OAuth1Configuration.cs" />
-    <Compile Include="Configuration\OAuth2Configuration.cs" />
-    <Compile Include="Configuration\SAMLConfiguration.cs" />
+    <Compile Include="Configuration\EmptyAdvancedNapConfig.cs" />
+    <Compile Include="Configuration\EmptyAuthenticationNapConfig.cs" />
+    <Compile Include="Configuration\EmptyHeader.cs" />
+    <Compile Include="Configuration\EmptyHeaders.cs" />
     <Compile Include="Configuration\EmptyNapConfig.cs" />
+    <Compile Include="Configuration\EmptyProxyNapConfig.cs" />
+    <Compile Include="Configuration\EmptyQueryParameter.cs" />
+    <Compile Include="Configuration\EmptyQueryParameters.cs" />
     <Compile Include="Configuration\NapSetup.cs" />
     <Compile Include="Exceptions\AuthorizationException.cs" />
     <Compile Include="Exceptions\NapConfigurationException.cs" />

@@ -20,7 +20,7 @@ namespace Nap.Configuration
         {
             return new EmptyProxyNapConfig
             {
-                Address = new Uri(Address.OriginalString)
+                Address = Address != null ? new Uri(Address.OriginalString) : null
             };
         }
     }
