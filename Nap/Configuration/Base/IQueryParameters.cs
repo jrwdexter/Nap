@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace Nap.Configuration
 {
@@ -9,6 +7,19 @@ namespace Nap.Configuration
     /// </summary>
     public interface IQueryParameters : ICollection<IQueryParameter>
     {
+        /// <summary>
+        /// Adds the specified query parameter by specifying key/value pair.
+        /// </summary>
+        /// <param name="key">The key of the query parameter to add.</param>
+        /// <param name="value">The value of the query parameter to add.</param>
+        void Add(string key, string value);
+
+        /// <summary>
+        /// Remvoes the specified query parameter by key.
+        /// </summary>
+        /// <param name="key">The key of the query parameter to remove.</param>
+        void Remove(string key);
+
         /// <summary>
         /// Converts the <see cref="IHeaders"/> interface to a dicitonary.
         /// Note that operations on this object (such as <see cref="IDictionary{T1,T2}.Clear()"/>

@@ -26,20 +26,12 @@ namespace Nap.Configuration
         /// <summary>
         /// Gets or sets the headers to use as a starting point to configure each request.
         /// </summary>
-        public IHeaders Headers
-        {
-            get { throw new System.NotImplementedException(); }
-            set { throw new System.NotImplementedException(); }
-        }
+        public IHeaders Headers { get; private set; } = new EmptyHeaders();
 
         /// <summary>
         /// Gets or sets the query parameters to use as a starting point to configure each request.
         /// </summary>
-        public IQueryParameters QueryParameters
-        {
-            get { throw new System.NotImplementedException(); }
-            set { throw new System.NotImplementedException(); }
-        }
+        public IQueryParameters QueryParameters { get; private set; } = new EmptyQueryParameters();
 
         /// <summary>
         /// Gets or sets the accept-type format.
@@ -51,7 +43,7 @@ namespace Nap.Configuration
         /// Gets or sets the advanced portion of the configuration.
         /// </summary>
         /// <value>The advanced.</value>
-        public IAdvancedNapConfig Advanced { get; set; }
+        public IAdvancedNapConfig Advanced { get; private set; } = new EmptyAdvancedNapConfig();
 
         /// <summary>
         /// Gets or sets a value indicating whether or not to fill "Special Values" such as StatusCode on the deserialized object.
@@ -71,8 +63,9 @@ namespace Nap.Configuration
                 BaseUrl = BaseUrl,
                 FillMetadata = FillMetadata,
                 Serialization = Serialization,
-                //Advanced = ((IAdvancedNapConfig)Advanced).Clone()
-                // TODO: Clone advanced.
+                QueryParameters = new EmptyQueryParameters(QueryParameters),
+                Headers = new EmptyHeaders(Headers),
+                Advanced = ((EmptyAdvancedNapConfig)Advanced).Clone()
             };
 
             return clone;

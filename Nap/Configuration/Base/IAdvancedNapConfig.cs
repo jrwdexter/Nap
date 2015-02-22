@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 
 namespace Nap.Configuration
 {
@@ -7,6 +8,11 @@ namespace Nap.Configuration
     /// </summary>
     public interface IAdvancedNapConfig
     {
+        /// <summary>
+        /// Gets or sets the overridable version of the construction of the <see cref="HttpClient"/> that handles Nap requests.
+        /// </summary>
+        Func<INapRequest, HttpClient> ClientCreator { get; set; }
+
         /// <summary>
         /// Gets or sets the optional proxy for requests.
         /// </summary>

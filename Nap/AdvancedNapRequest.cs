@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 
 namespace Nap
 {
@@ -19,6 +20,12 @@ namespace Nap
             _config.Advanced.Proxy.Address = uri;
             return this;
         }
+
+        /// <summary>
+        /// Gets or sets the client creator, which is an optionally overridable way to create an <see cref="HttpClient"/> to send Nap requests.
+        /// </summary>
+        /// <remarks>When set to null, default <see cref="HttpClient"/> construction is performed.</remarks>
+        public Func<INapRequest, HttpClient> ClientCreator { get; set; }
 
         /// <summary>
         /// Gets a <see cref="IAuthenticatedNapRequestComponent"/> object, which exposes authentication properties for futher configuration of the nap request.

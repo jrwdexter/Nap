@@ -70,7 +70,7 @@ var cake = Nap.Lets.Post("http://example.com/bake-cake")
 
 Along with a simple Configuration declaration:
 ```c#
-NapSetup.AddConfig(NapConfig.GetCurrent());
+NapSetup.AddConfig(NapConfig.GetCurrent);
 ```
 
 And make your **Naps** even easier:

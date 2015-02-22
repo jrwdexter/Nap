@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 
@@ -165,6 +164,27 @@ namespace Nap.Configuration.Sections
         public override bool IsReadOnly()
         {
             return false;
+        }
+
+        /// <summary>
+        /// Adds the specified query parameter by specifying key/value pair.
+        /// </summary>
+        /// <param name="key">The key of the query parameter to add.</param>
+        /// <param name="value">The value of the query parameter to add.</param>
+        public void Add(string key, string value)
+        {
+            Add(new QueryParameter { Key = key, Value = value });
+        }
+
+        /// <summary>
+        /// Remvoes the specified query parameter by key.
+        /// </summary>
+        /// <param name="key">The key of the query parameter to remove.</param>
+        public void Remove(string key)
+        {
+            var itemToRemove = this.FirstOrDefault(qp => qp.Key == key);
+            if (itemToRemove != null)
+                Remove(itemToRemove);
         }
 
         /// <summary>

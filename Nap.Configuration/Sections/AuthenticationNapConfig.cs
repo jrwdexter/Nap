@@ -11,6 +11,18 @@ namespace Nap.Configuration.Sections
     public class AuthenticationNapConfig : ConfigurationElement, IAuthenticationNapConfig
     {
         /// <summary>
+        /// Gets or sets the type of the authentication to be used (eg. Basic, SAML, OAUth).
+        /// </summary>
+        [ConfigurationProperty("type", DefaultValue = AuthenticationTypeEnum.None, IsRequired = false)]
+        public AuthenticationTypeEnum AuthenticationType
+        {
+            get { return (AuthenticationTypeEnum)this["type"]; }
+            set { this["type"] = value; }
+        }
+
+        public IFederationConfiguration AuthenticationConfiguration { get; set; } // TODO: Figure out how to do authentication in configuration
+
+        /// <summary>
         /// Gets or sets the username to use for authenticaiton.
         /// </summary>
         [ConfigurationProperty("username", DefaultValue = null, IsRequired = false)]
@@ -47,7 +59,7 @@ namespace Nap.Configuration.Sections
         /// <returns>A copy of the current instance.</returns>
         public AuthenticationNapConfig Clone()
         {
-            return new AuthenticationNapConfig { Username = Username, Password = Password };
+            return new AuthenticationNapConfig { AuthenticationType = AuthenticationType, Username = Username, Password = Password };
         }
     }
 }

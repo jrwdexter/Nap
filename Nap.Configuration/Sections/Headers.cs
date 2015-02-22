@@ -39,7 +39,7 @@ namespace Nap.Configuration.Sections
         public Headers(IEnumerable<IHeader> headers)
         {
             foreach (var header in headers)
-                Add(new Header {Key = header.Key, Value = header.Value});
+                Add(new Header { Key = header.Key, Value = header.Value });
         }
 
         /// <summary>
@@ -165,6 +165,27 @@ namespace Nap.Configuration.Sections
         public override bool IsReadOnly()
         {
             return false;
+        }
+
+        /// <summary>
+        /// Adds the specified header by specifying key/value pair.
+        /// </summary>
+        /// <param name="key">The key of the header to add.</param>
+        /// <param name="value">The value of the header to add.</param>
+        public void Add(string key, string value)
+        {
+            Add(new Header { Key = key, Value = value });
+        }
+
+        /// <summary>
+        /// Remvoes the specified header by key.
+        /// </summary>
+        /// <param name="key">The key of the header to remove.</param>
+        public void Remove(string key)
+        {
+            var itemToRemove = this.FirstOrDefault(h => h.Key == key);
+            if (itemToRemove != null)
+                Remove(itemToRemove);
         }
 
         /// <summary>

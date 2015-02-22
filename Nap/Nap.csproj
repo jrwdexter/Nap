@@ -49,7 +49,9 @@
     <Compile Include="AdvancedNapRequest.cs" />
     <Compile Include="Base\IAdvancedNapRequestComponent.cs" />
     <Compile Include="Base\IAuthenticatedNapRequestComponent.cs" />
+    <Compile Include="Configuration\AuthenticationTypeEnum.cs" />
     <Compile Include="Configuration\Base\IAuthenticationNapConfig.cs" />
+    <Compile Include="Configuration\Base\IFederationConfiguration.cs" />
     <Compile Include="Configuration\Base\IHeader.cs" />
     <Compile Include="Configuration\Base\IHeaders.cs" />
     <Compile Include="Configuration\Base\INapConfig.cs" />
@@ -57,8 +59,12 @@
     <Compile Include="Configuration\Base\IProxyNapConfig.cs" />
     <Compile Include="Configuration\Base\IQueryParameter.cs" />
     <Compile Include="Configuration\Base\IQueryParameters.cs" />
+    <Compile Include="Configuration\OAuth1Configuration.cs" />
+    <Compile Include="Configuration\OAuth2Configuration.cs" />
+    <Compile Include="Configuration\SAMLConfiguration.cs" />
     <Compile Include="Configuration\EmptyNapConfig.cs" />
     <Compile Include="Configuration\NapSetup.cs" />
+    <Compile Include="Exceptions\AuthorizationException.cs" />
     <Compile Include="Exceptions\NapConfigurationException.cs" />
     <Compile Include="Exceptions\Base\NapException.cs" />
     <Compile Include="Exceptions\ConstructorNotFoundException.cs" />

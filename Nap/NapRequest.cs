@@ -44,6 +44,7 @@ namespace Nap
                 Advanced.UseProxy(_config.Advanced.Proxy.Address);
             if (!string.IsNullOrEmpty(_config.Advanced.Authentication.Username) && !string.IsNullOrEmpty(_config.Advanced.Authentication.Password))
                 Advanced.Authentication.Basic(_config.Advanced.Authentication.Username, _config.Advanced.Authentication.Password);
+            ClientCreator = _config.Advanced.ClientCreator;
 
             _url = url;
             _method = method;
@@ -206,9 +207,11 @@ namespace Nap
         /// <returns>The content and response.</returns>
         private async Task<InternalResponse> RunRequest()
         {
-            using (var client = CreateClient())
+            using (var client = ClientCreator != null ? ClientCreator(this) : CreateClient())
             {
-                var content = new StringContent(_content);
+                HttpContent content = null;
+                if (!string.IsNullOrEmpty(_content))
+                    content = new StringContent(_content);
                 var url = CreateUrl();
                 foreach (var header in _headers)
                 {
@@ -253,6 +256,7 @@ namespace Nap
                 handler.Proxy = new NapWebProxy(_config.Advanced.Proxy.Address);
                 handler.UseProxy = true;
             }
+
             foreach (var cookie in _cookies)
             {
                 handler.CookieContainer.Add(cookie.Item1, cookie.Item2);
@@ -299,7 +303,7 @@ namespace Nap
         #endregion
 
         /// <summary>
-        /// An internal class to house response and content information.
+        /// A child private class to house response and content information.
         /// </summary>
         private sealed class InternalResponse
         {

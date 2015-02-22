@@ -77,6 +77,8 @@ namespace Nap
         /// <returns>The configurable request object.  Run <see cref="INapRequest.ExecuteAsync{T}"/> or equivalent method.</returns>
         public INapRequest Get(string url)
         {
+            Authenticate();
+            // TODO: Do authentication (if not done yet) here
             return new NapRequest(Config.Clone(), url, HttpMethod.Get);
         }
 
@@ -87,6 +89,7 @@ namespace Nap
         /// <returns>The configurable request object.  Run <see cref="INapRequest.ExecuteAsync{T}"/> or equivalent method.</returns>
         public INapRequest Post(string url)
         {
+            // TODO: Do authentication (if not done yet) here
             return new NapRequest(Config.Clone(), url, HttpMethod.Post);
         }
 
@@ -108,6 +111,13 @@ namespace Nap
         public INapRequest Put(string url)
         {
             return new NapRequest(Config.Clone(), url, HttpMethod.Put);
+        }
+
+        private void Authenticate()
+        {
+            var authentication = _config.Advanced.Authentication;
+            if(authentication.AuthenticationType > AuthenticationTypeEnum.Basic) // Then we're doing some sort of federated authentication/authorization
+                throw new System.NotImplementedException();
         }
     }
 }

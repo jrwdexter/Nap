@@ -1,9 +1,15 @@
 ﻿using System;
 using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Moq;
+
 using Nap.Configuration;
 using Nap.Tests.TestClasses;
 
@@ -12,15 +18,33 @@ namespace Nap.Tests
     [TestClass]
     public class NapClientTests
     {
-        [TestMethod]
-        public void Nap_ConfigurationFromAppConfig_MatchesExpectation()
-        {
-            var nap = new Nap();
-            NapSetup.AddConfig(NapConfig.GetCurrent);
+        private Nap _nap;
+        private TestHandler _handler;
+        private HttpClient _httpClient;
+        private string _url;
 
-            Assert.AreEqual("http://example.com", nap.Config.BaseUrl);
-            Assert.AreEqual(true, nap.Config.FillMetadata);
-            Assert.AreEqual(RequestFormat.Xml, nap.Config.Serialization);
+        [TestInitialize]
+        public void Setup()
+        {
+            _url = "http://example.com/test";
+
+            _nap = new Nap();
+            _nap.Config.FillMetadata = true;
+            _handler = new TestHandler();
+            _httpClient = new HttpClient(_handler);
+            _nap.Config.Advanced.ClientCreator = request => _httpClient;
+        }
+
+        [TestMethod]
+        public void Nap_Get_PerformsHttpClientGet()
+        {
+            // Act
+            _nap.Get(_url);
+
+            // Assert
+            Assert.AreEqual(HttpMethod.Get, _handler.Request.Method);
+            Assert.AreEqual(null, _handler.Request.Content);
+            Assert.AreEqual(new Uri(_url), _handler.Request.RequestUri);
         }
 
         [TestMethod]
@@ -44,6 +68,17 @@ namespace Nap.Tests
             {
                 xmlSerializer.Serialize(textWriter, person);
                 Console.Write(textWriter.ToString());
+            }
+        }
+
+        public class TestHandler : HttpMessageHandler
+        {
+            public HttpRequestMessage Request { get; set; }
+
+            protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+            {
+                Request = request;
+                return new Task<HttpResponseMessage>(() => new HttpResponseMessage()); // Return empty response
             }
         }
     }
