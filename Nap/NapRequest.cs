@@ -143,7 +143,7 @@ namespace Nap
         /// <returns>A task, that when run returns the body content.</returns>
         public async Task<string> ExecuteAsync()
         {
-            return (await RunRequest()).Content;
+            return (await RunRequestAsync()).Content;
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Nap
         /// </returns>
         public async Task<T> ExecuteAsync<T>()
         {
-            var responseWithContent = await RunRequest();
+            var responseWithContent = await RunRequestAsync();
             var toReturn = GetSerializer(responseWithContent.Response.Content.Headers.ContentType.MediaType).Deserialize<T>(responseWithContent.Content);
 
             if (_config.FillMetadata)
@@ -205,7 +205,7 @@ namespace Nap
         /// Runs the request.
         /// </summary>
         /// <returns>The content and response.</returns>
-        private async Task<InternalResponse> RunRequest()
+        private async Task<InternalResponse> RunRequestAsync()
         {
             using (var client = ClientCreator != null ? ClientCreator(this) : CreateClient())
             {
