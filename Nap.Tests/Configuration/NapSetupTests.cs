@@ -114,7 +114,7 @@ namespace Nap.Tests.Configuration
                 test = NapSetup.Default;
                 Assert.IsNotNull(test);
             }
-            Console.WriteLine("Generic instantiation: \{sw.ElapsedMilliseconds}");
+            Console.WriteLine($"Generic instantiation: {sw.ElapsedMilliseconds}");
 
             sw.Restart();
             NapSetup.AddConfig(typeof(TestNapConfig));
@@ -123,7 +123,7 @@ namespace Nap.Tests.Configuration
                 test = NapSetup.Default;
                 Assert.IsNotNull(test);
             }
-            Console.WriteLine("Typed instantiation: \{sw.ElapsedMilliseconds}");
+            Console.WriteLine($"Typed instantiation: {sw.ElapsedMilliseconds}");
 
             sw.Restart();
             NapSetup.AddConfig(() => new TestNapConfig());
@@ -132,7 +132,7 @@ namespace Nap.Tests.Configuration
                 test = NapSetup.Default;
                 Assert.IsNotNull(test);
             }
-            Console.WriteLine("Lambda instantiation: \{sw.ElapsedMilliseconds}");
+            Console.WriteLine($"Lambda instantiation: {sw.ElapsedMilliseconds}");
         }
 
         private sealed class TestNapConfig : INapConfig

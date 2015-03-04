@@ -22,8 +22,8 @@ namespace Nap
             if (_headers.ContainsKey("Authorization"))
                 throw new ArgumentException("Authorization header already exists.");
 
-            var hash = Convert.ToBase64String(Encoding.UTF8.GetBytes("\{username}:\{password}"));
-            _headers.Add("Authorization", "Basic \{hash}");
+            var hash = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
+            _headers.Add("Authorization", $"Basic {hash}");
             return this;
         }
 

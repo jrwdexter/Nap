@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Nap.Configuration;
 using Nap.Formatters.Base;
 using Nap.Proxies;
+using System.Diagnostics;
 
 namespace Nap
 {
@@ -207,19 +208,26 @@ namespace Nap
         /// <returns>The content and response.</returns>
         private async Task<InternalResponse> RunRequestAsync()
         {
+            var excludedHeaders = new[] { "content-type" };
             using (var client = ClientCreator != null ? ClientCreator(this) : CreateClient())
             {
                 HttpContent content = null;
                 if (!string.IsNullOrEmpty(_content))
                     content = new StringContent(_content);
                 var url = CreateUrl();
-                foreach (var header in _headers)
+                var allowedDefaultHeaders = _headers.Where(h => !excludedHeaders.Any(eh => eh.Equals(h.Key, StringComparison.OrdinalIgnoreCase)));
+                foreach (var header in allowedDefaultHeaders)
                 {
                     client.DefaultRequestHeaders.Add(header.Key, header.Value);
                 }
 
-                //if(!client.DefaultRequestHeaders.Any(kv => kv.Key.Equals("content-type", StringComparison.OrdinalIgnoreCase)))
-                //    client.DefaultRequestHeaders.Add("content-type", );
+                var contentType = _headers.FirstOrDefault(kv => kv.Key.Equals("content-type", StringComparison.OrdinalIgnoreCase));
+                if (contentType.Value != null)
+                {
+                    content.Headers.ContentType.MediaType = contentType.Value;
+                }
+                else
+                    content.Headers.ContentType.MediaType = _config.Serializers[_config.Serialization].ContentType;
 
                 HttpResponseMessage response = null;
                 if (_method == HttpMethod.Get)

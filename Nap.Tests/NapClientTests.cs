@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nap.Configuration;
 
 namespace Nap.Tests
 {
@@ -39,13 +40,31 @@ namespace Nap.Tests
             Assert.AreEqual(new Uri(_url), _handler.Request.RequestUri);
         }
 
+        [TestMethod]
+        public void Nap_PostJson_ContentTypeIncluded()
+        {
+            // Arrange
+            _nap.Config.Serialization = RequestFormat.Json;
+
+            // Act
+            _nap.Post(_url).IncludeBody(new { Foo = "Bar" }).Execute();
+
+            //
+            Assert.AreEqual(HttpMethod.Post, _handler.Request.Method);
+            Assert.AreEqual("{\"Foo\":\"Bar\"}", _handler.RequestContent);
+            Assert.AreEqual("application/json", _handler.Request.Content.Headers.ContentType.MediaType);
+        }
+
         public class TestHandler : HttpMessageHandler
         {
             public HttpRequestMessage Request { get; set; }
 
+            public string RequestContent { get; set; }
+
             protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
             {
                 Request = request;
+                RequestContent = request.Content.ReadAsStringAsync().Result;
                 return new HttpResponseMessage { Content = new StringContent(string.Empty) };
             }
         }
