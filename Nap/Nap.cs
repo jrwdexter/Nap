@@ -31,22 +31,23 @@ namespace Nap
         }
 
         /// <summary>
-        /// Gets a single instance of the <see cref="Nap"/>, which can be used to perform requests swiftly.
+        /// Gets a new instance of the <see cref="Nap"/>, which can be used to perform requests swiftly.
         /// </summary>
         public static Nap Lets
         {
             get
             {
-                if (_instance == null)
-                {
-                    lock (_padlock)
-                    {
-                        if (_instance == null)
-                            _instance = new Nap();
-                    }
-                }
+                return new Nap();
+                //if (_instance == null)
+                //{
+                //    lock (_padlock)
+                //    {
+                //        if (_instance == null)
+                //            _instance = new Nap();
+                //    }
+                //}
 
-                return _instance;
+                //return _instance;
             }
         }
 
@@ -115,7 +116,7 @@ namespace Nap
 
         private void Authenticate()
         {
-            var authentication = _config.Advanced.Authentication;
+            var authentication = Config.Advanced.Authentication;
             if(authentication.AuthenticationType > AuthenticationTypeEnum.Basic) // Then we're doing some sort of federated authentication/authorization
                 throw new System.NotImplementedException();
         }

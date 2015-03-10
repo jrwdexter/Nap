@@ -70,6 +70,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Configuration\NapEmptyConfigurationTests.cs" />
     <Compile Include="Configuration\NapConfigurationTests.cs" />
     <Compile Include="Configuration\NapSetupTests.cs" />
     <Compile Include="Formatters\Base\NapSerializerTestBase.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Formatters\NapXmlSerializerTests.cs" />
     <Compile Include="Formatters\NapJsonSerializerTests.cs" />
     <Compile Include="NapClientTests.cs" />
+    <Compile Include="NapFluentTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestClasses\ParentTestClass.cs" />
     <Compile Include="TestClasses\RequiresParameters_TestClass.cs" />

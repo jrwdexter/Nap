@@ -7,12 +7,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nap.Configuration;
 using Nap.Formatters.Base;
+using Nap.Configuration.Sections;
+using Nap.Exceptions;
 
 namespace Nap.Tests.Configuration
 {
     [TestClass]
     public class NapConfigurationTests
     {
+        // Tests to ensure that *.config files get parsed correctly.
+
         [TestInitialize]
         public void Setup()
         {
@@ -21,21 +25,21 @@ namespace Nap.Tests.Configuration
 
         [TestMethod]
         [TestCategory("Configuration")]
-        public void GetConfiguration_DoesNotThrowException()
+        public void GetConfiguration_FromConfigFile_DoesNotThrowException()
         {
             var config = Nap.Lets.Config;
         }
 
         [TestMethod]
         [TestCategory("Configuration")]
-        public void GetConfiguration_BaseUrl_Matches()
+        public void GetConfiguration_FromConfigFile_BaseUrl_Matches()
         {
             Assert.AreEqual("http://example.com", Nap.Lets.Config.BaseUrl);
         }
 
         [TestMethod]
         [TestCategory("Configuration")]
-        public void GetConfiguration_Headers_Match()
+        public void GetConfiguration_FromConfigFile_Headers_Match()
         {
             var headers = Nap.Lets.Config.Headers.AsDictionary();
 
@@ -48,7 +52,7 @@ namespace Nap.Tests.Configuration
 
         [TestMethod]
         [TestCategory("Configuration")]
-        public void GetConfiguration_QueryParameters_Match()
+        public void GetConfiguration_FromConfigFile_QueryParameters_Match()
         {
             var queryParameters = Nap.Lets.Config.QueryParameters.AsDictionary();
 
@@ -57,6 +61,24 @@ namespace Nap.Tests.Configuration
             Assert.AreEqual(1, queryParameters.Count, "App.Config should create one, and only one, query parameter.");
             Assert.AreEqual("testQueryParameter", queryParameters.First().Key);
             Assert.AreEqual("testQueryParameterValue", queryParameters.First().Value);
+        }
+
+        [TestMethod]
+        [TestCategory("Configuration")]
+        [ExpectedException(typeof(NapConfigurationException))]
+        public void AddInvalidHeader_ThrowsConfigurationException()
+        {
+            var config = Nap.Lets.Config;
+            ((Headers)config.Headers).Add(new EmptyHeader());
+        }
+
+        [TestMethod]
+        [TestCategory("Configuration")]
+        [ExpectedException(typeof(NapConfigurationException))]
+        public void AddInvalidQueryParameter_ThrowsConfigurationException()
+        {
+            var config = Nap.Lets.Config;
+            ((QueryParameters)config.QueryParameters).Add(new EmptyQueryParameter());
         }
     }
 }

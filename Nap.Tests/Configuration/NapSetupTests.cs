@@ -22,7 +22,7 @@ namespace Nap.Tests.Configuration
         public void ResetConfiguration_ResetsToEmptyNapConfig()
         {
             // Arrange
-            NapSetup.AddConfig(() => new EmptyNapConfig());
+            NapSetup.AddConfig(() => new TestNapConfig());
             NapSetup.ResetConfig();
 
             // Act
@@ -53,7 +53,6 @@ namespace Nap.Tests.Configuration
         {
             // Act
             NapSetup.AddConfig<TestNapConfig>();
-            NapSetup.AddConfig(() => new TestNapConfig());
             NapSetup.AddConfig(() => new TestNapConfig());
         }
 

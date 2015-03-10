@@ -155,10 +155,10 @@ namespace Nap
         /// A task, that when run returns the body content deserialized to the object <typeparamref name="T"/>,
         /// using the serializer matching <see cref="INapConfig.Serializers"/>.
         /// </returns>
-        public async Task<T> ExecuteAsync<T>()
+        public async Task<T> ExecuteAsync<T>() where T : class, new()
         {
             var responseWithContent = await RunRequestAsync();
-            var toReturn = GetSerializer(responseWithContent.Response.Content.Headers.ContentType.MediaType).Deserialize<T>(responseWithContent.Content);
+            var toReturn = GetSerializer(responseWithContent.Response.Content.Headers.ContentType.MediaType).Deserialize<T>(responseWithContent.Content) ?? new T();
 
             if (_config.FillMetadata)
             {
@@ -193,7 +193,7 @@ namespace Nap
         /// The body content deserialized to the object <typeparamref name="T"/>,
         /// using the serializer matching <see cref="INapConfig.Serializers"/>.
         /// </returns>
-        public T Execute<T>()
+        public T Execute<T>() where T : class, new()
         {
             return ExecuteAsync<T>().Result;
         }
@@ -211,9 +211,7 @@ namespace Nap
             var excludedHeaders = new[] { "content-type" };
             using (var client = ClientCreator != null ? ClientCreator(this) : CreateClient())
             {
-                HttpContent content = null;
-                if (!string.IsNullOrEmpty(_content))
-                    content = new StringContent(_content);
+                var content = new StringContent(_content ?? string.Empty);
                 var url = CreateUrl();
                 var allowedDefaultHeaders = _headers.Where(h => !excludedHeaders.Any(eh => eh.Equals(h.Key, StringComparison.OrdinalIgnoreCase)));
                 foreach (var header in allowedDefaultHeaders)
