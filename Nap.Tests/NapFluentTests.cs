@@ -16,8 +16,8 @@ namespace Nap.Tests
         {
         }
 
-        [TestMethod]
-        [TestCategory("NapFluent")]
+        //[TestMethod]
+        //[TestCategory("NapFluent")]
         public void NapFluent_BasicAuth_AddsAuthenticationHeader()
         {
             // Arrange

@@ -81,30 +81,6 @@ private bool BinderMatchesType(IBinder binder, Type type)
 }
 }
 
-public interface IFinder
-{
-	HtmlNode FindNode(HtmlNode currentNode, string selector);
-}
-
-public interface IParser<T> where T : BaseHtmlAttribute
-{
-	string Parse(HtmlNode node, T attributeInstance);
-}
-
-public class HtmlElementParser : IParser<HtmlElementAttribute>
-{
-	protected string Parse(HtmlElement node, HtmlElementAttribute attributeInstance)
-	{
-		switch (attributeInstance.BindingBehavior)
-		{
-			case BindingBehavior.InnerText:
-				return inputElement.InnerText;
-			case BindingBehavior.InnerHtml:
-				return inputElement.InnerHtml;
-		}
-	}
-}
-
 public interface IBinder
 {
 	public object Handle(HtmlElement inputElement, Type outputType);
