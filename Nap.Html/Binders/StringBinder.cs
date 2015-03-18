@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 using HtmlAgilityPack;
@@ -24,6 +25,7 @@ namespace Nap.Html.Binders
 		/// <returns>
 		/// The output type object created, and filled with the parsed version of the <see cref="input" />.
 		/// </returns>
+		[Pure]
 		public override object Handle(string input, HtmlNode context, Type outputType)
 		{
 			return input;

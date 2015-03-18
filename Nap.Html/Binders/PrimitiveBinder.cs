@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 using HtmlAgilityPack;
@@ -22,6 +23,7 @@ namespace Nap.Html.Binders
 		/// <param name="context">The context of the currently being-bound input value.  Generally the HTML element corresponding to the input value.</param>
 		/// <param name="outputType">The type of output object to generate, whether a POCO, primitive, or other.</param>
 		/// <returns>The output type object created, and filled with the parsed version of the <see cref="input"/>.</returns>
+		[Pure]
 		public object Handle(string input, HtmlNode context, Type outputType)
 		{
 			return Convert.ChangeType(input, outputType);

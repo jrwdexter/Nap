@@ -1,4 +1,6 @@
-﻿using HtmlAgilityPack;
+﻿using System.Diagnostics.Contracts;
+
+using HtmlAgilityPack;
 
 namespace Nap.Html.Finders.Base
 {
@@ -13,6 +15,7 @@ namespace Nap.Html.Finders.Base
         /// <param name="currentNode">The node that we are currently operating on.</param>
         /// <param name="selector">The selector to find the next element.</param>
         /// <returns>A new element, found by performing the selector <paramref name="selector" /> on the current node.</returns>
+		[Pure]
         HtmlNode FindNode(HtmlNode currentNode, string selector);
     }
 }

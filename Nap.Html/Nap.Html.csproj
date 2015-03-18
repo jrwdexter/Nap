@@ -62,6 +62,7 @@
     <Compile Include="BinderFactory.cs" />
     <Compile Include="Enum\BindingBehavior.cs" />
     <Compile Include="Finders\Base\IFinder.cs" />
+    <Compile Include="IBinderFactory.cs" />
     <Compile Include="Parsers\Base\IParser.cs" />
     <Compile Include="Parsers\HtmlElementParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

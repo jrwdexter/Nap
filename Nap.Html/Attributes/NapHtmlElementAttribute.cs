@@ -5,7 +5,7 @@ using System;
 namespace Nap.Html.Attributes
 {
     /// <summary>
-    /// Describes a simple binding element
+    /// Describes a simple binding element, selecting a node for binding.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
 	public class HtmlElementAttribute : BaseHtmlAttribute

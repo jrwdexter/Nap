@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 using HtmlAgilityPack;
@@ -21,6 +22,7 @@ namespace Nap.Html.Binders.Base
 		/// <param name="context">The context of the currently being-bound input value.  Generally the HTML element corresponding to the input value.</param>
 		/// <param name="outputType">The type of output object to generate, whether a POCO, primitive, or other.</param>
 		/// <returns>The output type object created, and filled with the parsed version of the <see cref="input"/>.</returns>
+		[Pure]
 		object Handle(string input, HtmlNode context, Type outputType);
 	}
 
@@ -39,6 +41,7 @@ namespace Nap.Html.Binders.Base
 		/// <param name="input">The input string.  See <see cref="BindingBehavior"/> for examples on what types of information may be passed in.</param>
 		/// <param name="context">The context of the currently being-bound input value.  Generally the HTML element corresponding to the input value.</param>
 		/// <returns>The output type object created, and filled with the parsed version of the <see cref="input"/>.</returns>
+		[Pure]
 		T Handle(string input, HtmlNode context);
 	}
 }

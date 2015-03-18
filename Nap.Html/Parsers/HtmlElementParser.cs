@@ -1,6 +1,10 @@
-﻿using HtmlAgilityPack;
+﻿using System;
+using System.Diagnostics.Contracts;
+
+using HtmlAgilityPack;
 using Nap.Html.Attributes;
 using Nap.Html.Enum;
+using Nap.Html.Finders.Base;
 using Nap.Html.Parsers.Base;
 
 namespace Nap.Html.Parsers
@@ -10,14 +14,21 @@ namespace Nap.Html.Parsers
     /// </summary>
     internal class HtmlElementParser : IParser<HtmlElementAttribute>
     {
-        /// <summary>
-        /// Parses some string value out of an <see cref="HtmlNode" /> selected by an <see cref="IFinder" />
-        /// </summary>
-        /// <param name="node">The node that we are preparing to bind on.</param>
-        /// <param name="attributeInstance">The instance of the attribute that is being used to perform binding.</param>
-        /// <returns>The string value of the element to pass to the binder for binding to the POCO.</returns>
+		/// <summary>
+		/// Parses some string value out of an <see cref="HtmlNode" /> selected by an <see cref="IFinder" />
+		/// </summary>
+		/// <param name="node">The node that we are preparing to bind on.</param>
+		/// <param name="attributeInstance">The instance of the attribute that is being used to perform binding.</param>
+		/// <returns>The string value of the element to pass to the binder for binding to the POCO.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if either <paramref name="node"/> or <paramref name="attributeInstance"/> is null.</exception>
+		[Pure]
         public string Parse(HtmlNode node, HtmlElementAttribute attributeInstance)
         {
+			if(node == null)
+				throw new ArgumentNullException(nameof(node));
+			if(attributeInstance == null)
+				throw new ArgumentNullException(nameof(attributeInstance));
+
             switch (attributeInstance.BindingBehavior)
             {
                 case BindingBehavior.InnerHtml:
