@@ -13,7 +13,7 @@ namespace Nap.Html.Binders
 	/// <summary>
 	/// A binder for most primitive types, including <see cref="int"/>, <see cref="double"/>, etc.
 	/// </summary>
-	public class PrimitiveBinder : IBinder
+	public sealed class PrimitiveBinder : IBinder
 	{
 		/// <summary>
 		/// Binds the specified input string to an output object of a certain primitive type.

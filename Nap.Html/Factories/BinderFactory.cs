@@ -1,47 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
+using Nap.Html.Binders;
 using Nap.Html.Binders.Base;
 using Nap.Html.Exceptions;
+using Nap.Html.Factories.Base;
 
-namespace Nap.Html
+namespace Nap.Html.Factories
 {
 	/// <summary>
 	/// Describes the factory that is used to find binders to handle various types.
 	/// </summary>
-	public class HtmlBinderFactory : IBinderFactory
+	public class BinderFactory : BaseFactory<IBinder>, IBinderFactory
 	{
-		private readonly IReadOnlyCollection<IBinder> _binders;
 		private static readonly object _padlock = new object();
 		private static IBinderFactory _instance;
 		private readonly IDictionary<Type, IBinder> _cachedBinders = new Dictionary<Type, IBinder>();
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="HtmlBinderFactory"/> class.
-		/// </summary>
-		public HtmlBinderFactory()
-		{
-			var binderTypes = typeof(HtmlBinderFactory).Assembly.GetTypes().Where(t => typeof(IBinder).IsAssignableFrom(t));
-			var binderInstances = binderTypes.Select(Activator.CreateInstance).OfType<IBinder>().ToList();
-			_binders = new ReadOnlyCollection<IBinder>(binderInstances);
-		}
-
-		/// <summary>
-		/// Gets the collection of binders that are available for use.
+		/// Gets the single, thread-safe instance of the <see cref="IBinderFactory" />.
 		/// </summary>
 		/// <value>
-		/// The collection of binders that are available for use.
-		/// </value>
-		public IReadOnlyCollection<IBinder> Binders => _binders;
-
-		/// <summary>
-		/// Gets the single, thread-safe instance of the <see cref="HtmlBinderFactory" />.
-		/// </summary>
-		/// <value>
-		/// The single, thread-safe instance of the <see cref="HtmlBinderFactory" />.
+		/// The single, thread-safe instance of the <see cref="IBinderFactory" />.
 		/// </value>
 		public static IBinderFactory Instance
 		{
@@ -52,7 +34,7 @@ namespace Nap.Html
 					lock (_padlock)
 					{
 						if (_instance == null)
-							_instance = new HtmlBinderFactory();
+							_instance = new BinderFactory();
 					}
 				}
 
@@ -83,7 +65,12 @@ namespace Nap.Html
 			IBinder binder;
 			if (!_cachedBinders.TryGetValue(type, out binder))
 			{
-				binder = _binders.FirstOrDefault(b => BinderMatchesType(b, type));
+				binder = Values.FirstOrDefault(b => BinderMatchesType(b, type));
+				if (binder == null && type.IsPrimitive)
+					binder = Values.FirstOrDefault(b => b is PrimitiveBinder);
+				if (binder == null && type.IsClass)
+					binder = Values.FirstOrDefault(b => b is ObjectBinder);
+
 				if (binder == null)
 					throw new NapBindingException($"No binder found that matches type {type.FullName}.");
 
@@ -115,7 +102,6 @@ namespace Nap.Html
 		/// <param name="type">The type to test against.</param>
 		/// <returns>True if <see name="binder"/> can be used to handle the specified <paramref name="type"/>.</returns>
 		/// <exception cref="ArgumentNullException">Thrown if either parameter is null.</exception>
-		/// <exception cref="NapBindingException">Thrown if <paramref name="binder"/> does not implement <see cref="IBinder{T}"/>.</exception>
 		[Pure]
 		private bool BinderMatchesType(IBinder binder, Type type)
 		{
@@ -126,7 +112,7 @@ namespace Nap.Html
 
 			var binderInterface = binder.GetType().GetInterfaces().FirstOrDefault(i => i.IsInstanceOfType(typeof(IBinder<>)));
 			if (binderInterface == null)
-				throw new NapBindingException($"Type {type.FullName} does not implement {typeof(IBinder<>).FullName}");
+				return false;
 
 			return type.IsAssignableFrom(binderInterface.GetGenericArguments().First());
 		}

@@ -42,6 +42,10 @@
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="Nap, Version=0.0.2.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nap.0.0.2.3\lib\portable-net45+win+WindowsPhoneApp81\Nap.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -88,10 +92,6 @@
     <ProjectReference Include="..\Nap.Configuration\Nap.Configuration.csproj">
       <Project>{7d733248-2081-41eb-8c66-dd4bbacec1e8}</Project>
       <Name>Nap.Configuration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Nap\Nap.csproj">
-      <Project>{2D0869E5-CEB3-4719-BFC3-3FAACC721384}</Project>
-      <Name>Nap</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

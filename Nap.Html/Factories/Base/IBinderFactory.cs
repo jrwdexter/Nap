@@ -5,7 +5,7 @@ using System.Linq;
 
 using Nap.Html.Binders.Base;
 
-namespace Nap.Html
+namespace Nap.Html.Factories.Base
 {
 	/// <summary>
 	/// An interface for a factory pattern to supply binders of specific type models.

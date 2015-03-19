@@ -59,15 +59,31 @@
     <Compile Include="Binders\ObjectBinder.cs" />
     <Compile Include="Binders\PrimitiveBinder.cs" />
     <Compile Include="Binders\StringBinder.cs" />
-    <Compile Include="BinderFactory.cs" />
+    <Compile Include="Exceptions\NapParsingException.cs" />
+    <Compile Include="Exceptions\NapFindingException.cs" />
+    <Compile Include="Factories\Base\BaseFactory.cs" />
+    <Compile Include="Factories\Base\IParserFactory.cs" />
+    <Compile Include="Factories\BinderFactory.cs" />
     <Compile Include="Enum\BindingBehavior.cs" />
+    <Compile Include="Exceptions\NapBindingException.cs" />
+    <Compile Include="Factories\Base\IFinderFactory.cs" />
+    <Compile Include="Factories\ParserFactory.cs" />
+    <Compile Include="Factories\FinderFactory.cs" />
     <Compile Include="Finders\Base\IFinder.cs" />
-    <Compile Include="IBinderFactory.cs" />
+    <Compile Include="Finders\EnumerableNodeFinder.cs" />
+    <Compile Include="Finders\NodeFinder.cs" />
+    <Compile Include="Factories\Base\IBinderFactory.cs" />
+    <Compile Include="HtmlSerializer.cs" />
     <Compile Include="Parsers\Base\IParser.cs" />
     <Compile Include="Parsers\HtmlElementParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Nap\Nap.csproj">
+      <Project>{2D0869E5-CEB3-4719-BFC3-3FAACC721384}</Project>
+      <Name>Nap</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />

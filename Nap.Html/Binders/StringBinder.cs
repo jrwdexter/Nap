@@ -13,7 +13,7 @@ namespace Nap.Html.Binders
 	/// <summary>
 	/// A simple binder for string types.
 	/// </summary>
-	public class StringBinder : BaseBinder<string>
+	public sealed class StringBinder : BaseBinder<string>
 	{
 		/// <summary>
 		/// Binds the specified input string to an output object of type <see cref="string"/>
