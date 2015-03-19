@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Xml;
+using System.Xml.Schema;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -9,37 +12,34 @@ using Nap.Formatters;
 using Nap.Tests.Formatters.Base;
 using Nap.Tests.TestClasses;
 
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema;
-
 namespace Nap.Tests.Formatters
 {
     [TestClass]
-    public class NapJsonSerializerTests : NapSerializerTestBase
+    public class NapXmlFormatterTests : NapFormatterTestBase
     {
-        private NapJsonFormatter _jsonFormatter;
+        private NapXmlFormatter _xmlFormatter;
 
         [TestInitialize]
         public void Setup()
         {
-            _jsonFormatter = new NapJsonFormatter();
+            _xmlFormatter = new NapXmlFormatter();
         }
 
         [TestMethod]
         [TestCategory("Formatters")]
-        public void GetContentType_EqualsApplicationJson()
+        public void GetContentType_EqualsApplicationXml()
         {
             // Assert
-            Assert.AreEqual("application/json", _jsonFormatter.ContentType);
+            Assert.AreEqual("application/xml", _xmlFormatter.ContentType);
         }
 
         [TestMethod]
         [TestCategory("Formatters")]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Serialize_WhenNull_ThenExceptionIsThrown()
+        public void Serialize_Null_ThrowsException()
         {
             // Act
-            _jsonFormatter.Serialize(null);
+            _xmlFormatter.Serialize(null);
         }
 
         [TestMethod]
@@ -48,7 +48,7 @@ namespace Nap.Tests.Formatters
         public void Deserialize_Null_ThrowsException()
         {
             // Act
-            _jsonFormatter.Deserialize<TestClass>(null);
+            _xmlFormatter.Deserialize<TestClass>(null);
         }
 
         [TestMethod]
@@ -57,28 +57,32 @@ namespace Nap.Tests.Formatters
         public void Deserialize_IntoClassWithoutParameterlessConstructor_ThrowsException()
         {
             // Act
-            _jsonFormatter.Deserialize<RequiresParameters_TestClass>("");
+            _xmlFormatter.Deserialize<RequiresParameters_TestClass>("");
         }
 
         [TestMethod]
         [TestCategory("Formatters")]
-        public void Serialize_TestClass_MatchesSchema()
+        public void Serialize_TestClass_ReturnsValidXml()
         {
             // Arrange
             var test = new TestClass { FirstName = "John", LastName = "Doe" };
-            var schema = JsonSchema.Parse(GetFileContents("TestClass.schema.json"));
+            var validatorMessages = new XmlValidatorChecks();
+            var schema = GetFileContents("TestClass.xsd");
+            var xdoc = new XmlDocument();
+            xdoc.Schemas.Add(string.Empty, XmlReader.Create(new StringReader(schema)));
 
             // Act
-            var json = _jsonFormatter.Serialize(test);
-            var jsonObject = JObject.Parse(json);
+            var xml = _xmlFormatter.Serialize(test);
+            xdoc.LoadXml(xml);
+            xdoc.Validate(validatorMessages.HandleValidationError);
 
             // Assert
-            Assert.IsTrue(jsonObject.IsValid(schema), "JSON serialization for [TestClass] does not match schema.");
+            Assert.IsTrue(validatorMessages.IsValid, string.Join("\r\n", validatorMessages.Errors));
         }
 
         [TestMethod]
         [TestCategory("Formatters")]
-        public void Serialize_ParentTestClass_MatchesSchema()
+        public void Serialize_ParentTestClass_ReturnsValidXml()
         {
             // Arrange
             var test = new ParentTestClass
@@ -90,14 +94,18 @@ namespace Nap.Tests.Formatters
                 },
                 Spouse = new TestClass { FirstName = "Jeff", LastName = "Doe" }
             };
-            var schema = JsonSchema.Parse(GetFileContents("ParentTestClass.schema.json"));
+            var validatorMessages = new XmlValidatorChecks();
+            var schema = GetFileContents("ParentTestClass.xsd");
+            var xdoc = new XmlDocument();
+            xdoc.Schemas.Add(string.Empty, XmlReader.Create(new StringReader(schema)));
 
             // Act
-            var json = _jsonFormatter.Serialize(test);
-            var jsonObject = JObject.Parse(json);
+            var xml = _xmlFormatter.Serialize(test);
+            xdoc.LoadXml(xml);
+            xdoc.Validate(validatorMessages.HandleValidationError);
 
             // Assert
-            Assert.IsTrue(jsonObject.IsValid(schema), "JSON serialization for [ParentTestClass] does not match schema.");
+            Assert.IsTrue(validatorMessages.IsValid, string.Join("\r\n", validatorMessages.Errors));
         }
 
         [TestMethod]
@@ -105,10 +113,10 @@ namespace Nap.Tests.Formatters
         public void Deserialize_BasicJson_DoesNotThrowException()
         {
             // Arrange
-            string json = GetFileContents("TestClass.json");
+            string json = GetFileContents("TestClass.xml");
 
             // Act
-            var result = _jsonFormatter.Deserialize<TestClass>(json);
+            var result = _xmlFormatter.Deserialize<TestClass>(json);
 
             // Assert
             Assert.IsNotNull(result);
@@ -122,8 +130,8 @@ namespace Nap.Tests.Formatters
             var input = new TestClass { FirstName = "John", LastName = "Doe" };
 
             // Act
-            var json = _jsonFormatter.Serialize(input);
-            var output = _jsonFormatter.Deserialize<TestClass>(json);
+            var json = _xmlFormatter.Serialize(input);
+            var output = _xmlFormatter.Deserialize<TestClass>(json);
 
             // Assert
             Assert.AreEqual(input.FirstName, output.FirstName);
@@ -146,8 +154,8 @@ namespace Nap.Tests.Formatters
             };
 
             // Act
-            var json = _jsonFormatter.Serialize(input);
-            var output = _jsonFormatter.Deserialize<ParentTestClass>(json);
+            var json = _xmlFormatter.Serialize(input);
+            var output = _xmlFormatter.Deserialize<ParentTestClass>(json);
 
             // Assert
             for (int i = 0; i < input.Children.Count(); i++)
@@ -157,6 +165,25 @@ namespace Nap.Tests.Formatters
             }
             Assert.AreEqual(input.Spouse.FirstName, output.Spouse.FirstName);
             Assert.AreEqual(input.Spouse.LastName, output.Spouse.LastName);
+        }
+
+        private sealed class XmlValidatorChecks
+        {
+            internal bool IsValid { get; private set; } = true;
+
+            internal IList<string> Errors { get; } = new List<string>();
+
+            internal void HandleValidationError(object sender, ValidationEventArgs e)
+            {
+                switch (e.Severity)
+                {
+                    case XmlSeverityType.Error:
+                    case XmlSeverityType.Warning:
+                        IsValid = false;
+                        Errors.Add(e.Message);
+                        break;
+                }
+            }
         }
     }
 }

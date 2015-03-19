@@ -10,7 +10,7 @@ namespace Nap.Configuration
     public interface INapConfig
     {
         /// <summary>
-        /// Gets or sets the serializers that can be used to both serialize and deserialize content.
+        /// Gets or sets the formatters that can be used to both serialize and deserialize content.
         /// </summary>
 		IFormattersConfig Formatters { get; }
 
@@ -30,7 +30,7 @@ namespace Nap.Configuration
         IQueryParameters QueryParameters { get; }
 
         /// <summary>
-        /// Gets or sets the Content-Type format, and which serializer to use on serialization.
+        /// Gets or sets the Content-Type format, and which formatter to use on serialization.
         /// Available options are at <see cref="RequestFormat"/>.
         /// </summary>
         string Serialization { get; set; }

@@ -73,7 +73,7 @@
     <Compile Include="Finders\EnumerableNodeFinder.cs" />
     <Compile Include="Finders\NodeFinder.cs" />
     <Compile Include="Factories\Base\IBinderFactory.cs" />
-    <Compile Include="NapHtmlSerializer.cs" />
+    <Compile Include="NapHtmlFormatter.cs" />
     <Compile Include="Parsers\Base\IParser.cs" />
     <Compile Include="Parsers\HtmlElementParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

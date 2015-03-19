@@ -160,7 +160,7 @@ namespace Nap
 		/// <typeparam name="T">The type to deserialize the object to.</typeparam>
 		/// <returns>
 		/// A task, that when run returns the body content deserialized to the object <typeparamref name="T"/>,
-		/// using the serializer matching <see cref="INapConfig.Formatters"/>.
+		/// using the formatter matching <see cref="INapConfig.Formatters"/>.
 		/// </returns>
 		public async Task<T> ExecuteAsync<T>() where T : class, new()
 		{
@@ -168,7 +168,7 @@ namespace Nap
 			if (napPluginResult != null)
 				return napPluginResult;
 			var responseWithContent = await RunRequestAsync();
-			var toReturn = GetSerializer(responseWithContent.Response.Content.Headers.ContentType.MediaType).Deserialize<T>(responseWithContent.Content) ?? new T();
+			var toReturn = GetFormatter(responseWithContent.Response.Content.Headers.ContentType.MediaType).Deserialize<T>(responseWithContent.Content) ?? new T();
 
 			if (_config.FillMetadata)
 			{
@@ -201,7 +201,7 @@ namespace Nap
 		/// <typeparam name="T">The type to deserialize the object to.</typeparam>
 		/// <returns>
 		/// The body content deserialized to the object <typeparamref name="T"/>,
-		/// using the serializer matching <see cref="INapConfig.Formatters"/>.
+		/// using the formatter matching <see cref="INapConfig.Formatters"/>.
 		/// </returns>
 		public T Execute<T>() where T : class, new()
 		{
@@ -303,11 +303,11 @@ namespace Nap
 		}
 
 		/// <summary>
-		/// Gets the serializer for a given content type.
+		/// Gets the formatter for a given content type.
 		/// </summary>
 		/// <param name="contentType">Type of the content (eg. application/json).</param>
-		/// <returns>The serializer matching the content type.</returns>
-		private INapFormatter GetSerializer(string contentType)
+		/// <returns>The formatter matching the content type.</returns>
+		private INapFormatter GetFormatter(string contentType)
 		{
 			if (contentType.ToLower().Contains("/json"))
 				return _config.Formatters.AsDictionary()[RequestFormat.Json];

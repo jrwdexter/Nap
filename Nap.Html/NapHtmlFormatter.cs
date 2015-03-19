@@ -9,7 +9,7 @@ using Nap.Html.Factories;
 
 namespace Nap.Html
 {
-	public class NapHtmlSerializer : INapFormatter
+	public class NapHtmlFormatter : INapFormatter
 	{
 		public string ContentType => "text/html";
 

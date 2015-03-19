@@ -6,7 +6,7 @@ using Nap.Formatters.Base;
 namespace Nap.Formatters
 {
     /// <summary>
-    /// The serializer corresponding to the "application/x-www-form-urlencoded" MIME type.
+    /// The formatter corresponding to the "application/x-www-form-urlencoded" MIME type.
     /// </summary>
     /// <remarks>Does not support the <see cref="Deserialize{T}"/> method.</remarks>
     public class NapFormsFormatter : INapFormatter

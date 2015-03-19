@@ -73,11 +73,11 @@
     <Compile Include="Configuration\NapEmptyConfigurationTests.cs" />
     <Compile Include="Configuration\NapConfigurationTests.cs" />
     <Compile Include="Configuration\NapSetupTests.cs" />
-    <Compile Include="Formatters\Base\NapSerializerTestBase.cs" />
-    <Compile Include="Formatters\NapFormsSerializerTests.cs" />
-    <Compile Include="Formatters\NapHtmlSerializerTests.cs" />
-    <Compile Include="Formatters\NapXmlSerializerTests.cs" />
-    <Compile Include="Formatters\NapJsonSerializerTests.cs" />
+    <Compile Include="Formatters\Base\NapFormatterTestBase.cs" />
+    <Compile Include="Formatters\NapFormsFormatterTests.cs" />
+    <Compile Include="Formatters\NapHtmlFormatterTests.cs" />
+    <Compile Include="Formatters\NapXmlFormatterTests.cs" />
+    <Compile Include="Formatters\NapJsonFormatterTests.cs" />
     <Compile Include="NapClientTests.cs" />
     <Compile Include="NapFluentTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

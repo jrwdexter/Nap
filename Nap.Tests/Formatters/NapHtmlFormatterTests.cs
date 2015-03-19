@@ -13,14 +13,14 @@ using Nap.Tests.TestClasses;
 namespace Nap.Tests.Formatters
 {
 	[TestClass]
-	public class NapHtmlSerializerTests : NapSerializerTestBase
+	public class NapHtmlFormatterTests : NapFormatterTestBase
 	{
-		private NapHtmlSerializer _htmlSerializer;
+		private NapHtmlFormatter _htmlFormatter;
 
 		[TestInitialize]
 		public void Setup()
 		{
-			_htmlSerializer = new NapHtmlSerializer();
+			_htmlFormatter = new NapHtmlFormatter();
 		}
 
 		[TestMethod]
@@ -29,7 +29,7 @@ namespace Nap.Tests.Formatters
 		public void GetContentType_EqualsTextHtml()
 		{
 			// Assert
-			Assert.AreEqual("text/html", _htmlSerializer.ContentType);
+			Assert.AreEqual("text/html", _htmlFormatter.ContentType);
 		}
 
 		[TestMethod]
@@ -39,7 +39,7 @@ namespace Nap.Tests.Formatters
 		public void Serialize_NotSupportedExceptionIsThrown()
 		{
 			// Act
-			_htmlSerializer.Serialize("<!DOCTYPE html><html lang=\"en\"><head></head><body></body></html>");
+			_htmlFormatter.Serialize("<!DOCTYPE html><html lang=\"en\"><head></head><body></body></html>");
 		}
 
 		[TestMethod]
@@ -49,7 +49,7 @@ namespace Nap.Tests.Formatters
 		public void Deserialize_Null_ThrowsException()
 		{
 			// Act
-			_htmlSerializer.Deserialize<TestClass>(null);
+			_htmlFormatter.Deserialize<TestClass>(null);
 		}
 
 		[TestMethod]
@@ -59,7 +59,7 @@ namespace Nap.Tests.Formatters
 		public void Deserialize_IntoClassWithoutParameterlessConstructor_ThrowsException()
 		{
 			// Act
-			_htmlSerializer.Deserialize<RequiresParameters_TestClass>("");
+			_htmlFormatter.Deserialize<RequiresParameters_TestClass>("");
 		}
 
 		[TestMethod]
@@ -71,7 +71,7 @@ namespace Nap.Tests.Formatters
 			string html = GetFileContents("TestClass.html");
 
 			// Act
-			var result = _htmlSerializer.Deserialize<TestClass>(html);
+			var result = _htmlFormatter.Deserialize<TestClass>(html);
 
 			// Assert
 			Assert.IsNotNull(result);
@@ -86,7 +86,7 @@ namespace Nap.Tests.Formatters
 			var html = GetFileContents("TestClass.html");
 
 			// Act
-			var person = _htmlSerializer.Deserialize<TestClass>(html);
+			var person = _htmlFormatter.Deserialize<TestClass>(html);
 
 			// Assert
 			Assert.AreEqual("John", person.FirstName);
@@ -102,7 +102,7 @@ namespace Nap.Tests.Formatters
 			var html = GetFileContents("ParentTestClass.html");
 
 			// Act
-			var person = _htmlSerializer.Deserialize<ParentTestClass>(html);
+			var person = _htmlFormatter.Deserialize<ParentTestClass>(html);
 
 			// Assert
 			Assert.AreEqual("Jeff", person.Spouse.FirstName);

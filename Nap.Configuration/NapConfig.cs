@@ -25,7 +25,7 @@ namespace Nap.Configuration
 		}
 
 		/// <summary>
-		/// Gets or sets the serializers that can be used to both serialize and deserialize content.
+		/// Gets or sets the formatters that can be used to both serialize and deserialize content.
 		/// </summary>
 		[ConfigurationProperty("formatters", IsDefaultCollection = false)]
 		[ConfigurationCollection(typeof(FormattersConfig), AddItemName = "add", RemoveItemName = "remove", ClearItemsName = "clear")]
@@ -36,7 +36,7 @@ namespace Nap.Configuration
 		}
 
 		/// <summary>
-		/// Gets or sets the serializers that can be used to both serialize and deserialize content.
+		/// Gets or sets the formatters that can be used to both serialize and deserialize content.
 		/// </summary>
 		IFormattersConfig INapConfig.Formatters => Formatters;
 

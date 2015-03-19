@@ -8,7 +8,7 @@ using Nap.Tests.TestClasses;
 
 namespace Nap.Tests.Formatters.Base
 {
-    public abstract class NapSerializerTestBase
+    public abstract class NapFormatterTestBase
     {
         protected static string GetFileContents(string fileName)
         {

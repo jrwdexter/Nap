@@ -1,28 +1,28 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Serialization;
 
 using Nap.Exceptions;
 using Nap.Formatters.Base;
-using Newtonsoft.Json;
 
 namespace Nap.Formatters
 {
     /// <summary>
-    /// The serializer corresponding to the "application/json" MIME type.
-    /// Utilizes the Newtonsoft.Json library for serialization/deserialization.
+    /// The formatter corresponding to the "application/xml" MIME type.
+    /// Utilizes <see cref="XmlSerializer"/> to perform serialization/deserialization.
     /// </summary>
-    public class NapJsonFormatter : INapFormatter
+    public class NapXmlFormatter : INapFormatter
     {
         /// <summary>
         /// Gets the MIME type corresponding to a given implementation of the <see cref="INapFormatter"/> interface.
-        /// Returns "application/json".
+        /// Returns "application/xml".
         /// </summary>
-        public string ContentType => "application/json";
+        public string ContentType => "application/xml";
 
         /// <summary>
         /// Converts a serialized value to a C# object.  A new object is created in this process.
-        /// Uses <see cref="Newtonsoft.Json.JsonConvert" />.
         /// </summary>
         /// <typeparam name="T">The type of object that should be created from the serializedvalue.</typeparam>
         /// <param name="serialized">The serialized data; such as from a REST request.</param>
@@ -31,10 +31,11 @@ namespace Nap.Formatters
         /// <exception cref="ConstructorNotFoundException">Thrown when a paremeterless constructor is not found for type <typeparamref name="T"/>.</exception>
         /// <remarks>All properties that are being hydrated by deserialization must have public setters.</remarks>
         /// <example><code>
-        /// {
-        ///     "FirstName" : "John",
-        ///     "LastName" : "Doe"
-        /// }
+        /// &lt;?xml version="1.0" encoding="utf-16"?&gt;
+        /// &lt;Person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+        ///    &lt;FirstName&gt;John&lt;/FirstName&gt;
+        ///    &lt;LastName&gt;Doe&lt;/LastName&gt;
+        /// &lt;/Person&gt;
         /// </code>
         /// would populate an object like
         /// <code>
@@ -47,12 +48,16 @@ namespace Nap.Formatters
         /// </example>
         public T Deserialize<T>(string serialized)
         {
-            if (serialized == null)
+            if(serialized == null)
                 throw new ArgumentNullException(nameof(serialized), "Cannot deserialize null.");
             if (typeof(T).GetTypeInfo().DeclaredConstructors.All(c => c.ContainsGenericParameters || c.GetParameters().Any()))
                 throw new ConstructorNotFoundException("Paremeterless constructor was not fuond.");
 
-            return JsonConvert.DeserializeObject<T>(serialized);
+            var xmlSerializer = new XmlSerializer(typeof(T));
+            using (var sr = new StringReader(serialized))
+            {
+                return (T)xmlSerializer.Deserialize(sr);
+            }
         }
 
         /// <summary>
@@ -72,18 +77,24 @@ namespace Nap.Formatters
         /// </code>
         /// would be serialized as
         /// <code>
-        /// {
-        ///     "FirstName" : "John",
-        ///     "LastName" : "Doe"
-        /// }
+        /// &lt;?xml version="1.0" encoding="utf-16"?&gt;
+        /// &lt;Person xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+        ///    &lt;FirstName&gt;John&lt;/FirstName&gt;
+        ///    &lt;LastName&gt;Doe&lt;/LastName&gt;
+        /// &lt;/Person&gt;
         /// </code>
         /// </example>
         public string Serialize(object graph)
         {
-            if (graph == null)
+            if(graph == null)
                 throw new ArgumentNullException(nameof(graph), "Cannot serialize a null object graph.");
 
-            return JsonConvert.SerializeObject(graph);
+            var xmlSerializer = new XmlSerializer(graph.GetType());
+            using (var textWriter = new StringWriter())
+            {
+                xmlSerializer.Serialize(textWriter, graph);
+                return textWriter.ToString();
+            }
         }
     }
 }

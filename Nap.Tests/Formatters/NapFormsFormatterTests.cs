@@ -9,7 +9,7 @@ using Nap.Tests.TestClasses;
 namespace Nap.Tests.Formatters
 {
     [TestClass]
-    public class NapFormsSerializerTests : NapSerializerTestBase
+    public class NapFormsFormatterTests : NapFormatterTestBase
     {
         private NapFormsFormatter _formsFormatter;
 

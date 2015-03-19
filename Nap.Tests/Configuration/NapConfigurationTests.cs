@@ -75,7 +75,7 @@ namespace Nap.Tests.Configuration
 			Assert.IsNotNull(formatters);
 			Assert.AreEqual(4, formatters.Count, "App.Config should populate one formatter, and 3 should be added by default.");
 			Assert.AreEqual("text/html", formatters.Last().Key);
-			Assert.IsInstanceOfType(formatters.Last().Value, typeof(NapHtmlSerializer));
+			Assert.IsInstanceOfType(formatters.Last().Value, typeof(NapHtmlFormatter));
 		}
 
         [TestMethod]

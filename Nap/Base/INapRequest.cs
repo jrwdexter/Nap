@@ -69,7 +69,7 @@ namespace Nap
         /// <typeparam name="T">The type to deserialize the object to.</typeparam>
         /// <returns>
         /// A task, that when run returns the body content deserialized to the object <typeparamref name="T"/>,
-        /// using the serializer matching the incoming request mime type.
+        /// using the formatter matching the incoming request mime type.
         /// </returns>
         Task<T> ExecuteAsync<T>() where T : class, new();
 
@@ -85,7 +85,7 @@ namespace Nap
         /// <typeparam name="T">The type to deserialize the object to.</typeparam>
         /// <returns>
         /// The body content deserialized to the object <typeparamref name="T"/>,
-        /// using the serializer matching the incoming request mime type.
+        /// using the formatter matching the incoming request mime type.
         /// </returns>
         T Execute<T>() where T : class, new();
     }
