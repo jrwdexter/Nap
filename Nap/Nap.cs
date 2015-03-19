@@ -3,6 +3,7 @@ using System.Net.Http;
 using Nap.Configuration;
 using Nap.Plugins.Base;
 using System;
+using Nap.Exceptions;
 
 namespace Nap
 {
@@ -179,11 +180,11 @@ namespace Nap
 			try
 			{
 				if (!NapSetup.Plugins.Aggregate(true, (current, plugin) => current && plugin.AfterNapRequestCreation(request)))
-					throw new Exception("Nap post-request creation aborted."); // TODO: Specific exception
+					throw new NapPluginException("Nap post-request creation aborted.");
 			}
 			catch (Exception e)
 			{
-				throw new Exception("Nap post-request creation aborted.  See inner exception for details.", e); // TODO: Specific exception
+				throw new NapPluginException("Nap post-request creation aborted.  See inner exception for details.", e);
 			}
 		}
 	}

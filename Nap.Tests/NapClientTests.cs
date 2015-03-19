@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nap.Configuration;
 using Nap.Exceptions;
+using System.Net.Http.Headers;
 
 namespace Nap.Tests
 {
@@ -119,7 +120,9 @@ namespace Nap.Tests
             {
                 Request = request;
                 RequestContent = request.Content?.ReadAsStringAsync().Result;
-                return new HttpResponseMessage { StatusCode = System.Net.HttpStatusCode.OK, Content = new StringContent(string.Empty) };
+                var content = new StringContent(string.Empty);
+                content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+                return new HttpResponseMessage { StatusCode = System.Net.HttpStatusCode.OK, Content = content };
             }
         }
 
