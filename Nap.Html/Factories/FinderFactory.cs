@@ -6,6 +6,7 @@ using System.Linq;
 using Nap.Html.Exceptions;
 using Nap.Html.Factories.Base;
 using Nap.Html.Finders.Base;
+using System.Diagnostics;
 
 namespace Nap.Html.Factories
 {
@@ -87,7 +88,7 @@ namespace Nap.Html.Factories
 			if (type == null)
 				throw new ArgumentNullException(nameof(type));
 
-			var finderInterface = finder.GetType().GetInterfaces().FirstOrDefault(i => i.IsInstanceOfType(typeof(IFinder<>)));
+			var finderInterface = finder.GetType().GetInterfaces().FirstOrDefault(i => i.GetGenericTypeDefinition() == typeof(IFinder<>));
 			if (finderInterface == null)
 				return false;
 

@@ -9,6 +9,8 @@ using Nap.Html.Binders.Base;
 using Nap.Html.Enum;
 using Nap.Html.Exceptions;
 using Nap.Html.Factories;
+using Nap.Exceptions;
+using System.Reflection;
 
 namespace Nap.Html.Binders
 {
@@ -41,15 +43,23 @@ namespace Nap.Html.Binders
 			}
 
 			var properties = outputType.GetProperties().Where(p => p.CanWrite);
-			var toReturn = Activator.CreateInstance(outputType);
+			object toReturn;
+			try
+			{
+				toReturn = Activator.CreateInstance(outputType);
+			}
+			catch (MissingMethodException ex)
+			{
+				throw new ConstructorNotFoundException("Parameterless constructor was not found", ex);
+			}
 
 			foreach (var property in properties)
 			{
 				var attribute = property.GetCustomAttributes(typeof(BaseHtmlAttribute), true).FirstOrDefault() as BaseHtmlAttribute;
 				if (attribute != null)
 				{
-					var enumerableInterface = property.PropertyType.GetInterfaces().FirstOrDefault(i => i == typeof(IEnumerable<>));
-					var isEnumerable = enumerableInterface != null;
+					var enumerableInterface = property.PropertyType.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+					var isEnumerable = enumerableInterface != null && property.PropertyType != typeof(string);
 
 					// Find
 					var typeOfFinder = isEnumerable ? typeof(IEnumerable<HtmlNode>) : typeof(HtmlNode);
@@ -61,12 +71,15 @@ namespace Nap.Html.Binders
 						object value;
 						var nodes = nodeForProperty as IEnumerable<HtmlNode>;
 						var singleNode = nodeForProperty as HtmlNode;
-						
+
 						if (nodes != null && isEnumerable)
 						{
 							// Enumerable case
 							var enumerableType = enumerableInterface.GetGenericArguments().First();
+							var castTypeMethod = typeof(Enumerable).GetMethod("Cast", BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(enumerableType);
+							var toListMethod = typeof(Enumerable).GetMethod("ToList", BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(enumerableType);
 							value = nodes.Select(node => ParseAndBind(attribute, enumerableType, node));
+							value = toListMethod.Invoke(null, new[] { castTypeMethod.Invoke(null, new[] { value }) });
 						}
 						else if (singleNode != null)
 						{

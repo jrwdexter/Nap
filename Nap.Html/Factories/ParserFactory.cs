@@ -88,7 +88,7 @@ namespace Nap.Html.Factories
 			if (type == null)
 				throw new ArgumentNullException(nameof(type));
 
-			var parserInterface = parser.GetType().GetInterfaces().FirstOrDefault(i => i.IsInstanceOfType(typeof(IParser<>)));
+			var parserInterface = parser.GetType().GetInterfaces().FirstOrDefault(i => i.GetGenericTypeDefinition() == typeof(IParser<>));
 			if (parserInterface == null)
 				return false;
 

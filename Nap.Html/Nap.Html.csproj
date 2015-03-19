@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nap.Html</RootNamespace>
     <AssemblyName>Nap.Html</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -73,7 +73,7 @@
     <Compile Include="Finders\EnumerableNodeFinder.cs" />
     <Compile Include="Finders\NodeFinder.cs" />
     <Compile Include="Factories\Base\IBinderFactory.cs" />
-    <Compile Include="HtmlSerializer.cs" />
+    <Compile Include="NapHtmlSerializer.cs" />
     <Compile Include="Parsers\Base\IParser.cs" />
     <Compile Include="Parsers\HtmlElementParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

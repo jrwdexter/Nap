@@ -110,7 +110,7 @@ namespace Nap.Html.Factories
 			if (type == null)
 				throw new ArgumentNullException(nameof(type));
 
-			var binderInterface = binder.GetType().GetInterfaces().FirstOrDefault(i => i.IsInstanceOfType(typeof(IBinder<>)));
+			var binderInterface = binder.GetType().GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IBinder<>));
 			if (binderInterface == null)
 				return false;
 

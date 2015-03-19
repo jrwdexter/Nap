@@ -9,7 +9,7 @@ using Nap.Html.Factories;
 
 namespace Nap.Html
 {
-	public class HtmlSerializer : INapFormatter
+	public class NapHtmlSerializer : INapFormatter
 	{
 		public string ContentType => "text/html";
 
@@ -47,15 +47,14 @@ namespace Nap.Html
 		/// </example>
 		public T Deserialize<T>(string serialized)
 		{
+			if (serialized == null)
+				throw new ArgumentNullException(nameof(serialized));
+
 			try
 			{
 				return (T)BinderFactory.Instance.GetBinder<T>().Handle(serialized, null, typeof(T));
 			}
 			catch (ArgumentNullException ex)
-			{
-				throw new NapBindingException("An issue occurred with HTML binding.  See inner exception for details.", ex);
-			}
-			catch (NapException ex)
 			{
 				throw new NapBindingException("An issue occurred with HTML binding.  See inner exception for details.", ex);
 			}

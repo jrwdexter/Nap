@@ -18,7 +18,7 @@ namespace Nap.Html.Factories.Base
 		/// </summary>
 		protected BaseFactory()
 		{
-			var binderTypes = typeof(BaseFactory<>).Assembly.GetTypes().Where(t => typeof(T).IsAssignableFrom(t));
+			var binderTypes = typeof(BaseFactory<>).Assembly.GetTypes().Where(t => typeof(T).IsAssignableFrom(t) && !t.IsAbstract);
 			var binderInstances = binderTypes.Select(Activator.CreateInstance).OfType<T>().ToList();
 			_values = new ReadOnlyCollection<T>(binderInstances);
 		}
