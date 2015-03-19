@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Nap</id>
+    <id>Nap.Html</id>
     <version>0.0.2.4</version>
-    <title>Nap</title>
+    <title>Nap.Html</title>
     <authors>Jonathan Dexter</authors>
     <owners>Jonathan Dexter</owners>
     <licenseUrl>https://github.com/mandest/Nap/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/mandest/Nap</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A short and sweet REST client</description>
+    <description>An add-on for Nap to allow binding of HTML elements to POCO elements via CSS selectors.</description>
     <copyright>Copyright 2014</copyright>
-    <tags>REST Fluent HTTP API JSON XML</tags>
+    <tags>REST Fluent HTML Binding Nap</tags>
   </metadata>
 </package>
