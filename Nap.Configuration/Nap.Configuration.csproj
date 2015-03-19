@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="Sections\AdvancedNapConfig.cs" />
     <Compile Include="Sections\AuthenticationNapConfig.cs" />
+    <Compile Include="Sections\FormatterConfig.cs" />
+    <Compile Include="Sections\FormattersConfig.cs" />
     <Compile Include="Utilities\ConfigurationEnumeratorWrapper.cs" />
     <Compile Include="Sections\QueryParameters.cs" />
     <Compile Include="Sections\QueryParameter.cs" />

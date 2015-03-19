@@ -54,6 +54,8 @@
     <Compile Include="Configuration\AuthenticationTypeEnum.cs" />
     <Compile Include="Configuration\Base\IAuthenticationNapConfig.cs" />
     <Compile Include="Configuration\Base\IFederationConfiguration.cs" />
+    <Compile Include="Configuration\Base\IFormatterConfig.cs" />
+    <Compile Include="Configuration\Base\IFormattersConfig.cs" />
     <Compile Include="Configuration\Base\IHeader.cs" />
     <Compile Include="Configuration\Base\IHeaders.cs" />
     <Compile Include="Configuration\Base\INapConfig.cs" />
@@ -63,9 +65,11 @@
     <Compile Include="Configuration\Base\IQueryParameters.cs" />
     <Compile Include="Configuration\EmptyAdvancedNapConfig.cs" />
     <Compile Include="Configuration\EmptyAuthenticationNapConfig.cs" />
+    <Compile Include="Configuration\EmptyFormatterConfig.cs" />
     <Compile Include="Configuration\EmptyHeader.cs" />
     <Compile Include="Configuration\EmptyHeaders.cs" />
     <Compile Include="Configuration\EmptyNapConfig.cs" />
+    <Compile Include="Configuration\EmptyFormattersConfig.cs" />
     <Compile Include="Configuration\EmptyProxyNapConfig.cs" />
     <Compile Include="Configuration\EmptyQueryParameter.cs" />
     <Compile Include="Configuration\EmptyQueryParameters.cs" />

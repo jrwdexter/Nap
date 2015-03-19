@@ -136,15 +136,15 @@ namespace Nap.Tests.Configuration
 
         private sealed class TestNapConfig : INapConfig
         {
-            public Dictionary<RequestFormat, INapFormatter> Serializers { get; set; }
+	        public IFormattersConfig Formatters { get; set; }
 
-            public string BaseUrl { get; set; }
+	        public string BaseUrl { get; set; }
 
             public IHeaders Headers { get; set; }
 
             public IQueryParameters QueryParameters { get; set; }
 
-            public RequestFormat Serialization { get; set; }
+	        string INapConfig.Serialization { get; set; }
 
             public IAdvancedNapConfig Advanced { get; set; }
 

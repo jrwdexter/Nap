@@ -2,7 +2,7 @@ namespace Nap.Formatters.Base
 {
     /// <summary>
     /// The interface that needs to be implemented for any sort of serialization technique.
-    /// Serializers in Nap can be used on both request and response objects seperately.
+    /// Formatters in Nap can be used on both request and response objects seperately.
     /// (for example, a request could be serialized using JSON, while a response could be deserialized using XML).
     /// </summary>
     public interface INapFormatter

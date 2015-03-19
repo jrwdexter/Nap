@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using Nap.Formatters.Base;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Nap.Configuration
 {
@@ -11,7 +12,7 @@ namespace Nap.Configuration
         /// <summary>
         /// Gets or sets the serializers that can be used to both serialize and deserialize content.
         /// </summary>
-        Dictionary<RequestFormat, INapFormatter> Serializers { get; set; }
+		IFormattersConfig Formatters { get; }
 
         /// <summary>
         /// Gets or sets the optional base URL for easy requests.
@@ -30,8 +31,9 @@ namespace Nap.Configuration
 
         /// <summary>
         /// Gets or sets the Content-Type format, and which serializer to use on serialization.
+        /// Available options are at <see cref="RequestFormat"/>.
         /// </summary>
-        RequestFormat Serialization { get; set; }
+        string Serialization { get; set; }
 
         /// <summary>
         /// Gets or sets the advanced portion of the configuration.

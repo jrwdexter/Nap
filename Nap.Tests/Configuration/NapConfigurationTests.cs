@@ -9,6 +9,7 @@ using Nap.Configuration;
 using Nap.Formatters.Base;
 using Nap.Configuration.Sections;
 using Nap.Exceptions;
+using Nap.Html;
 
 namespace Nap.Tests.Configuration
 {
@@ -62,6 +63,20 @@ namespace Nap.Tests.Configuration
             Assert.AreEqual("testQueryParameter", queryParameters.First().Key);
             Assert.AreEqual("testQueryParameterValue", queryParameters.First().Value);
         }
+
+        [TestMethod]
+        [TestCategory("Configuration")]
+		[TestCategory("Nap.Html")]
+		public void GetConfiguration_FromConfigFile_Formatters_Match()
+		{
+			var formatters = Nap.Lets.Config.Formatters.AsDictionary();
+
+			// Assert
+			Assert.IsNotNull(formatters);
+			Assert.AreEqual(4, formatters.Count, "App.Config should populate one formatter, and 3 should be added by default.");
+			Assert.AreEqual("text/html", formatters.Last().Key);
+			Assert.IsInstanceOfType(formatters.Last().Value, typeof(NapHtmlSerializer));
+		}
 
         [TestMethod]
         [TestCategory("Configuration")]

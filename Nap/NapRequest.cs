@@ -1,17 +1,17 @@
 using System;
+using System.Reflection;
+
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Reflection;
 using System.Threading.Tasks;
+
 using Nap.Configuration;
 using Nap.Formatters.Base;
-using Nap.Proxies;
-using System.Diagnostics;
 using Nap.Plugins.Base;
-using System.Linq.Expressions;
+using Nap.Proxies;
 
 namespace Nap
 {
@@ -96,7 +96,7 @@ namespace Nap
 		public INapRequest IncludeBody(object body)
 		{
 			RunBooleanPluginMethod(p => p.BeforeRequestSerialization(this), "Nap plugin returned false.  Request serialization cancelled.");
-			_content = _config.Serializers[_config.Serialization].Serialize(body);
+			_content = _config.Formatters.AsDictionary()[_config.Serialization].Serialize(body);
 			RunBooleanPluginMethod(p => p.AfterRequestSerialization(this), "Nap plugin returned false.  Request post-serialization cancelled.");
 			return this;
 		}
@@ -160,7 +160,7 @@ namespace Nap
 		/// <typeparam name="T">The type to deserialize the object to.</typeparam>
 		/// <returns>
 		/// A task, that when run returns the body content deserialized to the object <typeparamref name="T"/>,
-		/// using the serializer matching <see cref="INapConfig.Serializers"/>.
+		/// using the serializer matching <see cref="INapConfig.Formatters"/>.
 		/// </returns>
 		public async Task<T> ExecuteAsync<T>() where T : class, new()
 		{
@@ -201,7 +201,7 @@ namespace Nap
 		/// <typeparam name="T">The type to deserialize the object to.</typeparam>
 		/// <returns>
 		/// The body content deserialized to the object <typeparamref name="T"/>,
-		/// using the serializer matching <see cref="INapConfig.Serializers"/>.
+		/// using the serializer matching <see cref="INapConfig.Formatters"/>.
 		/// </returns>
 		public T Execute<T>() where T : class, new()
 		{
@@ -235,7 +235,7 @@ namespace Nap
 					content.Headers.ContentType.MediaType = contentType.Value;
 				}
 				else
-					content.Headers.ContentType.MediaType = _config.Serializers[_config.Serialization].ContentType;
+					content.Headers.ContentType.MediaType = _config.Formatters.AsDictionary()[_config.Serialization].ContentType;
 
 				HttpResponseMessage response = null;
 				if (_method == HttpMethod.Get)
@@ -310,10 +310,10 @@ namespace Nap
 		private INapFormatter GetSerializer(string contentType)
 		{
 			if (contentType.ToLower().Contains("/json"))
-				return _config.Serializers[RequestFormat.Json];
+				return _config.Formatters.AsDictionary()[RequestFormat.Json];
 			if (contentType.ToLower().Contains("/xml"))
-				return _config.Serializers[RequestFormat.Xml];
-			return _config.Serializers[RequestFormat.Json];
+				return _config.Formatters.AsDictionary()[RequestFormat.Xml];
+			return _config.Formatters.AsDictionary()[RequestFormat.Json];
 		}
 
 		private void RunBooleanPluginMethod(Func<IPlugin, bool> pluginMethod, string errorMessage)
