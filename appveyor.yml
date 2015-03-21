@@ -18,17 +18,19 @@ after_test:
     ./scripts/SetVersion.ps1
 
 # Master branch deployments
-branches:
-  only:
-    - master
-  configuration: Release
-  deploy:
-    provider: Nuget
-    api_key: 
-      secure: ELbN5jzU0YJ7y3qZsMv6OTGmVVkVgBIaUVkWu2GhamhjCTnYQzNs+VSoXdZWs7Jw
-    artifact: /.*\.nupkg/
+-
+  branches:
+    only:
+      - master
+    configuration: Release
+    deploy:
+      provider: Nuget
+      api_key: 
+        secure: ELbN5jzU0YJ7y3qZsMv6OTGmVVkVgBIaUVkWu2GhamhjCTnYQzNs+VSoXdZWs7Jw
+      artifact: /.*\.nupkg/
 
-branches:
-  only:
-    - develop
-  configuration: Debug
+-
+  branches:
+    only:
+      - develop
+    configuration: Debug
