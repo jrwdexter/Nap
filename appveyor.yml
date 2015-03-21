@@ -7,6 +7,9 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
+init:
+- ps: >-
+    ./scripts/SetReleaseVersion.ps1
 install:
 - nuget restore
 before_build:
@@ -15,7 +18,7 @@ build:
   verbosity: minimal
 after_test:
 - ps: >-
-    ./scripts/SetVersion.ps1
+    ./scripts/BuildPackages.ps1
 
 #---------------------------------#
 #      general configuration      #
@@ -40,7 +43,7 @@ deploy:
   provider: NuGet
   api_key: 
     secure: ELbN5jzU0YJ7y3qZsMv6OTGmVVkVgBIaUVkWu2GhamhjCTnYQzNs+VSoXdZWs7Jw
-  artifact: /.*\.nupkg/
+  artifact: /.*\/.*\.nupkg/
   on:
     branch: master
     appveyor_repo_tag: true

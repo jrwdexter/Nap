@@ -8,5 +8,5 @@ $root = (split-path -parent $MyInvocation.MyCommand.Definition) + '\..'
   $content = (Get-Content $root\$_\$_.nuspec) 
   $content = $content -replace '\$version\$',$versionStr
   $content | Out-File $root\$_\$_.compiled.nuspec
-  nuget pack $root\$_\$_.compiled.nuspec 
+  nuget pack $root\$_\$_.compiled.nuspec -Properties Configuration=Release
 }
