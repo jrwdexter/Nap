@@ -17,12 +17,15 @@ after_test:
 - ps: >-
     ./scripts/SetVersion.ps1
 
-# Branch deployments
+#---------------------------------#
+#      general configuration      #
+#---------------------------------#
 branches:
   only:
     - master
     - develop
-  configuration: Release
+
+configuration: Release
 
 #---------------------------------#
 #      artifacts configuration    #
