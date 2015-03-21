@@ -18,7 +18,7 @@ Nap is in Beta, and not ready to be used on production projects yet.
 **Nap** is short.
 
 ```c#
-var nap = new Nap("http://example.com/");
+var nap = new NapClient("http://example.com/");
 var dogs = await nap.Get("/dogs").ExecuteAsync<Dogs>();
 var cats = await nap.Get("http://otherexample.com/cats").ExecuteAsync<Cats>();
 ```
@@ -26,7 +26,7 @@ var cats = await nap.Get("http://otherexample.com/cats").ExecuteAsync<Cats>();
 Or, even shorter!
 
 ```c#
-var dogs = Nap.Lets.Get("http://example.com/dogs").ExecuteAsync<Dogs>()
+var dogs = NapClient.Lets.Get("http://example.com/dogs").ExecuteAsync<Dogs>()
 ```
 
 ## Sweet
@@ -35,11 +35,11 @@ var dogs = Nap.Lets.Get("http://example.com/dogs").ExecuteAsync<Dogs>()
 
 ```c#
 var ingredients = new { Flour = 10, Eggs = 2, CakeMix = 1 };
-var cake = Nap.Lets.Post("http://example.com/bake-cake")
-                   .IncludeQueryParameter("temp", "425F")
-                   .IncludeHeader("sugar", "100g")
-                   .IncludeBody(ingredients)
-                   .Execute<Cake>();
+var cake = NapClient.Lets.Post("http://example.com/bake-cake")
+                         .IncludeQueryParameter("temp", "425F")
+                         .IncludeHeader("sugar", "100g")
+                         .IncludeBody(ingredients)
+                         .Execute<Cake>();
 ```
 
 ## Configurable
@@ -81,17 +81,17 @@ And make your **Naps** even easier:
 
 ```c#
 var ingredients = new { Flour = 10, Eggs = 2, CakeMix = 1 };
-Nap.Lets.Post("/bake-cake")
-        .IncludeBody(ingredients)
-        .Execute<Cake>();
+NapClient.Lets.Post("/bake-cake")
+              .IncludeBody(ingredients)
+              .Execute<Cake>();
 ```
 
 And still fully malleable:
 
 ```c#
-Nap.Lets.Get("/potato")
-        .DoNot.IncludeHeader("sugar")
-        .Execute<Potato>();
+NapClient.Lets.Get("/potato")
+              .DoNot.IncludeHeader("sugar")
+              .Execute<Potato>();
 ```
 
 Nap supports 3 levels of cascading configuration: *.config < Nap() < Fluent.  In this example:
@@ -110,7 +110,7 @@ Nap supports 3 levels of cascading configuration: *.config < Nap() < Fluent.  In
 ```
 
 ```c#
-var nap = new Nap();
+var nap = new NapClient();
 nap.Config.QueryParameters["temp"] = "300F";
 var cake = nap.Get("/cake")
               .IncludeHeader("sugar", "10g")
@@ -124,7 +124,7 @@ The end result would perform an HTTP GET Request to `http://example.com/cake` (f
 Most of all, **Nap** is aimed at bringing the full power of the RESTful requests to your projects.  Although few methods are exposed at the `INapRequest` level, the `INapRequest.Advanced` property quickly allows access to many more features:
 
 ```c#
-var cake = Nap.Lets.Get("http://example.com/cake")
+var cake = NapClient.Lets.Get("http://example.com/cake")
                    .Advanced
                    .Proxy("http://localhost:8888")
                    .Authentication.Basic("jdoe@example.com", "Password")
@@ -142,9 +142,9 @@ class Cake
   public int StatusCode { get; set; }
 }
 
-var cake = Nap.Lets.Get("http://example.com/cake")
-                   .FillMetadata()
-                   .Execute<Cake>()
+var cake = NapClient.Lets.Get("http://example.com/cake")
+                         .FillMetadata()
+                         .Execute<Cake>()
 ```
 
 In the above example, if the URL cake has no property called "Status Code", it would be populated by the `FillMetadata()` flag, and result in the status code of the request.
