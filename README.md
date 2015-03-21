@@ -14,8 +14,8 @@ Nap is in Beta, and not ready to be used on production projects yet.
 **Nap** is a short and sweet REST client.  It was made with the purpose of streamlining REST requests *as much as possible*.
 
 ## Plugins and Extensions
-[Nap.Configuration](Nap.Configuration/README.md)
-[Nap.Html](Nap.Html/README.md)
+ - [Nap.Configuration](Nap.Configuration/README.md)
+ - [Nap.Html](Nap.Html/README.md)
 
 ## Short
 
