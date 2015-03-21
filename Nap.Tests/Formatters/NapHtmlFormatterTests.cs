@@ -5,10 +5,11 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nap.Exceptions;
-using Nap.Formatters;
 using Nap.Html;
 using Nap.Tests.Formatters.Base;
 using Nap.Tests.TestClasses;
+
+using Nap.Formatters;
 
 namespace Nap.Tests.Formatters
 {

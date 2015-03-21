@@ -20,7 +20,7 @@ namespace Nap.Configuration.Sections
     ///   &lt;/QueryParameters&gt;
     /// &lt;Nap&gt;
     /// </c>
-    /// or by configuration on <see cref="Nap.Config"/>.
+    /// or by configuration on <see cref="NapClient.Config"/>.
     /// </example>
     public class QueryParameters : ConfigurationElementCollection, IQueryParameters
     {

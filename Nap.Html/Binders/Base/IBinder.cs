@@ -5,8 +5,8 @@ using System.Linq;
 
 using CsQuery;
 
-using Nap.Html.Enum;
 using Nap.Html.Attributes.Base;
+using Nap.Html.Enum;
 
 namespace Nap.Html.Binders.Base
 {

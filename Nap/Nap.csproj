@@ -81,7 +81,7 @@
     <Compile Include="AuthenticatedNapRequest.cs" />
     <Compile Include="Exceptions\NapPluginException.cs" />
     <Compile Include="Exceptions\NapSerializingException.cs" />
-    <Compile Include="Nap.cs" />
+    <Compile Include="NapClient.cs" />
     <Compile Include="NapRemovableRequest.cs" />
     <Compile Include="NapRequest.cs" />
     <Compile Include="Formatters\Base\INapFormatter.cs" />

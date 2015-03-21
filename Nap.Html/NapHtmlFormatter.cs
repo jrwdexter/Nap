@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Nap.Exceptions.Base;
 using Nap.Formatters.Base;
 using Nap.Html.Exceptions;
 using Nap.Html.Factories;
+
+using Nap.Exceptions.Base;
 
 namespace Nap.Html
 {

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nap.Configuration;
-using Nap.Formatters.Base;
 using Nap.Configuration.Sections;
 using Nap.Exceptions;
 using Nap.Html;
@@ -28,21 +26,21 @@ namespace Nap.Tests.Configuration
         [TestCategory("Configuration")]
         public void GetConfiguration_FromConfigFile_DoesNotThrowException()
         {
-            var config = Nap.Lets.Config;
+            var config = NapClient.Lets.Config;
         }
 
         [TestMethod]
         [TestCategory("Configuration")]
         public void GetConfiguration_FromConfigFile_BaseUrl_Matches()
         {
-            Assert.AreEqual("http://example.com", Nap.Lets.Config.BaseUrl);
+            Assert.AreEqual("http://example.com", NapClient.Lets.Config.BaseUrl);
         }
 
         [TestMethod]
         [TestCategory("Configuration")]
         public void GetConfiguration_FromConfigFile_Headers_Match()
         {
-            var headers = Nap.Lets.Config.Headers.AsDictionary();
+            var headers = NapClient.Lets.Config.Headers.AsDictionary();
 
             // Assert
             Assert.IsNotNull(headers);
@@ -55,7 +53,7 @@ namespace Nap.Tests.Configuration
         [TestCategory("Configuration")]
         public void GetConfiguration_FromConfigFile_QueryParameters_Match()
         {
-            var queryParameters = Nap.Lets.Config.QueryParameters.AsDictionary();
+            var queryParameters = NapClient.Lets.Config.QueryParameters.AsDictionary();
 
             // Assert
             Assert.IsNotNull(queryParameters);
@@ -69,7 +67,7 @@ namespace Nap.Tests.Configuration
 		[TestCategory("Nap.Html")]
 		public void GetConfiguration_FromConfigFile_Formatters_Match()
 		{
-			var formatters = Nap.Lets.Config.Formatters.AsDictionary();
+			var formatters = NapClient.Lets.Config.Formatters.AsDictionary();
 
 			// Assert
 			Assert.IsNotNull(formatters);
@@ -83,7 +81,7 @@ namespace Nap.Tests.Configuration
         [ExpectedException(typeof(NapConfigurationException))]
         public void AddInvalidHeader_ThrowsConfigurationException()
         {
-            var config = Nap.Lets.Config;
+            var config = NapClient.Lets.Config;
             ((Headers)config.Headers).Add(new EmptyHeader());
         }
 
@@ -92,7 +90,7 @@ namespace Nap.Tests.Configuration
         [ExpectedException(typeof(NapConfigurationException))]
         public void AddInvalidQueryParameter_ThrowsConfigurationException()
         {
-            var config = Nap.Lets.Config;
+            var config = NapClient.Lets.Config;
             ((QueryParameters)config.QueryParameters).Add(new EmptyQueryParameter());
         }
     }

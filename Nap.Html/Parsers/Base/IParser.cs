@@ -2,6 +2,7 @@
 using System.Diagnostics.Contracts;
 
 using CsQuery;
+
 using Nap.Html.Attributes.Base;
 using Nap.Html.Finders.Base;
 

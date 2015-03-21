@@ -5,11 +5,12 @@ using System.Linq;
 
 using CsQuery;
 
-using Nap.Html.Binders.Base;
-using Nap.Html.Enum;
 using System.Globalization;
+
 using Nap.Html.Attributes;
 using Nap.Html.Attributes.Base;
+using Nap.Html.Binders.Base;
+using Nap.Html.Enum;
 using Nap.Html.Exceptions;
 using Nap.Html.Formats;
 

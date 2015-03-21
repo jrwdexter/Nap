@@ -1,9 +1,10 @@
 ﻿using System.Linq;
 using System.Net.Http;
-using Nap.Configuration;
-using Nap.Plugins.Base;
 using System;
+
+using Nap.Configuration;
 using Nap.Exceptions;
+using Nap.Plugins.Base;
 
 namespace Nap
 {
@@ -11,37 +12,37 @@ namespace Nap
 	/// Nap is the top level class for performing easy REST requests.
 	/// Requests can be made using <code>new Nap();</code> or <code>Nap.Lets</code>.
 	/// </summary>
-	public class Nap
+	public class NapClient
 	{
-		private static Nap _instance;
+		private static NapClient _instance;
 		private readonly static object _padlock = new object();
 		private INapConfig _config;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Nap"/> class.
+		/// Initializes a new instance of the <see cref="NapClient"/> class.
 		/// </summary>
-		public Nap()
+		public NapClient()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Nap" /> class.
+		/// Initializes a new instance of the <see cref="NapClient" /> class.
 		/// </summary>
 		/// <param name="baseUrl">The base URL to use.</param>
-		public Nap(string baseUrl)
+		public NapClient(string baseUrl)
 			: this()
 		{
 			Config.BaseUrl = baseUrl;
 		}
 
 		/// <summary>
-		/// Gets a new instance of the <see cref="Nap"/>, which can be used to perform requests swiftly.
+		/// Gets a new instance of the <see cref="NapClient"/>, which can be used to perform requests swiftly.
 		/// </summary>
-		public static Nap Lets
+		public static NapClient Lets
 		{
 			get
 			{
-				return new Nap();
+				return new NapClient();
 				//if (_instance == null)
 				//{
 				//    lock (_padlock)

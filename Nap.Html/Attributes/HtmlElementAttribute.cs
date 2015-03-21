@@ -1,6 +1,7 @@
-﻿using Nap.Html.Attributes.Base;
+﻿using System;
+
+using Nap.Html.Attributes.Base;
 using Nap.Html.Enum;
-using System;
 
 namespace Nap.Html.Attributes
 {

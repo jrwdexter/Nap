@@ -1,9 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Nap.Tests
 {
@@ -21,7 +20,7 @@ namespace Nap.Tests
         public void NapFluent_BasicAuth_AddsAuthenticationHeader()
         {
             // Arrange
-            var nap = new Nap();
+            var nap = new NapClient();
 
             // Act
             var request = nap.Get(_exampleUrl).Advanced.Authentication.Basic("johndoe", "password");

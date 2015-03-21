@@ -5,6 +5,7 @@ using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nap.Configuration;
+
 using Nap.Formatters.Base;
 
 namespace Nap.Tests.Configuration

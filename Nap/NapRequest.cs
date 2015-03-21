@@ -9,10 +9,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 
 using Nap.Configuration;
+using Nap.Exceptions;
 using Nap.Formatters.Base;
 using Nap.Plugins.Base;
 using Nap.Proxies;
-using Nap.Exceptions;
 
 namespace Nap
 {

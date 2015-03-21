@@ -4,13 +4,14 @@ using System.Linq;
 
 using CsQuery;
 
+using System.Reflection;
+
+using Nap.Exceptions;
 using Nap.Html.Attributes.Base;
 using Nap.Html.Binders.Base;
 using Nap.Html.Enum;
 using Nap.Html.Exceptions;
 using Nap.Html.Factories;
-using Nap.Exceptions;
-using System.Reflection;
 
 namespace Nap.Html.Binders
 {

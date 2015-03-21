@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Text;
+
 using Nap.Formatters.Base;
 
 namespace Nap.Formatters

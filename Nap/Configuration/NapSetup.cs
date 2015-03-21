@@ -1,7 +1,8 @@
-﻿using Nap.Plugins.Base;
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+
+using Nap.Plugins.Base;
 
 namespace Nap.Configuration
 {

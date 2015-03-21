@@ -3,12 +3,14 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 
 using CsQuery;
+
 using Nap.Html.Attributes;
 using Nap.Html.Attributes.Base;
 using Nap.Html.Enum;
 using Nap.Html.Exceptions;
 using Nap.Html.Finders.Base;
 using Nap.Html.Parsers.Base;
+
 using Nap.Html.Extensions;
 
 namespace Nap.Html.Parsers

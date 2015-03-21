@@ -4,16 +4,18 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nap.Configuration;
+
 using Nap.Exceptions;
 using System.Net.Http.Headers;
+
+using Nap.Configuration;
 
 namespace Nap.Tests
 {
     [TestClass]
     public class NapClientTests
     {
-        private Nap _nap;
+        private NapClient _nap;
         private TestHandler _handler;
         private HttpClient _httpClient;
         private string _url;
@@ -23,7 +25,7 @@ namespace Nap.Tests
         {
             _url = "http://example.com/test";
 
-            _nap = new Nap();
+            _nap = new NapClient();
             _nap.Config.FillMetadata = true;
             _handler = new TestHandler();
             _httpClient = new HttpClient(_handler);
@@ -35,10 +37,10 @@ namespace Nap.Tests
         public void Nap_CreatesNewNap()
         {
             // Arrange
-            var nap = Nap.Lets;
+            var nap = NapClient.Lets;
 
             // Assert
-            Assert.AreNotSame(Nap.Lets, nap);
+            Assert.AreNotSame(NapClient.Lets, nap);
         }
 
         [TestMethod]

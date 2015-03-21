@@ -4,6 +4,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 
 using CsQuery;
+
 using Nap.Html.Attributes.Base;
 using Nap.Html.Binders.Base;
 using Nap.Html.Enum;

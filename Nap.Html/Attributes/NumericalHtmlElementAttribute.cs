@@ -5,9 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Nap.Html.Binders.Base;
 using Nap.Html.Exceptions;
 using Nap.Html.Formats.Base;
+
+using Nap.Html.Binders.Base;
 
 namespace Nap.Html.Attributes
 {

@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 
 using Nap.Configuration.Sections;
+
 using Nap.Formatters;
 using Nap.Formatters.Base;
 

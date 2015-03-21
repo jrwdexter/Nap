@@ -1,5 +1,6 @@
-﻿using Nap.Configuration;
-using System.Net.Http;
+﻿using System.Net.Http;
+
+using Nap.Configuration;
 
 namespace Nap.Plugins.Base
 {
@@ -23,7 +24,7 @@ namespace Nap.Plugins.Base
 		bool BeforeNapRequestCreation();
 
 		/// <summary>
-		/// Method that is run at <see cref="INapRequest"/> creation time (see <see cref="Nap.Get(string)"/> for example) to create a new request object.
+		/// Method that is run at <see cref="INapRequest"/> creation time (see <see cref="NapClient.Get(string)"/> for example) to create a new request object.
 		/// If a non-null value is returned, execution of plugins and default behavior (<see cref="NapRequest"/>) is truncated, and the returned value is used.
 		/// </summary>
 		/// <param name="configuration">The initial configuration used to setup the <see cref="INapRequest"/>.</param>
@@ -33,7 +34,7 @@ namespace Nap.Plugins.Base
 		INapRequest GenerateNapRequest(INapConfig configuration, string url, HttpMethod method);
 
 		/// <summary>
-		/// Method to run a after <see cref="INapRequest"/> creation.  See <see cref="Nap.Get(string)"/> for example.
+		/// Method to run a after <see cref="INapRequest"/> creation.  See <see cref="NapClient.Get(string)"/> for example.
 		/// If <c>false</c> is returned, the <see cref="INapRequest"/> is truncated with an error.
 		/// </summary>
 		/// <returns><c>true</c> to continue <see cref="INapRequest"/> creation and subsequent execution; otherwise, <c>false</c>.</returns>

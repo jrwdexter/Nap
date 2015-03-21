@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using Nap.Configuration;
-using Nap.Formatters.Base;
 
 namespace Nap.Tests.Configuration
 {
@@ -24,7 +20,7 @@ namespace Nap.Tests.Configuration
         [TestCategory("Configuration")]
         public void GetConfiguration_DoesNotThrowException()
         {
-            var config = Nap.Lets.Config;
+            var config = NapClient.Lets.Config;
         }
 
         [TestMethod]
@@ -32,7 +28,7 @@ namespace Nap.Tests.Configuration
         public void GetConfiguration_BaseUrl_Matches()
         {
             // Arrange
-            var nap = Nap.Lets;
+            var nap = NapClient.Lets;
 
             // Act
             nap.Config.BaseUrl = _exampleUrl;
@@ -46,7 +42,7 @@ namespace Nap.Tests.Configuration
         public void GetConfiguration_Headers_Match()
         {
             // Arrange
-            var nap = Nap.Lets;
+            var nap = NapClient.Lets;
 
             // Act
             nap.Config.Headers.Add("foo", "bar");
@@ -62,7 +58,7 @@ namespace Nap.Tests.Configuration
         public void GetConfiguration_Headers_RemoveHeader_LeavesNoHeader()
         {
             // Arrange
-            var nap = Nap.Lets;
+            var nap = NapClient.Lets;
             
             // Act
             nap.Config.Headers.Add("foo", "bar");
@@ -77,7 +73,7 @@ namespace Nap.Tests.Configuration
         public void GetConfiguration_QueryParameters_Match()
         {
             // Arrange
-            var nap = Nap.Lets;
+            var nap = NapClient.Lets;
 
             // Act
             nap.Config.QueryParameters.Add("foo", "bar");
@@ -93,7 +89,7 @@ namespace Nap.Tests.Configuration
         public void GetConfiguration_QueryParameters_RemoveQueryParameter_LeavesNoQueryParameter()
         {
             // Arrange
-            var nap = Nap.Lets;
+            var nap = NapClient.Lets;
 
             // Act
             nap.Config.QueryParameters.Add("foo", "bar");

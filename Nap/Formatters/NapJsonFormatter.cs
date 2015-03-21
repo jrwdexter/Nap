@@ -4,6 +4,7 @@ using System.Reflection;
 
 using Nap.Exceptions;
 using Nap.Formatters.Base;
+
 using Newtonsoft.Json;
 
 namespace Nap.Formatters
