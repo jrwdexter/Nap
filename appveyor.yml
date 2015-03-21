@@ -7,11 +7,10 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
-init:
-- ps: >-
-    & ./scripts/SetReleaseVersion.ps1
 install:
 - nuget restore
+- ps: >-
+    ./scripts/SetReleaseVersion.ps1
 before_build:
 - set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
 build:
