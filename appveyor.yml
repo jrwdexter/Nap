@@ -44,7 +44,6 @@ deploy:
   provider: NuGet
   api_key: 
     secure: ELbN5jzU0YJ7y3qZsMv6OTGmVVkVgBIaUVkWu2GhamhjCTnYQzNs+VSoXdZWs7Jw
-  artifact: /.*\.nupkg/
   on:
     branch: master
     appveyor_repo_tag: true
