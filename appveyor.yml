@@ -33,9 +33,9 @@ configuration: Release
 #      artifacts configuration    #
 #---------------------------------#
 artifacts:
-  - path: Nap/*.nupkg
-  - path: Nap.Configuration/*.nupkg
-  - path: Nap.Html/*.nupkg
+  - path: Nap\*.nupkg
+  - path: Nap.Configuration\*.nupkg
+  - path: Nap.Html\*.nupkg
 
 #---------------------------------#
 #     deployment configuration    #
