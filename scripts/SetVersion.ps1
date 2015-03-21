@@ -1,12 +1,12 @@
-param(
-  [Parameter(Mandatory=$true)]
-  [string]$Version
-)
+$root = (split-path -parent $MyInvocation.MyCommand.Definition) + '\..'
 
-$nuspecFiles = Get-ChildItem -Recurse *.nuspec
+@('Nap', 'Nap.Configuration', 'Nap.Html') | %{
+  $version = [System.Reflection.Assembly]::LoadFile("$root\$_\bin\Release\$_.dll").GetName().Version
+  $versionStr = "{0}.{1}.{2}" -f ($version.Major, $version.Minor, $version.Build)
 
-$nuspecFiles | % {
-  $nuspecContent = [xml](gc $_.FullName)
-  $nuspec.package.metadata.version = $Version
-  $nuspec.Save($_.FullName)
+  Write-Host "Setting .nuspec for $_ version tag to $versionStr"
+  $content = (Get-Content $root\$_\$_.nuspec) 
+  $content = $content -replace '\$version\$',$versionStr
+  $content | Out-File $root\$_\$_.compiled.nuspec
+  nuget pack $root\$_\$_.compiled.nuspec 
 }

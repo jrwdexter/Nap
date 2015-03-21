@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Nap.Html</id>
-    <version>0.0.2.4</version>
+    <version>$version$</version>
     <title>Nap.Html</title>
     <authors>Jonathan Dexter</authors>
     <owners>Jonathan Dexter</owners>
