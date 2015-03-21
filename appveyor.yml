@@ -51,10 +51,10 @@ deploy:
 #---------------------------------#
 #         notifications           #
 #---------------------------------#
-notifications:
-  - provider: Webhook
-    url:
-      secure: QX1SSnqVH3r4dS+TOE4qU5gwneCjhEfTELkmM+NxetZfYGy2FTyrHdqQk4yXVlIgYndlZLDQ/Dd7TS/3WDTyQT+G7tGqm/e5FsAvcq3SKO06xAIkOhFDu6uZuCxuOSYkUbjc3kUEm1tdXRtTfmMNh64VsSK6ZRq8IXmcoppt6BgucbqSeAyPEob1W8X2Gtnz6QvABnV9p+f7cE9silsXwuRX3pkbZoKF3RkCIMLkiqPl/sPx0S2EjItzV7nz6jgB
-    on_build_failure: true
-    on_build_success: false
-    on_build_status_changed: false
+# notifications:
+#   - provider: Webhook
+#     url:
+#       secure: QX1SSnqVH3r4dS+TOE4qU5gwneCjhEfTELkmM+NxetZfYGy2FTyrHdqQk4yXVlIgYndlZLDQ/Dd7TS/3WDTyQT+G7tGqm/e5FsAvcq3SKO06xAIkOhFDu6uZuCxuOSYkUbjc3kUEm1tdXRtTfmMNh64VsSK6ZRq8IXmcoppt6BgucbqSeAyPEob1W8X2Gtnz6QvABnV9p+f7cE9silsXwuRX3pkbZoKF3RkCIMLkiqPl/sPx0S2EjItzV7nz6jgB
+#     on_build_failure: true
+#     on_build_success: false
+#     on_build_status_changed: false
