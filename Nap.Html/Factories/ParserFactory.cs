@@ -92,7 +92,7 @@ namespace Nap.Html.Factories
 			if (parserInterface == null)
 				return false;
 
-			return type.IsAssignableFrom(parserInterface.GetGenericArguments().First());
+			return parserInterface.GetGenericArguments().First().IsAssignableFrom(type);
 		}
 	}
 }

@@ -8,7 +8,7 @@ namespace Nap.Html.Attributes
     /// Describes a simple binding element, selecting a node for binding.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-	public sealed class HtmlElementAttribute : BaseHtmlAttribute
+	public class HtmlElementAttribute : BaseHtmlAttribute
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="HtmlElementAttribute"/> class.

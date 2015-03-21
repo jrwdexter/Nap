@@ -40,7 +40,7 @@ namespace Nap.Html.Finders
 			if (selector == null)
 				throw new ArgumentNullException(nameof(selector));
 
-			return currentNode[selector];
+			return currentNode.Select(selector, currentNode).Select(cq => new CQ(cq)).FirstOrDefault();
 		}
 	}
 }

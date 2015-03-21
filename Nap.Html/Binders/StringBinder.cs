@@ -7,6 +7,7 @@ using CsQuery;
 
 using Nap.Html.Binders.Base;
 using Nap.Html.Enum;
+using Nap.Html.Attributes.Base;
 
 namespace Nap.Html.Binders
 {
@@ -22,11 +23,12 @@ namespace Nap.Html.Binders
 		/// <param name="input">The input string.  See <see cref="BindingBehavior" /> for examples on what types of information may be passed in.</param>
 		/// <param name="context">Unused in this case.</param>
 		/// <param name="outputType">Unused in this case.</param>
+		/// <param name="attribute">Unused in this case.</param>
 		/// <returns>
 		/// The output type object created, and filled with the parsed version of the <see cref="input" />.
 		/// </returns>
 		[Pure]
-		public override object Handle(string input, CQ context, Type outputType)
+		public override object Handle(string input, CQ context, Type outputType, BaseHtmlAttribute attribute)
 		{
 			return input;
 		}
