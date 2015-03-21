@@ -17,20 +17,27 @@ after_test:
 - ps: >-
     ./scripts/SetVersion.ps1
 
-# Master branch deployments
--
-  branches:
-    only:
-      - master
-    configuration: Release
-    deploy:
-      provider: Nuget
-      api_key: 
-        secure: ELbN5jzU0YJ7y3qZsMv6OTGmVVkVgBIaUVkWu2GhamhjCTnYQzNs+VSoXdZWs7Jw
-      artifact: /.*\.nupkg/
+# Branch deployments
+branches:
+  only:
+    - master
+    - develop
+  configuration: Release
 
--
-  branches:
-    only:
-      - develop
-    configuration: Debug
+#---------------------------------#
+#      artifacts configuration    #
+#---------------------------------#
+artifacts:
+  - path: /.*\.nupkg/
+
+#---------------------------------#
+#     deployment configuration    #
+#---------------------------------#
+deploy:
+  provider: Nuget
+  api_key: 
+    secure: ELbN5jzU0YJ7y3qZsMv6OTGmVVkVgBIaUVkWu2GhamhjCTnYQzNs+VSoXdZWs7Jw
+  artifact: /.*\.nupkg/
+  on:
+    branch: master
+    appveyor_repo_tag: true
