@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 
-using HtmlAgilityPack;
+using CsQuery;
 using Nap.Html.Attributes;
 using Nap.Html.Attributes.Base;
 using Nap.Html.Enum;
@@ -24,7 +24,7 @@ namespace Nap.Html.Parsers
 		/// <returns>The string value of the element to pass to the binder for binding to the POCO.</returns>
 		/// <exception cref="ArgumentNullException">Thrown if either <paramref name="node"/> or <paramref name="attributeInstance"/> is null.</exception>
 		[Pure]
-		public string Parse(HtmlNode node, HtmlElementAttribute attributeInstance)
+		public string Parse(CQ node, HtmlElementAttribute attributeInstance)
 		{
 			if (node == null)
 				throw new ArgumentNullException(nameof(node));
@@ -34,16 +34,18 @@ namespace Nap.Html.Parsers
 			switch (attributeInstance.BindingBehavior)
 			{
 				case BindingBehavior.InnerHtml:
-					return node.InnerHtml;
+					return node.Html();
 				case BindingBehavior.Class:
-					return node.Attributes["class"]?.Value;
+					return node.Attr("class");
 				case BindingBehavior.Id:
-					return node.Id;
+					return node.Attr("id");
 				case BindingBehavior.Value:
-					return node.Attributes["value"]?.Value;
+					return node.Attr("value");
+				case BindingBehavior.Attribute:
+					return node.Attr(attributeInstance.AttributeName);
 				case BindingBehavior.InnerText:
 				default:
-					return node.InnerText;
+					return node.Text();
 			}
 		}
 
@@ -54,7 +56,7 @@ namespace Nap.Html.Parsers
 		/// <param name="attributeInstance">The instance of the attribute that is being used to perform binding.</param>
 		/// <returns>The string value of the element to pass to the binder for binding to the POCO.</returns>
 		/// <exception cref="ArgumentNullException">Thrown if either <paramref name="node"/> or <paramref name="attributeInstance"/> is null.</exception>
-		public string Parse(HtmlNode node, BaseHtmlAttribute attributeInstance)
+		public string Parse(CQ node, BaseHtmlAttribute attributeInstance)
 		{
 			if (node == null)
 				throw new ArgumentNullException(nameof(node));

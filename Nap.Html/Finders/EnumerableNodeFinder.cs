@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
-using Fizzler.Systems.HtmlAgilityPack;
-
-using HtmlAgilityPack;
+using CsQuery;
 
 using Nap.Html.Finders.Base;
 
@@ -14,7 +12,7 @@ namespace Nap.Html.Finders
 	/// <summary>
 	/// A finder for locating single nodes.
 	/// </summary>
-	public sealed class EnumerableNodeFinder : IFinder<IEnumerable<HtmlNode>>
+	public sealed class EnumerableNodeFinder : IFinder<IEnumerable<CQ>>
 	{
 		/// <summary>
 		/// Find an item of uknown type within another node (possibly the document root) to prepare for binding.
@@ -23,7 +21,7 @@ namespace Nap.Html.Finders
 		/// <param name="currentNode">The node that we are currently operating on.</param>
 		/// <param name="selector">The selector to find the next element.</param>
 		/// <returns>A new element, found by performing the selector <paramref name="selector" /> on the current node.</returns>
-		public object Find(HtmlNode currentNode, string selector)
+		public object Find(CQ currentNode, string selector)
 		{
 			return FindItem(currentNode, selector);
 		}
@@ -35,14 +33,14 @@ namespace Nap.Html.Finders
 		/// <param name="selector">The selector to find the next element.</param>
 		/// <returns>A new element, found by performing the selector <paramref name="selector" /> on the current node.</returns>
 		[Pure]
-		public IEnumerable<HtmlNode> FindItem(HtmlNode currentNode, string selector)
+		public IEnumerable<CQ> FindItem(CQ currentNode, string selector)
 		{
 			if (currentNode == null)
 				throw new ArgumentNullException(nameof(currentNode));
 			if (selector == null)
 				throw new ArgumentNullException(nameof(selector));
 
-			return currentNode.QuerySelectorAll(selector);
+			return currentNode.Select(selector).Select(cq => new CQ(cq));
 		}
 	}
 }

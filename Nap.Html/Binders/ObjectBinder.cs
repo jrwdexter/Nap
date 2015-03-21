@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using HtmlAgilityPack;
+using CsQuery;
 
 using Nap.Html.Attributes.Base;
 using Nap.Html.Binders.Base;
@@ -24,7 +24,7 @@ namespace Nap.Html.Binders
 		/// <param name="context">The context of the currently being-bound input value.  Generally the HTML element corresponding to the input value.</param>
 		/// <param name="outputType">The type of output object to generate, whether a POCO, primitive, or other.</param>
 		/// <returns>The output type object created, and filled with the parsed version of the <see cref="input"/>.</returns>
-		public object Handle(string input, HtmlNode context, Type outputType)
+		public object Handle(string input, CQ context, Type outputType)
 		{
 			if (context == null && input == null)
 			{
@@ -37,9 +37,7 @@ namespace Nap.Html.Binders
 
 			if (context == null)
 			{
-				var doc = new HtmlDocument();
-				doc.LoadHtml(input);
-				context = doc.DocumentNode;
+				context = new CQ(input);
 			}
 
 			var properties = outputType.GetProperties().Where(p => p.CanWrite);
@@ -62,15 +60,15 @@ namespace Nap.Html.Binders
 					var isEnumerable = enumerableInterface != null && property.PropertyType != typeof(string);
 
 					// Find
-					var typeOfFinder = isEnumerable ? typeof(IEnumerable<HtmlNode>) : typeof(HtmlNode);
+					var typeOfFinder = isEnumerable ? typeof(IEnumerable<CQ>) : typeof(CQ);
 					var nodeForProperty = FinderFactory.Instance.GetFinder(typeOfFinder).Find(context, attribute.Selector);
 
 					// Verify
 					if (nodeForProperty != null)
 					{
 						object value;
-						var nodes = nodeForProperty as IEnumerable<HtmlNode>;
-						var singleNode = nodeForProperty as HtmlNode;
+						var nodes = nodeForProperty as IEnumerable<CQ>;
+						var singleNode = nodeForProperty as CQ;
 
 						if (nodes != null && isEnumerable)
 						{
@@ -84,7 +82,7 @@ namespace Nap.Html.Binders
 						else if (singleNode != null)
 						{
 							// Single case
-							value = ParseAndBind(attribute, property.PropertyType, (HtmlNode)nodeForProperty);
+							value = ParseAndBind(attribute, property.PropertyType, (CQ)nodeForProperty);
 						}
 						else
 						{
@@ -99,7 +97,7 @@ namespace Nap.Html.Binders
 			return toReturn;
 		}
 
-		private static object ParseAndBind(BaseHtmlAttribute attribute, Type objectType, HtmlNode nodeForProperty)
+		private static object ParseAndBind(BaseHtmlAttribute attribute, Type objectType, CQ nodeForProperty)
 		{
 			// Parse
 			var parsedValue = ParserFactory.Instance.GetParser(attribute.GetType()).Parse(nodeForProperty, attribute);

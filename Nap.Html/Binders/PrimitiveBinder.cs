@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
-using HtmlAgilityPack;
+using CsQuery;
 
 using Nap.Html.Binders.Base;
 using Nap.Html.Enum;
@@ -24,7 +24,7 @@ namespace Nap.Html.Binders
 		/// <param name="outputType">The type of output object to generate, whether a POCO, primitive, or other.</param>
 		/// <returns>The output type object created, and filled with the parsed version of the <see cref="input"/>.</returns>
 		[Pure]
-		public object Handle(string input, HtmlNode context, Type outputType)
+		public object Handle(string input, CQ context, Type outputType)
 		{
 			return Convert.ChangeType(input, outputType);
 		}

@@ -6,7 +6,6 @@ using System.Linq;
 using Nap.Html.Exceptions;
 using Nap.Html.Factories.Base;
 using Nap.Html.Finders.Base;
-using System.Diagnostics;
 
 namespace Nap.Html.Factories
 {

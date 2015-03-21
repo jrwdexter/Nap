@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
-using HtmlAgilityPack;
+using CsQuery;
 
 using Nap.Html.Enum;
 
@@ -23,7 +23,7 @@ namespace Nap.Html.Binders.Base
 		/// <param name="outputType">The type of output object to generate, whether a POCO, primitive, or other.</param>
 		/// <returns>The output type object created, and filled with the parsed version of the <see cref="input"/>.</returns>
 		[Pure]
-		object Handle(string input, HtmlNode context, Type outputType);
+		object Handle(string input, CQ context, Type outputType);
 	}
 
 
@@ -42,6 +42,6 @@ namespace Nap.Html.Binders.Base
 		/// <param name="context">The context of the currently being-bound input value.  Generally the HTML element corresponding to the input value.</param>
 		/// <returns>The output type object created, and filled with the parsed version of the <see cref="input"/>.</returns>
 		[Pure]
-		T Handle(string input, HtmlNode context);
+		T Handle(string input, CQ context);
 	}
 }

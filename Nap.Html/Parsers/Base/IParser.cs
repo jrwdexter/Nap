@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 
-using HtmlAgilityPack;
+using CsQuery;
 using Nap.Html.Attributes.Base;
 using Nap.Html.Finders.Base;
 
@@ -18,7 +18,7 @@ namespace Nap.Html.Parsers.Base
         /// <param name="node">The node that we are preparing to bind on.</param>
         /// <param name="attributeInstance">The instance of the attribute that is being used to perform binding.</param>
         /// <returns>The string value of the element to pass to the binder for binding to the POCO.</returns>
-		string Parse(HtmlNode node, BaseHtmlAttribute attributeInstance);
+		string Parse(CQ node, BaseHtmlAttribute attributeInstance);
 	}
 
     /// <summary>
@@ -34,7 +34,7 @@ namespace Nap.Html.Parsers.Base
         /// <param name="attributeInstance">The instance of the attribute that is being used to perform binding.</param>
         /// <returns>The string value of the element to pass to the binder for binding to the POCO.</returns>
 		[Pure]
-        string Parse(HtmlNode node, T attributeInstance);
+        string Parse(CQ node, T attributeInstance);
     }
 
 }
