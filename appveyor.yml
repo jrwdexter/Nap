@@ -9,7 +9,7 @@ assembly_info:
   assembly_informational_version: '{version}'
 init:
 - ps: >-
-    ./scripts/SetReleaseVersion.ps1
+    & ./scripts/SetReleaseVersion.ps1
 install:
 - nuget restore
 before_build:
@@ -47,3 +47,18 @@ deploy:
   on:
     branch: master
     appveyor_repo_tag: true
+
+#---------------------------------#
+#         notifications           #
+#---------------------------------#
+notifications:
+  - provider: Webhook
+    url: https://www.notifymyandroid.com/publicapi/notify?apikey= 
+    headers:
+      apikey:
+        secure: zXzU/JnZoKz24WoaVoPMmQrXi+3LjiDCC1Uvr02alLswLnXURcsyVhzukG2aSpRbJ1KYkyb9glEVDVURzv9j2Q==
+      application: appveyor_repo_tag
+      event: "Nap build {status}"
+      description: "{message}"
+      priority: 1
+      url: "{commitId}"
