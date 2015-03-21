@@ -13,6 +13,10 @@ Nap is in Beta, and not ready to be used on production projects yet.
 
 **Nap** is a short and sweet REST client.  It was made with the purpose of streamlining REST requests *as much as possible*.
 
+## Plugins and Extensions
+[Nap.Configuration](Nap.Configuration/README.md)
+[Nap.Html](Nap.Html/README.md)
+
 ## Short
 
 **Nap** is short.
@@ -42,82 +46,21 @@ var cake = NapClient.Lets.Post("http://example.com/bake-cake")
                          .Execute<Cake>();
 ```
 
-## Configurable
+## Configuration
 
-**Nap** removes the need to configure stuff over and over again if you don't want to, or the need to create a client if you don't want one.  Your `App.config` or `Web.config` file can include:
+**Nap** removes the need to configure stuff over and over again if you don't want to, or the need to create a client if you don't want one.  Nap follows a cascading configuration pattern: NapClient() > Fluent.
 
-```xml
-<configuration>
-  <configSections>
-    <section 
-      name="nap" 
-      type="Nap.Configuration.NapConfig" 
-      allowLocation="true" 
-      allowDefinition="Everywhere"
-    />
-  </configSections>
-</configuration>
-...
-<nap baseUrl="http://example.com" fillMetada="true">
-  <headers>
-    <add key="sugar" value="100g" />
-  </headers>
-  <queryParameters>
-    <add key="temp" value="425F" />
-  </queryParameters>
-  <advanced useSsl="true">
-    <proxy address="http://localhost:8080" />
-    <authentication username="jdoe" password="password123" />
-  </advanced>
-</nap>
-```
-
-Along with a simple Configuration declaration:
-```c#
-NapSetup.AddConfig(NapConfig.GetCurrent);
-```
-
-And make your **Naps** even easier:
-
-```c#
-var ingredients = new { Flour = 10, Eggs = 2, CakeMix = 1 };
-NapClient.Lets.Post("/bake-cake")
-              .IncludeBody(ingredients)
-              .Execute<Cake>();
-```
-
-And still fully malleable:
-
-```c#
-NapClient.Lets.Get("/potato")
-              .DoNot.IncludeHeader("sugar")
-              .Execute<Potato>();
-```
-
-Nap supports 3 levels of cascading configuration: *.config < Nap() < Fluent.  In this example:
-
-```xml
-...
-<nap baseUrl="http://example.com">
-  <headers>
-    <add key="sugar" value="100g" />
-  </headers>
-  <queryParameters>
-    <add key="temp" value="425F" />
-  </queryParameters>
-</nap>
-...
-```
+In this example:
 
 ```c#
 var nap = new NapClient();
 nap.Config.QueryParameters["temp"] = "300F";
-var cake = nap.Get("/cake")
+var cake = nap.Get("http://example.com/cake")
               .IncludeHeader("sugar", "10g")
               .Execute<Cake>();
 ```
 
-The end result would perform an HTTP GET Request to `http://example.com/cake` (from *.config), using a query parameter of "temp=300F" (Nap() configuration level) and a Header of "sugar: 10g" (Fluent level).  This allows for a high degree of customization on a per-request or per-scope basis.
+The end result would perform an HTTP GET Request to `http://example.com/cake`, using a query parameter of "temp=300F" (Nap() configuration level) and a Header of "sugar: 10g" (Fluent level).  This allows for a high degree of customization on a per-request or per-scope basis.
 
 ## Powerful
 
