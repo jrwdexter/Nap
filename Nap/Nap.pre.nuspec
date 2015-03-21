@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Nap.Configuration</id>
+    <id>Nap</id>
     <version>$version$</version>
-    <title>Nap.Configuration</title>
+    <title>Nap</title>
     <authors>Jonathan Dexter</authors>
     <owners>Jonathan Dexter</owners>
     <licenseUrl>https://github.com/mandest/Nap/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/mandest/Nap</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>An add-on to Nap to allow for configuration in *.config files.</description>
+    <description>A short and sweet REST client</description>
     <copyright>Copyright 2014</copyright>
-    <tags>REST Fluent Configuration Nap</tags>
+    <tags>REST Fluent HTTP API JSON XML</tags>
     <dependencies>
-        <dependency id="Nap" version="$version$" />
+        <dependency id="Newtonsoft.Json" version="6.0.0.0" />
     </dependencies>
   </metadata>
 </package>

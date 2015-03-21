@@ -5,8 +5,8 @@ $root = (split-path -parent $MyInvocation.MyCommand.Definition) + '\..'
   $versionStr = "{0}.{1}.{2}" -f ($version.Major, $version.Minor, $version.Build)
 
   Write-Host "Setting .nuspec for $_ version tag to $versionStr"
-  $content = (Get-Content $root\$_\$_.nuspec) 
+  $content = (Get-Content $root\$_\$_.pre.nuspec) 
   $content = $content -replace '\$version\$',$versionStr
-  $content | Out-File $root\$_\$_.compiled.nuspec
-  nuget pack $root\$_\$_.compiled.nuspec -Properties Configuration=Release
+  $content | Out-File $root\$_\$_.nuspec
+  nuget pack $root\$_\$_.csproj -Properties Configuration=Release
 }
