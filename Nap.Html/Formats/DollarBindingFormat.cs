@@ -1,10 +1,8 @@
-﻿using Nap.Html.Binders.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Globalization;
+using System.Linq;
+
 using Nap.Html.Formats.Base;
 
 namespace Nap.Html.Formats
@@ -49,7 +47,7 @@ namespace Nap.Html.Formats
 		/// <returns>The input string with percentage signs removed</returns>
 		public string ParseToNumber(string input)
 		{
-			return input.Replace("%", string.Empty);
+			return input;
 		}
 	}
 }

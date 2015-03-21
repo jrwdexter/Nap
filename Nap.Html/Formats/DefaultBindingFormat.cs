@@ -47,7 +47,7 @@ namespace Nap.Html.Formats
 		/// <returns>The input string with percentage signs removed</returns>
 		public string ParseToNumber(string input)
 		{
-			return input.Replace("%", string.Empty);
+			return input;
 		}
 	}
 }
