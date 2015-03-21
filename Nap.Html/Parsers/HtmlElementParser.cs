@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.Linq;
 
 using CsQuery;
 using Nap.Html.Attributes;
@@ -8,6 +9,7 @@ using Nap.Html.Enum;
 using Nap.Html.Exceptions;
 using Nap.Html.Finders.Base;
 using Nap.Html.Parsers.Base;
+using Nap.Html.Extensions;
 
 namespace Nap.Html.Parsers
 {
@@ -44,8 +46,10 @@ namespace Nap.Html.Parsers
 				case BindingBehavior.Attribute:
 					return node.Attr(attributeInstance.AttributeName);
 				case BindingBehavior.InnerText:
+					return node.Text()?.Trim();
+				case BindingBehavior.Smart:
 				default:
-					return node.Text();
+					return ParseSmart(node, attributeInstance);
 			}
 		}
 
@@ -71,6 +75,19 @@ namespace Nap.Html.Parsers
 			{
 				throw new NapParsingException($"Attribute {attributeInstance.GetType().FullName} is not of the correct type to be handled by ${GetType().FullName}.", ex);
 			}
+		}
+
+		/// <summary>
+		/// Parses the node in an intelligent fashion, trying to find selected optoins, values, and finally inner text..
+		/// </summary>
+		/// <param name="node">The node to parse.</param>
+		/// <param name="attribute">The attribute corresponding to the property being bound.</param>
+		/// <returns>A string containing either the selected option's value, the value attribute, or the inner text of the node.</returns>
+		private string ParseSmart(CQ node, HtmlElementAttribute attribute)
+		{
+			var option = node.Select("option[selected]", node).FirstOrDefault();
+			var input = node.Select("input", node).FirstOrDefault();
+			return option?.InnerText?.TrimAll() ?? input?.Attributes["value"] ?? node.Attr("value") ?? node.Text()?.TrimAll();
 		}
 	}
 }

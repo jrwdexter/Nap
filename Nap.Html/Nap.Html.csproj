@@ -55,6 +55,9 @@
     <Compile Include="Attributes\Base\BaseHtmlAttribute.cs" />
     <Compile Include="Attributes\NumericalHtmlElementAttribute.cs" />
     <Compile Include="Attributes\HtmlElementAttribute.cs" />
+    <Compile Include="Binders\DateBinder.cs" />
+    <Compile Include="Binders\IntBinder.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Formats\DefaultBindingFormat.cs" />
     <Compile Include="Formats\DollarBindingFormat.cs" />
     <Compile Include="Formats\PercentageBindingFormat.cs" />

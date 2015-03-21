@@ -38,6 +38,13 @@ namespace Nap.Html.Enum
         /// <summary>
         /// Bind to the <c>value=""</c> (specific attribute) of the selected/found node.
         /// </summary>
-        Value
-    }
+        Value,
+
+		/// <summary>
+		/// The smart binding behavior, which will perform various types of binds in order.
+		/// The bindings tried are: option[selected].InnerText -> Value -> InnerText
+		/// This is the default behavior.
+		/// </summary>
+		Smart
+	}
 }

@@ -18,7 +18,7 @@ namespace Nap.Html.Binders
 	/// <summary>
 	/// A binder for decimal types.
 	/// </summary>
-	public sealed class DecimalBinder : BaseBinder<decimal>, IBinder<decimal>
+	public sealed class IntBinder : BaseBinder<int>, IBinder<int>
 	{
 		private static DefaultBindingFormat _defaultBindingBehavior = new DefaultBindingFormat();
 
@@ -39,12 +39,12 @@ namespace Nap.Html.Binders
 
 				if (outputType.IsGenericType && outputType.GetGenericTypeDefinition() == typeof(Nullable<>))
 				{
-					decimal d;
+					int d;
 					var underlyingType = Nullable.GetUnderlyingType(outputType);
-					return decimal.TryParse(bindingFormat.ParseToNumber(input) ?? input, bindingFormat.NumberStyle, bindingFormat.FormatInfo, out d) ? (decimal?)d : null;
+					return int.TryParse(bindingFormat.ParseToNumber(input) ?? input, bindingFormat.NumberStyle, bindingFormat.FormatInfo, out d) ? (int?)d : null;
 				}
 
-				return decimal.Parse(bindingFormat.ParseToNumber(input) ?? input, bindingFormat.NumberStyle, bindingFormat.FormatInfo);
+				return int.Parse(bindingFormat.ParseToNumber(input) ?? input, bindingFormat.NumberStyle, bindingFormat.FormatInfo);
 			}
 			catch (Exception e)
 			{

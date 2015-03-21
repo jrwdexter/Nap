@@ -16,6 +16,7 @@ namespace Nap.Html.Attributes
         /// <param name="selector">The selector to use to find the element.</param>
 		public HtmlElementAttribute(string selector) : base(selector)
 	    {
+			BindingBehavior = BindingBehavior.Smart;
 	    }
 
 	    /// <summary>
