@@ -12,5 +12,8 @@
     <description>An add-on to Nap to allow for configuration in *.config files.</description>
     <copyright>Copyright 2014</copyright>
     <tags>REST Fluent Configuration Nap</tags>
+    <dependencies>
+        <dependency id="Nap" version="$version$" />
+    </dependencies>
   </metadata>
 </package>
