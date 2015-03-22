@@ -7,14 +7,20 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
+
+# Before build
 install:
 - nuget restore
 - ps: >-
     ./scripts/SetReleaseVersion.ps1
+
+# Do the build
 before_build:
 - set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
 build:
   verbosity: minimal
+
+# Build packages
 after_test:
 - ps: >-
     ./scripts/BuildPackages.ps1
@@ -32,21 +38,22 @@ configuration: Release
 #---------------------------------#
 #      artifacts configuration    #
 #---------------------------------#
-artifacts:
-  - path: Nap.nupkg
-  - path: Nap.Configuration.nupkg
-  - path: Nap.Html.nupkg
+# artifacts:
+#   - path: Nap.nupkg
+#   - path: Nap.Configuration.nupkg
+#   - path: Nap.Html.nupkg
 
 #---------------------------------#
 #     deployment configuration    #
 #---------------------------------#
 deploy:
   provider: NuGet
+  artifact: /.*\.nupkg/
   api_key: 
     secure: ELbN5jzU0YJ7y3qZsMv6OTGmVVkVgBIaUVkWu2GhamhjCTnYQzNs+VSoXdZWs7Jw
   on:
     branch: master
-    appveyor_repo_tag: true
+    # appveyor_repo_tag: true
 
 #---------------------------------#
 #         notifications           #
