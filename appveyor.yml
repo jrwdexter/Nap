@@ -20,6 +20,7 @@ before_build:
 - ps: >-
     ./scripts/SetPackageVersions.ps1
 build:
+  verbosity: minimal
   publish_nuget: true
   publish_nuget_symbols: true
 
@@ -34,14 +35,6 @@ branches:
 configuration: Release
 
 #---------------------------------#
-#      artifacts configuration    #
-#---------------------------------#
-# artifacts:
-#   - path: Nap.nupkg
-#   - path: Nap.Configuration.nupkg
-#   - path: Nap.Html.nupkg
-
-#---------------------------------#
 #     deployment configuration    #
 #---------------------------------#
 deploy:
@@ -51,7 +44,7 @@ deploy:
       secure: ELbN5jzU0YJ7y3qZsMv6OTGmVVkVgBIaUVkWu2GhamhjCTnYQzNs+VSoXdZWs7Jw
     on:
       branch: master
-      # appveyor_repo_tag: true
+      appveyor_repo_tag: true
 
 #---------------------------------#
 #         notifications           #
