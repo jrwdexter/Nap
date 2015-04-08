@@ -33,12 +33,12 @@
     <DocumentationFile>bin\Release\Nap.Configuration.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Nap, Version=0.0.2.4, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nap.0.0.2.4\lib\portable-net45+win+wpa81\Nap.dll</HintPath>
+    <Reference Include="Nap, Version=0.2.47.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nap.0.2.47\lib\portable-net45+win+wpa81\Nap.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

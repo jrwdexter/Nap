@@ -11,6 +11,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Configuration", "Nap.Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Html", "Nap.Html\Nap.Html.csproj", "{DE5DB636-28E5-4D73-9D70-683E80D47254}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A51A8509-EBE5-49AA-80BB-3EDA8FF6217B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Configuration.Tests", "Nap.Configuration.Tests\Nap.Configuration.Tests.csproj", "{CF70F218-F6E5-49F5-BCF6-2B00CF0E5292}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Html.Tests", "Nap.Html.Tests\Nap.Html.Tests.csproj", "{A8B7E8C4-FB86-41A2-AB4D-E2F34557F3F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,8 +39,21 @@ Global
 		{DE5DB636-28E5-4D73-9D70-683E80D47254}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE5DB636-28E5-4D73-9D70-683E80D47254}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE5DB636-28E5-4D73-9D70-683E80D47254}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF70F218-F6E5-49F5-BCF6-2B00CF0E5292}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF70F218-F6E5-49F5-BCF6-2B00CF0E5292}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF70F218-F6E5-49F5-BCF6-2B00CF0E5292}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF70F218-F6E5-49F5-BCF6-2B00CF0E5292}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8B7E8C4-FB86-41A2-AB4D-E2F34557F3F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8B7E8C4-FB86-41A2-AB4D-E2F34557F3F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8B7E8C4-FB86-41A2-AB4D-E2F34557F3F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8B7E8C4-FB86-41A2-AB4D-E2F34557F3F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A9CC8956-2590-4DFC-B7A8-CB42F5ED26DE} = {A51A8509-EBE5-49AA-80BB-3EDA8FF6217B}
+		{CF70F218-F6E5-49F5-BCF6-2B00CF0E5292} = {A51A8509-EBE5-49AA-80BB-3EDA8FF6217B}
+		{A8B7E8C4-FB86-41A2-AB4D-E2F34557F3F2} = {A51A8509-EBE5-49AA-80BB-3EDA8FF6217B}
 	EndGlobalSection
 EndGlobal

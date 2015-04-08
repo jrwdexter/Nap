@@ -1,0 +1,10 @@
+﻿{
+    "Spouse": {
+        "FirstName": "Jeff",
+        "LastName": "Doe"
+    },
+    "Children": [
+        { "FirstName": "John", "LastName": "Doe" },
+        { "FirstName": "Jane", "LastName": "Doe" }
+    ]
+}
