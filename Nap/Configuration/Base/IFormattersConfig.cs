@@ -18,11 +18,37 @@ namespace Nap.Configuration
 		/// <param name="formatterType">The full type name of the formatter to add.</param>
 		void Add(string contentType, string formatterType);
 
-		/// <summary>
-		/// Remvoes the specified formatter by key, a string of appropriate MIME type.
-		/// </summary>
-		/// <param name="contentType">The MIME type key of the formatter to remove.</param>
-		void Remove(string contentType);
+        /// <summary>
+        /// Adds the specified formatter generically.
+        /// </summary>
+        /// <typeparam name="T">The type of <see cref="INapFormatter"/> to add.</typeparam>
+        void Add<T>() where T : INapFormatter, new();
+
+        /// <summary>
+        /// Adds the specified formatter generically.
+        /// </summary>
+        /// <param name="contentType">The content type to apply the formatter to.</param>
+        /// <typeparam name="T">The type of <see cref="INapFormatter"/> to add.</typeparam>
+        void Add<T>(string contentType) where T : INapFormatter, new();
+
+        /// <summary>
+        /// Adds the specified formatter by specifying an instance of the formatter.
+        /// </summary>
+        /// <param name="napFormatter">The formatter instance to add to the collection of formatters.</param>
+        void Add(INapFormatter napFormatter);
+
+        /// <summary>
+        /// Adds the specified formatter by specifying an instance of the formatter.
+        /// </summary>
+        /// <param name="napFormatter">The formatter instance to add to the collection of formatters.</param>
+        /// <param name="contentType">The content type to apply the formatter to.</param>
+        void Add(INapFormatter napFormatter, string contentType);
+
+        /// <summary>
+        /// Remvoes the specified formatter by key, a string of appropriate MIME type.
+        /// </summary>
+        /// <param name="contentType">The MIME type key of the formatter to remove.</param>
+        void Remove(string contentType);
 
 		/// <summary>
 		/// Converts the <see cref="IFormattersConfig"/> interface to a dicitonary.
