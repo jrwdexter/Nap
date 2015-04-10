@@ -7,18 +7,16 @@ namespace Nap.Configuration
     /// <summary>
     /// The configuration class for clients and requests.
     /// </summary>
-    public class NapConfig : ConfigurationSection, INapConfig
+    public class ChildNapConfig : ConfigurationElement, INapConfig
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="NapConfig"/> class.
         /// </summary>
-        public NapConfig()
+        public ChildNapConfig()
         {
             Formatters = new FormattersConfig();
             Headers = new Headers();
             QueryParameters = new QueryParameters();
-            Profiles = new Profiles();
         }
 
         /// <summary>
@@ -125,23 +123,12 @@ namespace Nap.Configuration
         }
 
         /// <summary>
-        /// Gets or sets the collection of profiles that are available.
-        /// </summary>
-        [ConfigurationProperty("profiles", IsDefaultCollection = false)]
-        [ConfigurationCollection(typeof(Profiles), AddItemName = "add", RemoveItemName = "remove", ClearItemsName = "clear")]
-        public Profiles Profiles
-        {
-            get { return (Profiles)this["profiles"]; }
-            private set { this["profiles"] = value; }
-        }
-
-        /// <summary>
         /// Creates a copy of the <see cref="NapConfig"/> configuration.
         /// </summary>
         /// <returns>A copy of the current instance.</returns>
         public INapConfig Clone()
         {
-            var clone = new NapConfig
+            var clone = new ChildNapConfig
             {
                 Formatters = new FormattersConfig(Formatters),
                 BaseUrl = BaseUrl,
@@ -149,8 +136,7 @@ namespace Nap.Configuration
                 Serialization = Serialization,
                 Advanced = Advanced.Clone(),
                 Headers = new Headers(Headers),
-                QueryParameters = new QueryParameters(QueryParameters),
-                Profiles = new Profiles(Profiles)
+                QueryParameters = new QueryParameters(QueryParameters)
             };
 
             return clone;
