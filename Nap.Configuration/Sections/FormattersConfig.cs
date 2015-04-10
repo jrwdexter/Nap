@@ -10,6 +10,9 @@ using Nap.Formatters.Base;
 
 namespace Nap.Configuration.Sections
 {
+    /// <summary>
+    /// An implementation of <see cref="IFormattersConfig"/> that allows for use of *.config files.
+    /// </summary>
 	public class FormattersConfig : ConfigurationElementCollection, IFormattersConfig
 	{
 		/// <summary>
@@ -78,6 +81,32 @@ namespace Nap.Configuration.Sections
 			CheckType(item);
 			BaseAdd((ConfigurationElement)item);
 		}
+
+        /// <summary>
+        /// Adds the specified formatter generically.
+        /// </summary>
+        /// <typeparam name="T">The type of <see cref="INapFormatter"/> to add.</typeparam>
+        public void Add<T>() where T : INapFormatter, new() => Add(new FormatterConfig(new T()));
+
+        /// <summary>
+        /// Adds the specified formatter generically.
+        /// </summary>
+        /// <param name="contentType">The content type to apply the formatter to.</param>
+        /// <typeparam name="T">The type of <see cref="INapFormatter"/> to add.</typeparam>
+        public void Add<T>(string contentType) where T : INapFormatter, new() => Add(new FormatterConfig(contentType, new T()));
+
+        /// <summary>
+        /// Adds the specified formatter by specifying an instance of the formatter.
+        /// </summary>
+        /// <param name="napFormatter">The formatter instance to add to the collection of formatters.</param>
+        public void Add(INapFormatter napFormatter) => Add(new FormatterConfig(napFormatter));
+
+        /// <summary>
+        /// Adds the specified formatter by specifying an instance of the formatter.
+        /// </summary>
+        /// <param name="napFormatter">The formatter instance to add to the collection of formatters.</param>
+        /// <param name="contentType">The content type to apply the formatter to.</param>
+        public void Add(INapFormatter napFormatter, string contentType) => Add(new FormatterConfig(contentType, napFormatter));
 
 		/// <summary>
 		/// Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1"/>.
@@ -214,5 +243,5 @@ namespace Nap.Configuration.Sections
 			if (!(formatterConfig is ConfigurationElement))
 				throw new NapConfigurationException("Header element being acted on by IFormattersConfig must inherit ConfigurationElement.");
 		}
-	}
+    }
 }

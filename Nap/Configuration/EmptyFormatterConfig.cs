@@ -58,7 +58,7 @@ namespace Nap.Configuration
 		}
 
 		/// <summary>
-		/// Gets or sets the request format that this formatter configuration is for.  See <see cref="IFormatterConfig.RequestFormat"/>.
+		/// Gets or sets the request format that this formatter configuration is for.  See <see cref="RequestFormat"/>.
 		/// </summary>
 		public string ContentType { get; set; }
 

@@ -28,7 +28,7 @@ namespace Nap.Formatters
         /// <typeparam name="T">The type of object that should be created from the serializedvalue.</typeparam>
         /// <param name="serialized">The serialized data; such as from a REST request.</param>
         /// <returns>The newly created object of type <typeparamref name="T"/>.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when <see cref="serialized"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="serialized"/> is null.</exception>
         /// <exception cref="ConstructorNotFoundException">Thrown when a paremeterless constructor is not found for type <typeparamref name="T"/>.</exception>
         /// <remarks>All properties that are being hydrated by deserialization must have public setters.</remarks>
         /// <example><code>
@@ -62,7 +62,7 @@ namespace Nap.Formatters
         /// </summary>
         /// <param name="graph">The object to serialize.</param>
         /// <returns>The object graph serialized to a string.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when <see cref="graph"/> is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="graph"/> is null.</exception>
         /// <remarks>All properties that are being serialized must have public getters.</remarks>
         /// <example><code>
         /// public class Person

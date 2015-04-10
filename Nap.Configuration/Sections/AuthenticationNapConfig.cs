@@ -6,7 +6,7 @@ using System.Linq;
 namespace Nap.Configuration.Sections
 {
     /// <summary>
-    /// An implementation of <see cref="IAdvancedNapConfig"/> that allows for use of *.config files.
+    /// An implementation of <see cref="IAuthenticationNapConfig"/> that allows for use of *.config files.
     /// </summary>
     public class AuthenticationNapConfig : ConfigurationElement, IAuthenticationNapConfig
     {
@@ -20,6 +20,9 @@ namespace Nap.Configuration.Sections
             set { this["type"] = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the federated authentication configuration for the request.
+        /// </summary>
         public IFederationConfiguration AuthenticationConfiguration { get; set; } // TODO: Figure out how to do authentication in configuration
 
         /// <summary>

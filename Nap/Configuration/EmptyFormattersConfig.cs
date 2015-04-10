@@ -82,7 +82,7 @@ namespace Nap.Configuration
 
         /// <summary>
         /// Converts the <see cref="IFormattersConfig"/> interface to a dicitonary.
-        /// Note that operations on this object (such as <see cref="IDictionary{T1,T2}.Clear()"/>) do not persist.
+        /// Note that operations on this object (such as <see cref="IDictionary{T1,T2}.Add(T1, T2)"/>) do not persist.
         /// </summary>
         /// <returns>The <see cref="IFormattersConfig"/> interface as a dictionary.</returns>
         public IDictionary<string, INapFormatter> AsDictionary()

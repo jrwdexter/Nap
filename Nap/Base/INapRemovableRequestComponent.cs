@@ -18,21 +18,21 @@ namespace Nap
         INapRequest IncludeBody();
 
         /// <summary>
-        /// Excludes the header with key <see cref="headerName"/>.
+        /// Excludes the header with key <paramref name="headerName"/>.
         /// </summary>
         /// <param name="headerName">The header name to be removed.</param>
         /// <returns>The <see cref="INapRequest"/> object.</returns>
         INapRequest IncludeHeader(string headerName);
         
         /// <summary>
-        /// Excludes the cookie with key <see cref="cookieName"/>.
+        /// Excludes the cookie with key <paramref name="cookieName"/>.
         /// </summary>
         /// <param name="cookieName">The name of the cookie to remove.</param>
         /// <returns>The <see cref="INapRequest"/> object.</returns>
         INapRequest IncludeCookie(string cookieName);
 
         /// <summary>
-        /// Excludes the query with key <see cref="key"/>.
+        /// Excludes the query with key <paramref name="key"/>.
         /// </summary>
         /// <param name="key">The key of the query parameter to remove.</param>
         /// <returns>The <see cref="INapRequest"/> object.</returns>

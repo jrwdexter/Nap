@@ -48,7 +48,7 @@ namespace Nap.Configuration
 
         /// <summary>
         /// Converts the <see cref="IHeaders"/> interface to a dicitonary.
-        /// Note that operations on this object (such as <see cref="IDictionary{T1,T2}.Clear()"/>
+        /// Note that operations on this object (such as <see cref="IDictionary{T1,T2}.Add(T1, T2)"/>
         /// </summary>
         /// <returns>The <see cref="IHeaders"/> interface as a dictionary.</returns>
         public IDictionary<string, string> AsDictionary()

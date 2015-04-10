@@ -8,9 +8,9 @@ using Nap.Formatters.Base;
 
 namespace Nap.Configuration.Sections
 {
-	/// <summary>
-	/// Represents a formatter available for serializing and deserializing data.
-	/// </summary>
+    /// <summary>
+    /// An implementation of <see cref="IFormatterConfig"/> that allows for use of *.config files.
+    /// </summary>
 	public class FormatterConfig : ConfigurationElement, IFormatterConfig
 	{
 		private readonly object _padlock = new object();

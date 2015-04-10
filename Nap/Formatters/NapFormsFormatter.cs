@@ -29,6 +29,8 @@ namespace Nap.Formatters
             throw new NotSupportedException("Forms deserialization is not supported.");
         }
 
+#pragma warning disable CS1570 // XML comment has badly formed XML
+
         /// <summary>
         /// Converts an object to a simple string to be transported via forms serialization.
         /// </summary>
@@ -49,9 +51,10 @@ namespace Nap.Formatters
         /// </code>
         /// for Forms serialization.
         /// </example>
+#pragma warning restore CS1570 // XML comment has badly formed XML
         public string Serialize(object graph)
         {
-            if(graph == null)
+            if (graph == null)
                 throw new ArgumentNullException(nameof(graph), "Cannot serialize a null object graph.");
 
             var sb = new StringBuilder();

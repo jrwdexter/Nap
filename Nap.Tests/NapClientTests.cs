@@ -121,7 +121,7 @@ namespace Nap.Tests
             protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
             {
                 Request = request;
-                RequestContent = request.Content?.ReadAsStringAsync().Result;
+                RequestContent = request.Content == null ? string.Empty : await request.Content?.ReadAsStringAsync();
                 var content = new StringContent(string.Empty);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 return new HttpResponseMessage { StatusCode = System.Net.HttpStatusCode.OK, Content = content };

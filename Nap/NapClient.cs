@@ -14,7 +14,6 @@ namespace Nap
 	/// </summary>
 	public class NapClient
 	{
-		private static NapClient _instance;
 		private readonly static object _padlock = new object();
 		private INapConfig _config;
 

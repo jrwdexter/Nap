@@ -5,8 +5,6 @@ namespace Nap
 {
     internal partial class NapRequest : IAuthenticatedNapRequestComponent
     {
-        private bool _authorizationSet = false;
-
         /// <summary>
         /// Configures the <see cref="NapRequest"/> for basic authentication, using plaintext <paramref name="username"/> and <paramref name="password"/>.
         /// </summary>

@@ -4,6 +4,9 @@ using System.Net.Http;
 
 namespace Nap.Configuration.Sections
 {
+    /// <summary>
+    /// An implementation of <see cref="IAdvancedNapConfig"/> that allows for use of *.config files.
+    /// </summary>
     public class AdvancedNapConfig : ConfigurationElement, IAdvancedNapConfig
     {
         /// <summary>

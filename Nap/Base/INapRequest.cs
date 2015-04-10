@@ -28,7 +28,7 @@ namespace Nap
         INapRequest IncludeQueryParameter(string key, string value);
 
         /// <summary>
-        /// Includes some content in the body, serialized according to <see cref="NapConfig.ContentFormat"/>.
+        /// Includes some content in the body, serialized according to <see cref="INapConfig.Serialization"/>.
         /// </summary>
         /// <param name="body">The object to serialize into the body.</param>
         /// <returns>The <see cref="INapRequest"/> object.</returns>
