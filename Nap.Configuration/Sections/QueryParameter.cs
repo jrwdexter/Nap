@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nap.Configuration.Sections.Base;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -20,14 +21,14 @@ namespace Nap.Configuration.Sections
     /// </c>
     /// or by configuration on <see cref="NapClient.Config"/>.
     /// </example>
-    public class QueryParameter : ConfigurationElement, IQueryParameter
+    public class QueryParameter : NapConfigurationElementBase<IQueryParameter, string>, IQueryParameter
     {
         /// <summary>
         /// Gets or sets the key of the header.
         /// Example: "name" in "/index?name=John"
         /// </summary>
         [ConfigurationProperty("key", IsRequired = true)]
-        public string Key
+        public override string Key
         {
             get { return (string)this["key"]; }
             set { this["key"] = value; }
@@ -38,7 +39,7 @@ namespace Nap.Configuration.Sections
         /// Example: "John" in "/index?name=John"
         /// </summary>
         [ConfigurationProperty("value", IsRequired = true)]
-        public string Value
+        public override string Value
         {
             get { return (string)this["value"]; }
             set { this["value"] = value; }
@@ -51,6 +52,16 @@ namespace Nap.Configuration.Sections
         public QueryParameter Clone()
         {
             return new QueryParameter { Key = Key, Value = Value };
+        }
+
+        /// <summary>
+        /// A method to hydrate the current instance of the <see cref="QueryParameter"/> with a non-configuration enabled version of data.
+        /// </summary>
+        /// <param name="original">The original <see cref="IQueryParameter"/> implementation (or other implementation) with data used to hydrate this object.</param>
+        public override void Hydrate(IQueryParameter original)
+        {
+            Key = original.Key;
+            Value = original.Value;
         }
     }
 }

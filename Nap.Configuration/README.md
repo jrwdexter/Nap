@@ -5,7 +5,7 @@ Nap.Configuration
 
 Make a simple sonfiguration declaration:
 ```c#
-NapSetup.AddConfig(NapConfig.GetCurrent);
+NapSetup.RegisterPlugin<NapConfigurationPlugin>();
 ```
 
 ## Usage
@@ -35,6 +35,15 @@ NapSetup.AddConfig(NapConfig.GetCurrent);
     <proxy address="http://localhost:8080" />
     <authentication username="jdoe" password="password123" />
   </advanced>
+  <profiles>
+    <add key="foobar">
+      <profile baseUrl="http://foobar.com" fillMetadata="false" serialization="Json">
+        <headers>
+          <add key="TOKEN" value="LONG_GUID" />
+        </headers>
+      </profile>
+    </add>
+  </profiles>
 </nap>
 ```
 
@@ -79,3 +88,29 @@ var cake = nap.Get("/cake")
 ```
 
 The end result would perform an HTTP GET Request to `http://example.com/cake` (from *.config), using a query parameter of "temp=300F" (Nap() configuration level) and a Header of "sugar: 10g" (Fluent level).  This allows for a high degree of customization on a per-request or per-scope basis.
+
+Additionally, profiles can be created to allow for simple specification of contexts for various common request parameters:
+
+```xml
+...
+  <profiles>
+    <add key="foobar">
+      <profile baseUrl="http://foobar.com" fillMetadata="false" serialization="Json">
+        <headers>
+          <add key="TOKEN" value="LONG_GUID" />
+        </headers>
+      </profile>
+    </add>
+  </profiles>
+...
+```
+
+Then calling
+
+```c#
+var nap = new NapClient();
+nap.ApplyConfiguration("foobar");
+var buzz = nap.Get("/buzz");
+```
+
+would apply the URL http://foobar.com and the header `TOKEN`.

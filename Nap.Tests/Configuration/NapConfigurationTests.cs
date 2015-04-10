@@ -19,7 +19,7 @@ namespace Nap.Configuration.Tests
         [TestInitialize]
         public void Setup()
         {
-            NapSetup.AddConfig(NapConfig.GetCurrent);
+            NapSetup.RegisterPlugin<NapConfigurationPlugin>();
         }
 
         [TestMethod]
@@ -82,16 +82,52 @@ namespace Nap.Configuration.Tests
 
         [TestMethod]
         [TestCategory("Configuration")]
-		[TestCategory("Nap.Html")]
-		public void GetConfiguration_FromConfigFile_Formatters_Match()
-		{
-			var formatters = NapClient.Lets.Config.Formatters.AsDictionary();
+        [TestCategory("Nap.Html")]
+        public void GetConfiguration_FromConfigFile_Formatters_Match()
+        {
+            var formatters = NapClient.Lets.Config.Formatters.AsDictionary();
 
-			// Assert
-			Assert.IsNotNull(formatters);
-			Assert.AreEqual(4, formatters.Count, "App.Config should populate one formatter, and 3 should be added by default.");
-			Assert.AreEqual("text/html", formatters.Last().Key);
-			Assert.IsInstanceOfType(formatters.Last().Value, typeof(NapHtmlFormatter));
-		}
+            // Assert
+            Assert.IsNotNull(formatters);
+            Assert.AreEqual(4, formatters.Count, "App.Config should populate one formatter, and 3 should be added by default.");
+            Assert.AreEqual("text/html", formatters.Last().Key);
+            Assert.IsInstanceOfType(formatters.Last().Value, typeof(NapHtmlFormatter));
+        }
+
+        [TestMethod]
+        [TestCategory("Configuration")]
+        public void GetConfiguration_FromConfigFile_Profile_HasProfile()
+        {
+            var config = (NapConfig)NapClient.Lets.Config;
+
+            // Assert
+            Assert.IsTrue(config.Profiles.Any(), "App.config should have at least one profile");
+        }
+
+        [TestMethod]
+        [TestCategory("Configuration")]
+        public void GetConfiguration_FromConfigFile_Profile_IsForFoobar()
+        {
+            var config = (NapConfig)NapClient.Lets.Config;
+
+            // Assert
+            Assert.IsTrue(config.Profiles.AsDictionary().ContainsKey("foobar"), "App.config should have a profile for foobar.com");
+        }
+
+        [TestMethod]
+        [TestCategory("Configuration")]
+        public void GetConfiguration_FromConfigFile_Profile_Foobar_HasValidValues()
+        {
+            var config = (NapConfig)NapClient.Lets.Config;
+            var profile = config.Profiles.AsDictionary()["foobar"];
+
+            // Assert
+            Assert.AreEqual("http://www.foobar.com", profile.BaseUrl);
+            Assert.IsFalse(profile.FillMetadata, "Foobar profile should have fillMetadata=false");
+            Assert.AreEqual("Json", profile.Serialization);
+            Assert.IsTrue(profile.Headers.Any(), "Foobar profile should have at least one header");
+            Assert.IsTrue(profile.Headers.Any(h => h.Key == "TOKEN"), "Foobar profile should have at least one header with key 'TOKEN'");
+            Assert.AreEqual("LONG_GUID", profile.Headers.First(h => h.Key == "TOKEN").Value);
+        }
     }
 }

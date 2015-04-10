@@ -48,6 +48,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChildNapConfig.cs" />
+    <Compile Include="Extensions\NapClientExtensions.cs" />
+    <Compile Include="NapConfigurationPlugin.cs" />
+    <Compile Include="Sections\Base\NapConfigurationCollectionBase.cs" />
+    <Compile Include="Sections\Base\IProfile.cs" />
+    <Compile Include="Sections\Base\IProfiles.cs" />
+    <Compile Include="Sections\Base\NapConfigurationElementBase.cs" />
+    <Compile Include="Sections\Profile.cs" />
+    <Compile Include="Sections\Profiles.cs" />
     <Compile Include="Sections\AdvancedNapConfig.cs" />
     <Compile Include="Sections\AuthenticationNapConfig.cs" />
     <Compile Include="Sections\FormatterConfig.cs" />
