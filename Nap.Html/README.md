@@ -74,7 +74,7 @@ could be bound to
 ```c#
 public class Person
 {
-  [HtmlElement(".firstName")]
+  [HtmlElement("#firstName")]
   public string FirstName { get; set; }
 
   [HtmlElement("#person .lastName")]
