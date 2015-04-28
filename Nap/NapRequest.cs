@@ -202,7 +202,9 @@ namespace Nap
         /// <returns>The response body content.</returns>
         public string Execute()
         {
-            return ExecuteAsync().Result;
+            var execution = ExecuteAsync();
+            execution.ConfigureAwait(false);
+            return execution.Result;
         }
 
         /// <summary>
@@ -215,7 +217,9 @@ namespace Nap
         /// </returns>
         public T Execute<T>() where T : class, new()
         {
-            return ExecuteAsync<T>().Result;
+            var execution = ExecuteAsync<T>();
+            execution.ConfigureAwait(false);
+            return execution.Result;
         }
 
         #endregion
