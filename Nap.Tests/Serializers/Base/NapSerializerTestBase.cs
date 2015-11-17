@@ -6,9 +6,9 @@ using System.Reflection;
 
 using Nap.Tests.TestClasses;
 
-namespace Nap.Tests.Formatters.Base
+namespace Nap.Tests.Serializers.Base
 {
-    public abstract class NapFormatterTestBase
+    public abstract class NapSerializerTestBase
     {
         protected static string GetFileContents(string fileName)
         {

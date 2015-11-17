@@ -10,10 +10,10 @@ namespace Nap.Configuration
 	public class EmptyNapConfig : INapConfig
 	{
 		/// <summary>
-		/// Gets or sets the formatters that can be used to both serialize and deserialize content.
+		/// Gets or sets the serializers that can be used to both serialize and deserialize content.
 		/// </summary>
-		/// <value>The formatters.</value>
-		public IFormattersConfig Formatters { get; set; } = new EmptyFormattersConfig();
+		/// <value>The serializers.</value>
+		public ISerializersConfig Serializers { get; set; } = new EmptySerializersConfig();
 
 		/// <summary>
 		/// Gets or sets the optional base URL for easy requests.
@@ -32,7 +32,7 @@ namespace Nap.Configuration
 		public IQueryParameters QueryParameters { get; private set; } = new EmptyQueryParameters();
 
 		/// <summary>
-		/// Gets or sets the Content-Type format, and which formatter to use on serialization.
+		/// Gets or sets the Content-Type format, and which serializer to use on serialization.
 		/// Available options are at <see cref="RequestFormat"/>.
 		/// </summary>
 		public string Serialization { get; set; } = RequestFormat.Json;
@@ -57,7 +57,7 @@ namespace Nap.Configuration
 		{
 			var clone = new EmptyNapConfig
 			{
-				Formatters = new EmptyFormattersConfig(Formatters),
+				Serializers = new EmptySerializersConfig(Serializers),
 				BaseUrl = BaseUrl,
 				FillMetadata = FillMetadata,
 				Serialization = Serialization,

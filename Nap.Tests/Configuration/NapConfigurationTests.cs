@@ -83,15 +83,15 @@ namespace Nap.Configuration.Tests
         [TestMethod]
         [TestCategory("Configuration")]
         [TestCategory("Nap.Html")]
-        public void GetConfiguration_FromConfigFile_Formatters_Match()
+        public void GetConfiguration_FromConfigFile_Serializers_Match()
         {
-            var formatters = NapClient.Lets.Config.Formatters.AsDictionary();
+            var serializers = NapClient.Lets.Config.Serializers.AsDictionary();
 
             // Assert
-            Assert.IsNotNull(formatters);
-            Assert.AreEqual(4, formatters.Count, "App.Config should populate one formatter, and 3 should be added by default.");
-            Assert.AreEqual("text/html", formatters.Last().Key);
-            Assert.IsInstanceOfType(formatters.Last().Value, typeof(NapHtmlFormatter));
+            Assert.IsNotNull(serializers);
+            Assert.AreEqual(4, serializers.Count, "App.Config should populate one serializer, and 3 should be added by default.");
+            Assert.AreEqual("text/html", serializers.Last().Key);
+            Assert.IsInstanceOfType(serializers.Last().Value, typeof(NapHtmlSerializer));
         }
 
         [TestMethod]

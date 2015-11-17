@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Reflection;
 using System.Text;
+using Nap.Serializers.Base;
 
-using Nap.Formatters.Base;
-
-namespace Nap.Formatters
+namespace Nap.Serializers
 {
     /// <summary>
-    /// The formatter corresponding to the "application/x-www-form-urlencoded" MIME type.
+    /// The serializer corresponding to the "application/x-www-form-urlencoded" MIME type.
     /// </summary>
     /// <remarks>Does not support the <see cref="Deserialize{T}"/> method.</remarks>
-    public class NapFormsFormatter : INapFormatter
+    public class NapFormsSerializer : INapSerializer
     {
         /// <summary>
-        /// Gets the MIME type corresponding to a given implementation of the <see cref="INapFormatter"/> interface.
+        /// Gets the MIME type corresponding to a given implementation of the <see cref="INapSerializer"/> interface.
         /// Returns "application/x-www-form-urlencoded".
         /// </summary>
         public string ContentType => "application/x-www-form-urlencoded";

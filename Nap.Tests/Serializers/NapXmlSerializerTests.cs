@@ -8,60 +8,60 @@ using System.Xml.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nap.Exceptions;
-using Nap.Formatters;
-using Nap.Tests.Formatters.Base;
+using Nap.Serializers;
+using Nap.Tests.Serializers.Base;
 using Nap.Tests.TestClasses;
 
-namespace Nap.Tests.Formatters
+namespace Nap.Tests.Serializers
 {
     [TestClass]
-    public class NapXmlFormatterTests : NapFormatterTestBase
+    public class NapXmlSerializerTests : NapSerializerTestBase
     {
-        private NapXmlFormatter _xmlFormatter;
+        private NapXmlSerializer _xmlSerializer;
 
         [TestInitialize]
         public void Setup()
         {
-            _xmlFormatter = new NapXmlFormatter();
+            _xmlSerializer = new NapXmlSerializer();
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         public void GetContentType_EqualsApplicationXml()
         {
             // Assert
-            Assert.AreEqual("application/xml", _xmlFormatter.ContentType);
+            Assert.AreEqual("application/xml", _xmlSerializer.ContentType);
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Serialize_Null_ThrowsException()
         {
             // Act
-            _xmlFormatter.Serialize(null);
+            _xmlSerializer.Serialize(null);
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Deserialize_Null_ThrowsException()
         {
             // Act
-            _xmlFormatter.Deserialize<TestClass>(null);
+            _xmlSerializer.Deserialize<TestClass>(null);
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         [ExpectedException(typeof(ConstructorNotFoundException))]
         public void Deserialize_IntoClassWithoutParameterlessConstructor_ThrowsException()
         {
             // Act
-            _xmlFormatter.Deserialize<RequiresParameters_TestClass>("");
+            _xmlSerializer.Deserialize<RequiresParameters_TestClass>("");
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         public void Serialize_TestClass_ReturnsValidXml()
         {
             // Arrange
@@ -72,7 +72,7 @@ namespace Nap.Tests.Formatters
             xdoc.Schemas.Add(string.Empty, XmlReader.Create(new StringReader(schema)));
 
             // Act
-            var xml = _xmlFormatter.Serialize(test);
+            var xml = _xmlSerializer.Serialize(test);
             xdoc.LoadXml(xml);
             xdoc.Validate(validatorMessages.HandleValidationError);
 
@@ -81,7 +81,7 @@ namespace Nap.Tests.Formatters
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         public void Serialize_ParentTestClass_ReturnsValidXml()
         {
             // Arrange
@@ -100,7 +100,7 @@ namespace Nap.Tests.Formatters
             xdoc.Schemas.Add(string.Empty, XmlReader.Create(new StringReader(schema)));
 
             // Act
-            var xml = _xmlFormatter.Serialize(test);
+            var xml = _xmlSerializer.Serialize(test);
             xdoc.LoadXml(xml);
             xdoc.Validate(validatorMessages.HandleValidationError);
 
@@ -109,29 +109,29 @@ namespace Nap.Tests.Formatters
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         public void Deserialize_BasicJson_DoesNotThrowException()
         {
             // Arrange
             string json = GetFileContents("TestClass.xml");
 
             // Act
-            var result = _xmlFormatter.Deserialize<TestClass>(json);
+            var result = _xmlSerializer.Deserialize<TestClass>(json);
 
             // Assert
             Assert.IsNotNull(result);
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         public void Serialization_ThenDeserialization_OfTestClass_MatchesInput()
         {
             // Arrange
             var input = new TestClass { FirstName = "John", LastName = "Doe" };
 
             // Act
-            var json = _xmlFormatter.Serialize(input);
-            var output = _xmlFormatter.Deserialize<TestClass>(json);
+            var json = _xmlSerializer.Serialize(input);
+            var output = _xmlSerializer.Deserialize<TestClass>(json);
 
             // Assert
             Assert.AreEqual(input.FirstName, output.FirstName);
@@ -139,7 +139,7 @@ namespace Nap.Tests.Formatters
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         public void Serialization_ThenDeserialization_OfParentTestClass_MatchesInput()
         {
             // Arrange
@@ -154,8 +154,8 @@ namespace Nap.Tests.Formatters
             };
 
             // Act
-            var json = _xmlFormatter.Serialize(input);
-            var output = _xmlFormatter.Deserialize<ParentTestClass>(json);
+            var json = _xmlSerializer.Serialize(input);
+            var output = _xmlSerializer.Deserialize<ParentTestClass>(json);
 
             // Assert
             for (int i = 0; i < input.Children.Count(); i++)

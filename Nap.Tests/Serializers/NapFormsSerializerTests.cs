@@ -1,59 +1,58 @@
 ﻿using System;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using Nap.Formatters;
-using Nap.Tests.Formatters.Base;
+using Nap.Serializers;
+using Nap.Tests.Serializers.Base;
 using Nap.Tests.TestClasses;
 
-namespace Nap.Tests.Formatters
+namespace Nap.Tests.Serializers
 {
     [TestClass]
-    public class NapFormsFormatterTests : NapFormatterTestBase
+    public class NapFormsSerializerTests : NapSerializerTestBase
     {
-        private NapFormsFormatter _formsFormatter;
+        private NapFormsSerializer _formsSerializer;
 
         [TestInitialize]
         public void Setup()
         {
-            _formsFormatter = new NapFormsFormatter();
+            _formsSerializer = new NapFormsSerializer();
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         public void GetContentType_EqualsApplicationJson()
         {
             // Assert
-            Assert.AreEqual("application/x-www-form-urlencoded", _formsFormatter.ContentType);
+            Assert.AreEqual("application/x-www-form-urlencoded", _formsSerializer.ContentType);
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Serialize_WhenNull_ThenExceptionIsThrown()
         {
             // Act
-            _formsFormatter.Serialize(null);
+            _formsSerializer.Serialize(null);
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         [ExpectedException(typeof(NotSupportedException))]
         public void Deserialize_Null_ThrowsNotSupprtedException()
         {
             // Act
-            _formsFormatter.Deserialize<TestClass>("anything");
+            _formsSerializer.Deserialize<TestClass>("anything");
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         public void Serialize_TestClass_IsCorrect()
         {
             // Arrange
             var test = new TestClass { FirstName = "John", LastName = "Doe" };
 
             // Act
-            var serialized = _formsFormatter.Serialize(test);
+            var serialized = _formsSerializer.Serialize(test);
 
             // Assert
             Assert.AreEqual("FirstName=John&LastName=Doe", serialized);

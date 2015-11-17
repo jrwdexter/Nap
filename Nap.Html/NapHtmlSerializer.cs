@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using Nap.Formatters.Base;
 using Nap.Html.Exceptions;
 using Nap.Html.Factories;
 
 using Nap.Exceptions.Base;
+using Nap.Serializers.Base;
 
 namespace Nap.Html
 {
-	public class NapHtmlFormatter : INapFormatter
+	public class NapHtmlSerializer : INapSerializer
 	{
 		public string ContentType => "text/html";
 

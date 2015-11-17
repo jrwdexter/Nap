@@ -6,65 +6,63 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nap.Exceptions;
 using Nap.Html;
-using Nap.Tests.Formatters.Base;
+using Nap.Tests.Serializers.Base;
 using Nap.Tests.TestClasses;
 
-using Nap.Formatters;
-
-namespace Nap.Tests.Formatters
+namespace Nap.Tests.Serializers
 {
 	[TestClass]
-	public class NapHtmlFormatterTests : NapFormatterTestBase
+	public class NapHtmlSerializerTests : NapSerializerTestBase
 	{
-		private NapHtmlFormatter _htmlFormatter;
+		private NapHtmlSerializer _htmlSerializer;
 
 		[TestInitialize]
 		public void Setup()
 		{
-			_htmlFormatter = new NapHtmlFormatter();
+			_htmlSerializer = new NapHtmlSerializer();
 		}
 
 		[TestMethod]
-		[TestCategory("Formatters")]
+		[TestCategory("Serializers")]
 		[TestCategory("Nap.Html")]
 		public void GetContentType_EqualsTextHtml()
 		{
 			// Assert
-			Assert.AreEqual("text/html", _htmlFormatter.ContentType);
+			Assert.AreEqual("text/html", _htmlSerializer.ContentType);
 		}
 
 		[TestMethod]
-		[TestCategory("Formatters")]
+		[TestCategory("Serializers")]
 		[TestCategory("Nap.Html")]
 		[ExpectedException(typeof(NotSupportedException))]
 		public void Serialize_NotSupportedExceptionIsThrown()
 		{
 			// Act
-			_htmlFormatter.Serialize("<!DOCTYPE html><html lang=\"en\"><head></head><body></body></html>");
+			_htmlSerializer.Serialize("<!DOCTYPE html><html lang=\"en\"><head></head><body></body></html>");
 		}
 
 		[TestMethod]
-		[TestCategory("Formatters")]
+		[TestCategory("Serializers")]
 		[TestCategory("Nap.Html")]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void Deserialize_Null_ThrowsException()
 		{
 			// Act
-			_htmlFormatter.Deserialize<TestClass>(null);
+			_htmlSerializer.Deserialize<TestClass>(null);
 		}
 
 		[TestMethod]
-		[TestCategory("Formatters")]
+		[TestCategory("Serializers")]
 		[TestCategory("Nap.Html")]
 		[ExpectedException(typeof(ConstructorNotFoundException))]
 		public void Deserialize_IntoClassWithoutParameterlessConstructor_ThrowsException()
 		{
 			// Act
-			_htmlFormatter.Deserialize<RequiresParameters_TestClass>("");
+			_htmlSerializer.Deserialize<RequiresParameters_TestClass>("");
 		}
 
 		[TestMethod]
-		[TestCategory("Formatters")]
+		[TestCategory("Serializers")]
 		[TestCategory("Nap.Html")]
 		public void Deserialize_BasicHtml_DoesNotThrowException()
 		{
@@ -72,14 +70,14 @@ namespace Nap.Tests.Formatters
 			string html = GetFileContents("TestClass.html");
 
 			// Act
-			var result = _htmlFormatter.Deserialize<TestClass>(html);
+			var result = _htmlSerializer.Deserialize<TestClass>(html);
 
 			// Assert
 			Assert.IsNotNull(result);
 		}
 
 		[TestMethod]
-		[TestCategory("Formatters")]
+		[TestCategory("Serializers")]
 		[TestCategory("Nap.Html")]
 		public void Deserialization_TestClass_MatchesAppropriateValues()
 		{
@@ -87,7 +85,7 @@ namespace Nap.Tests.Formatters
 			var html = GetFileContents("TestClass.html");
 
 			// Act
-			var person = _htmlFormatter.Deserialize<TestClass>(html);
+			var person = _htmlSerializer.Deserialize<TestClass>(html);
 
 			// Assert
 			Assert.AreEqual("John", person.FirstName);
@@ -95,7 +93,7 @@ namespace Nap.Tests.Formatters
 		}
 
 		[TestMethod]
-		[TestCategory("Formatters")]
+		[TestCategory("Serializers")]
 		[TestCategory("Nap.Html")]
 		public void Deserialization_ParentTestClass_MatchesAppropriateValues()
 		{
@@ -103,7 +101,7 @@ namespace Nap.Tests.Formatters
 			var html = GetFileContents("ParentTestClass.html");
 
 			// Act
-			var person = _htmlFormatter.Deserialize<ParentTestClass>(html);
+			var person = _htmlSerializer.Deserialize<ParentTestClass>(html);
 
 			// Assert
 			Assert.AreEqual("Jeff", person.Spouse.FirstName);

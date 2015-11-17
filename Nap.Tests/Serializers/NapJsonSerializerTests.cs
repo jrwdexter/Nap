@@ -5,63 +5,63 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nap.Exceptions;
-using Nap.Formatters;
-using Nap.Tests.Formatters.Base;
+using Nap.Serializers;
+using Nap.Tests.Serializers.Base;
 using Nap.Tests.TestClasses;
 
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 
-namespace Nap.Tests.Formatters
+namespace Nap.Tests.Serializers
 {
     [TestClass]
-    public class NapJsonFormatterTests : NapFormatterTestBase
+    public class NapJsonSerializerTests : NapSerializerTestBase
     {
-        private NapJsonFormatter _jsonFormatter;
+        private NapJsonSerializer _jsonSerializer;
 
         [TestInitialize]
         public void Setup()
         {
-            _jsonFormatter = new NapJsonFormatter();
+            _jsonSerializer = new NapJsonSerializer();
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         public void GetContentType_EqualsApplicationJson()
         {
             // Assert
-            Assert.AreEqual("application/json", _jsonFormatter.ContentType);
+            Assert.AreEqual("application/json", _jsonSerializer.ContentType);
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Serialize_WhenNull_ThenExceptionIsThrown()
         {
             // Act
-            _jsonFormatter.Serialize(null);
+            _jsonSerializer.Serialize(null);
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         [ExpectedException(typeof(ArgumentNullException))]
         public void Deserialize_Null_ThrowsException()
         {
             // Act
-            _jsonFormatter.Deserialize<TestClass>(null);
+            _jsonSerializer.Deserialize<TestClass>(null);
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         [ExpectedException(typeof(ConstructorNotFoundException))]
         public void Deserialize_IntoClassWithoutParameterlessConstructor_ThrowsException()
         {
             // Act
-            _jsonFormatter.Deserialize<RequiresParameters_TestClass>("");
+            _jsonSerializer.Deserialize<RequiresParameters_TestClass>("");
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         public void Serialize_TestClass_MatchesSchema()
         {
             // Arrange
@@ -69,7 +69,7 @@ namespace Nap.Tests.Formatters
             var schema = JsonSchema.Parse(GetFileContents("TestClass.schema.json"));
 
             // Act
-            var json = _jsonFormatter.Serialize(test);
+            var json = _jsonSerializer.Serialize(test);
             var jsonObject = JObject.Parse(json);
 
             // Assert
@@ -77,7 +77,7 @@ namespace Nap.Tests.Formatters
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         public void Serialize_ParentTestClass_MatchesSchema()
         {
             // Arrange
@@ -93,7 +93,7 @@ namespace Nap.Tests.Formatters
             var schema = JsonSchema.Parse(GetFileContents("ParentTestClass.schema.json"));
 
             // Act
-            var json = _jsonFormatter.Serialize(test);
+            var json = _jsonSerializer.Serialize(test);
             var jsonObject = JObject.Parse(json);
 
             // Assert
@@ -101,29 +101,29 @@ namespace Nap.Tests.Formatters
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         public void Deserialize_BasicJson_DoesNotThrowException()
         {
             // Arrange
             string json = GetFileContents("TestClass.json");
 
             // Act
-            var result = _jsonFormatter.Deserialize<TestClass>(json);
+            var result = _jsonSerializer.Deserialize<TestClass>(json);
 
             // Assert
             Assert.IsNotNull(result);
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         public void Serialization_ThenDeserialization_OfTestClass_MatchesInput()
         {
             // Arrange
             var input = new TestClass { FirstName = "John", LastName = "Doe" };
 
             // Act
-            var json = _jsonFormatter.Serialize(input);
-            var output = _jsonFormatter.Deserialize<TestClass>(json);
+            var json = _jsonSerializer.Serialize(input);
+            var output = _jsonSerializer.Deserialize<TestClass>(json);
 
             // Assert
             Assert.AreEqual(input.FirstName, output.FirstName);
@@ -131,7 +131,7 @@ namespace Nap.Tests.Formatters
         }
 
         [TestMethod]
-        [TestCategory("Formatters")]
+        [TestCategory("Serializers")]
         public void Serialization_ThenDeserialization_OfParentTestClass_MatchesInput()
         {
             // Arrange
@@ -146,8 +146,8 @@ namespace Nap.Tests.Formatters
             };
 
             // Act
-            var json = _jsonFormatter.Serialize(input);
-            var output = _jsonFormatter.Deserialize<ParentTestClass>(json);
+            var json = _jsonSerializer.Serialize(input);
+            var output = _jsonSerializer.Deserialize<ParentTestClass>(json);
 
             // Assert
             for (int i = 0; i < input.Children.Count(); i++)

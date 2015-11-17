@@ -59,8 +59,8 @@
     <Compile Include="Sections\Profiles.cs" />
     <Compile Include="Sections\AdvancedNapConfig.cs" />
     <Compile Include="Sections\AuthenticationNapConfig.cs" />
-    <Compile Include="Sections\FormatterConfig.cs" />
-    <Compile Include="Sections\FormattersConfig.cs" />
+    <Compile Include="Sections\SerializerConfig.cs" />
+    <Compile Include="Sections\SerializersConfig.cs" />
     <Compile Include="Utilities\ConfigurationEnumeratorWrapper.cs" />
     <Compile Include="Sections\QueryParameters.cs" />
     <Compile Include="Sections\QueryParameter.cs" />
