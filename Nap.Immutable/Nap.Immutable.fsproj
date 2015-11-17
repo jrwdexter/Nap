@@ -8,13 +8,13 @@
     <ProjectGuid>e517f21c-31f6-4ea5-8cd4-dbf1b18abf64</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Nap.FSharp</RootNamespace>
-    <AssemblyName>Nap.FSharp</AssemblyName>
+    <AssemblyName>Nap.Immutable</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
     <TargetProfile>netcore</TargetProfile>
     <TargetFSharpCoreVersion>3.259.4.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Name>Nap.FSharp</Name>
+    <Name>Nap.Immutable</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

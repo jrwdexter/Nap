@@ -60,12 +60,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nap.FSharp\Nap.FSharp.fsproj">
-      <Project>{e517f21c-31f6-4ea5-8cd4-dbf1b18abf64}</Project>
-      <Name>Nap.FSharp</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Choose>
