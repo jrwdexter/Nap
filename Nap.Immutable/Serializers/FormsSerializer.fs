@@ -1,12 +1,13 @@
-﻿namespace Nap
+﻿namespace Nap.Serializers
 
 open System
 open System.Text
 open System.Reflection
-open Exceptions
+open Nap.Serializers.Base
+open Nap.ExceptionHelpers
 
 type FormsSerializer =
-    interface ISerializer with
+    interface INapSerializer with
         member this.ContentType = "application/x-www-form-urlencoded";
         member this.Deserialize<'T> serialized =
             notSupported "Forms deserialization is not supported."

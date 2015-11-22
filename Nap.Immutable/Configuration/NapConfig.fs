@@ -2,10 +2,11 @@
 
 open System
 open System.Net.Http
+open Nap.Serializers.Base
 
 type NapConfig = 
     {
-        Serializers     : Map<string, ISerializer>
+        Serializers     : Map<string, INapSerializer>
         BaseUri         : string
         Headers         : Map<string, string>
         QueryParameters : Map<string, string>

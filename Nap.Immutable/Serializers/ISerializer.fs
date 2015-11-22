@@ -1,6 +1,6 @@
-﻿namespace Nap
+﻿namespace Nap.Serializers.Base
 
-type ISerializer = 
+type INapSerializer = 
     abstract member ContentType : string
     abstract member Deserialize<'T> : string -> 'T option
     abstract member Serialize : obj -> string

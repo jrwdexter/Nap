@@ -1,10 +1,11 @@
-﻿namespace Nap
+﻿namespace Nap.Serializers
 
 open System.IO
+open Nap.Serializers.Base
 open System.Xml
 
 type XmlSerializer =
-    interface ISerializer with
+    interface INapSerializer with
         member this.ContentType = "application/xml"
         member this.Deserialize<'T> serialized =
             match serialized with

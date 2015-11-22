@@ -1,10 +1,11 @@
-﻿namespace Nap
+﻿namespace Nap.Serializers
 
 open System.Reflection
+open Nap.Serializers.Base
 open Newtonsoft.Json
 
 type JsonSerializer = 
-    interface ISerializer with
+    interface INapSerializer with
         member this.ContentType = "application/json"
         member this.Deserialize<'T> serialized = 
             match serialized with

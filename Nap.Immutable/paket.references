@@ -1,2 +1,6 @@
-Newtonsoft.Json
+System.Net.Http
+System.Collections.Concurrent
+
 FSharp.Core
+
+Newtonsoft.Json

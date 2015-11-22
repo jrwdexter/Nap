@@ -20,7 +20,7 @@ module Async =
             return f value
         }
 
-module Exceptions =
+module ExceptionHelpers =
     let notSupported message : 'T =
         raise <| new NotSupportedException(message)
 

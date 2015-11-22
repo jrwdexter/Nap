@@ -8,6 +8,8 @@ open System.Net.Http
 open System.Reflection
 open System.Threading.Tasks
 
+open Nap.Serializers.Base
+
 open Finalizable
 open AsyncFinalizable
 open Operators
