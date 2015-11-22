@@ -1,6 +1,7 @@
 ﻿namespace Nap
 
 open System.Net.Http
+open System.Threading.Tasks
 
 type INapRequest =
     abstract member DoNot : unit -> IRemovableNapRequestComponent
@@ -10,8 +11,8 @@ type INapRequest =
     abstract member IncludeHeader : string -> string -> INapRequest
     abstract member IncludeCookie : string -> string -> string -> INapRequest
     abstract member FillMetadata : unit -> INapRequest
-    abstract member ExecuteAsync : unit -> Async<string>
-    abstract member ExecuteAsync<'T> : unit -> Async<'T>
+    abstract member ExecuteAsync : unit -> Task<string>
+    abstract member ExecuteAsync<'T> : unit -> Task<'T>
     abstract member Execute : unit -> string
     abstract member Execute<'T> : unit -> 'T
 

@@ -7,4 +7,3 @@ type LogLevel =
     | Warn = 3
     | Error = 4
     | Fatal = 5
-

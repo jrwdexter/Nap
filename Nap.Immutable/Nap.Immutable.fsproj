@@ -49,9 +49,13 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Utilities.fs" />
-    <Compile Include="Serializers.fs" />
     <Compile Include="LogLevel.fs" />
-    <Compile Include="Event.fs" />
+    <Compile Include="Serializers\ISerializer.fs" />
+    <Compile Include="Serializers\JsonSerializer.fs" />
+    <Compile Include="Serializers\XmlSerializer.fs" />
+    <Compile Include="Serializers\FormsSerializer.fs" />
+    <Compile Include="Events\Finalizable.fs" />
+    <Compile Include="Events\Event.fs" />
     <Compile Include="Configuration\Credentials.fs" />
     <Compile Include="Configuration\AuthenticationNapConfig.fs" />
     <Compile Include="Configuration\ProxyNapConfig.fs" />
@@ -62,7 +66,7 @@
     <Compile Include="Plugins\IPlugin.fs" />
     <Compile Include="Plugins\BasePlugin.fs" />
     <Compile Include="Plugins\DefaultPlugin.fs" />
-    <Compile Include="Types.fs" />
+    <Compile Include="NapSetup.fs" />
     <Compile Include="NapClient.fs" />
     <Compile Include="FNap.fs" />
     <None Include="Script.fsx" />

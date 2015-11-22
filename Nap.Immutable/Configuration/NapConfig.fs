@@ -5,7 +5,7 @@ open System.Net.Http
 
 type NapConfig = 
     {
-        Serializers     : ISerializer list
+        Serializers     : Map<string, ISerializer>
         BaseUri         : string
         Headers         : Map<string, string>
         QueryParameters : Map<string, string>
@@ -17,7 +17,7 @@ type NapConfig =
     with
     static member Default =
         {
-            Serializers = []
+            Serializers = Map.empty
             BaseUri = ""
             Headers = Map.empty
             QueryParameters = Map.empty

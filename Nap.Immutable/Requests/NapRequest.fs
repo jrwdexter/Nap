@@ -1,14 +1,29 @@
 ﻿namespace Nap
 
 open System
+open System.Collections.Generic
+open System.IO
 open System.Net
 open System.Net.Http
+open System.Reflection
+open System.Threading.Tasks
 
 open Finalizable
+open AsyncFinalizable
+open Operators
+open Text
+
+type InternalResponse =
+    {
+        Raw : HttpResponseMessage
+        Content : string
+        Deserialized : obj option
+    }
 
 type NapRequest =
     {
         Config          : NapConfig
+        Response        : InternalResponse option
         RequestEvents   : Map<string, Event<NapRequest> list>
         Url             : string
         Method          : HttpMethod
@@ -22,6 +37,7 @@ type NapRequest =
     static member internal Default =
         {
             Config = NapConfig.Default
+            Response = None
             RequestEvents = Map.empty
             Url = ""
             Method = HttpMethod.Get
@@ -78,6 +94,12 @@ type NapRequest =
         |> fun x -> x :> INapRequest
 
     (*** Event helpers ***)
+    static member internal RunEventsAsync eventName asyncFinalizableRequest =
+        async {
+            let! finalizableRequest = asyncFinalizableRequest
+            return NapRequest.RunEvents eventName finalizableRequest
+        }
+
     static member internal RunEvents eventName (finalizableRequest:FinalizableType<NapRequest>) =
         let request = finalizableRequest |> Finalizable.get
         request.Debug "Nap.NapRequest.RunEvents()" (sprintf "Running events for %s on %A" eventName request)
@@ -94,6 +116,122 @@ type NapRequest =
     member private x.Error = x.Log LogLevel.Error
     member private x.Fatal path message = x.Log LogLevel.Fatal path message; failwith (sprintf "[%s] %s" path message)
 
+    (*** Request running implementation ***)
+    member private x.CreateUrl () =
+        let pairToQueryStringValue (k,v) =
+            sprintf "%s=%s" k <| WebUtility.UrlEncode(v)
+        x.Url |?? String.Empty
+        |> fun url ->
+            match url with
+            | Prefix "http" _ -> url
+            | _ -> new Uri(new Uri(x.Config.BaseUri), url) |> string
+        |> fun url ->
+            match x.QueryParameters |> Map.toArray with 
+            | [||] -> url
+            | parameters -> sprintf "%s?%s" (url.TrimEnd('?')) <|
+                                (parameters |> Array.map pairToQueryStringValue |> fun l -> String.Join("&", l))
+
+    member private x.GetSerializer contentType =
+        let serializer = x.Config.Serializers |> Map.tryFind contentType
+        let seperator = "/"
+        match serializer with
+        | Some(s) -> s |> Some
+        | None -> 
+            match contentType with
+            | Split seperator (_::tail)  -> x.GetSerializer (tail |> String.concat seperator)
+            | _ -> None
+
+    static member private RunRequestAsync request =
+        async {
+            let excludedHeaders = ["content-type"]
+            use client = request.Config.Advanced.ClientCreator (box request)
+            let content = new StringContent(request.Content |?? "")
+            let requestMessage = new HttpRequestMessage(request.Method, request.CreateUrl())
+            let allowedDefaultHeaders = request.Headers |> Map.filter (fun headerName _ -> excludedHeaders |> Seq.forall (fun eh -> eh.Equals(headerName, StringComparison.OrdinalIgnoreCase)))
+            for (h,v) in allowedDefaultHeaders |> Map.toSeq do
+                client.DefaultRequestHeaders.Add(h, v)
+            match request.Headers |> Map.toSeq |> Seq.tryFind (fun (k,_) -> k.Equals("content-type", StringComparison.OrdinalIgnoreCase)) with
+            | Some((_,v)) -> content.Headers.ContentType.MediaType <- v
+            | None -> content.Headers.ContentType.MediaType <- (request.Config.Serializers.[request.Config.Serialization]).ContentType
+            requestMessage.Content <- content
+            let! response = client.SendAsync(requestMessage) |> Async.AwaitTask
+            let! content = response.Content.ReadAsStringAsync() |> Async.AwaitTask
+            return { request with Response = { Raw = response; Content = content; Deserialized = None } |> Some }
+        }
+
+    static member private Deserialize<'T> request =
+        let path = sprintf "NapRequest.RunReqest()/NapRequest.Deserialize<%s>() [%s]" typeof<'T>.FullName request.Url
+        match request.Response with
+            | Some(response) ->
+                let serializerOption = request.GetSerializer <| response.Raw.Content.Headers.ContentType.MediaType
+                match serializerOption with
+                | Some(serializer) -> 
+                    request.Verbose path <| sprintf "Deserializing content with %s deserializer" (serializer.GetType().FullName)
+                    { request with
+                        Response = { response with Deserialized = serializer.Deserialize response.Content } |> Some
+                    }
+                | None ->
+                    request.Warn path <| sprintf "No deserializer found for content type '%s'" response.Raw.Content.Headers.ContentType.MediaType
+                    request
+            | None ->
+                request.Warn path "No response recieved."
+                request
+
+    static member private FillMetadata<'T> request =
+        match request.Config.FillMetadata, request.Response, request.Response |> Option.bind(fun r -> r.Deserialized) with
+        | true,Some(response),Some(deserializedObj) ->
+            let deserialized = unbox<'T> response.Deserialized
+            let statusCodeProperty = typeof<'T>.GetRuntimeProperty("StatusCode")
+            if isNull statusCodeProperty |> not then
+                statusCodeProperty.SetValue(deserialized, Convert.ChangeType(response.Raw.StatusCode, statusCodeProperty.PropertyType))
+            let cookieProperty = typeof<'T>.GetRuntimeProperty("Cookies")
+            if isNull cookieProperty |> not then
+                let cookies =
+                    response.Raw.Headers
+                    |> Seq.filter (fun h -> h.Key.StartsWith("set-cookie", StringComparison.OrdinalIgnoreCase))
+                    |> Seq.filter (fun c -> (c.Value |> Seq.length) > 0)
+                    |> Seq.map (fun c -> new KeyValuePair<string, string>(c.Key, c.Value |> Seq.head))
+                cookieProperty.SetValue(deserialized, cookies)
+            { request with Response = { response with Deserialized = Some(box deserialized) } |> Some } 
+        | _ -> request
+
+    member x.ExecuteFSTypedAsync<'T> () =
+        async {
+            let path = sprintf "NapRequest.Execute() [%s]" x.Url
+            x.Info path <| sprintf "Executing %O request with body %s" x.Method x.Content
+            x.Verbose path <| sprintf "Executing %O request with parameters full structure %A" x.Method x
+            let! processedRequest =
+                async.Return <| Continuing(x)
+                |> NapRequest.RunEventsAsync "BeforeNapRequestExecution"
+                |> AsyncFinalizable.bindAsync (NapRequest.RunRequestAsync)
+                |> NapRequest.RunEventsAsync "AfterNapRequestExecution"
+                |> NapRequest.RunEventsAsync "BeforeResponseDeserialization"
+                <!!> fun response -> NapRequest.Deserialize<'T> response
+                |> NapRequest.RunEventsAsync "AfterResponseDeserialization"
+                |> AsyncFinalizable.get
+                |> Async.map (fun request -> NapRequest.FillMetadata<'T> request)
+            let deserializedObj = processedRequest.Response |> Option.bind (fun response -> response.Deserialized)
+            return
+                match deserializedObj with
+                | Some(deserialized) -> unbox<'T> deserialized |> Some
+                | None -> None
+        }
+        
+            
+    member x.ExecuteFSAsync () = 
+        async {
+            let path = sprintf "NapRequest.Execute() [%s]" x.Url
+            x.Info path <| sprintf "Executing %O request with body %s" x.Method x.Content
+            x.Verbose path <| sprintf "Executing %O request with parameters full structure %A" x.Method x
+            let! processedRequest =
+                async.Return <| Continuing(x)
+                |> NapRequest.RunEventsAsync "BeforeNapRequestExecution"
+                |> AsyncFinalizable.bindAsync (NapRequest.RunRequestAsync)
+                |> NapRequest.RunEventsAsync "AfterNapRequestExecution"
+                |> AsyncFinalizable.get
+            return processedRequest.Response |> Option.bind (fun response -> response.Content |> Some)
+        }
+
     (*** INapRequest interface implementation ***)
     interface INapRequest with
         member x.Advanced(): IAdvancedNapRequestComponent = 
@@ -103,16 +241,24 @@ type NapRequest =
             x :> IRemovableNapRequestComponent
 
         member x.Execute(): 'T = 
-            failwith "Not implemented yet"
+            let result = x.ExecuteFSTypedAsync () |> Async.RunSynchronously
+            defaultArg result Unchecked.defaultof<'T>
 
         member x.Execute(): string = 
-            failwith "Not implemented yet"
+            let result = x.ExecuteFSAsync () |> Async.RunSynchronously
+            defaultArg result null
 
-        member x.ExecuteAsync(): Async<'T> = 
-            failwith "Not implemented yet"
+        member x.ExecuteAsync<'T> () : Task<'T> =
+            async {
+                let! result = x.ExecuteFSTypedAsync<'T> ()
+                return defaultArg result Unchecked.defaultof<'T>
+            } |> Async.StartAsTask
 
-        member x.ExecuteAsync(): Async<string> = 
-            failwith "Not implemented yet"
+        member x.ExecuteAsync(): Task<string> = 
+            async {
+                let! result = x.ExecuteFSTypedAsync<'T> ()
+                return defaultArg result null
+            } |> Async.StartAsTask
 
         member x.FillMetadata(): INapRequest = 
             x.Verbose "Nap.NapRequest.FillMetadata()" "Flagging metadata to be filled."
@@ -128,7 +274,7 @@ type NapRequest =
                 Continuing(x)
                 |> NapRequest.RunEvents "BeforeRequestSerialization"
                 <!> fun request ->
-                    match request.Config.Serializers |> List.tryFind (fun s -> s.ContentType = request.Config.Serialization) with
+                    match request.Config.Serializers |> Map.tryFind request.Config.Serialization with
                     | Some(serializer) -> { request with Content = serializer.Serialize(body) }
                     | None -> 
                         x.Error "Nap.NapRequest.IncludeBody()" (sprintf "Could not serialize content of type %s with serializer %s" (body.GetType().ToString()) x.Config.Serialization)
