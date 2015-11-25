@@ -28,7 +28,11 @@ namespace Nap.Tests.Issues
 	    {
 	        var html = GetFileContents("Issue5.html");
 
-	        var tests = _htmlSerializer.Deserialize<TestIssue5>(html);
+#if IMMUTABLE
+		    var tests = _htmlSerializer.Deserialize<TestIssue5>(html).Value;
+#else
+            var tests = _htmlSerializer.Deserialize<TestIssue5>(html);
+#endif
 
             Assert.AreEqual(5, tests.Items.Count);
 

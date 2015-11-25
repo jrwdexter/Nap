@@ -1,8 +1,8 @@
 ﻿namespace Nap
 
-type FinalizableType<'T> = 
-    | Continuing of 'T
-    | Final of 'T
+type FinalizableType<'TCurrent,'TFinal> = 
+    | Continuing of 'TCurrent
+    | Final of 'TFinal
 
 module Finalizable =
     let bind f finalizable =
@@ -25,7 +25,7 @@ module Finalizable =
         | Final(v) -> Continuing(v)
         | x -> x
 
-    let toAsync (finalizable:FinalizableType<'T>) =
+    let toAsync (finalizable:FinalizableType<_,_>) =
         async {
             return finalizable
         }

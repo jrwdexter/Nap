@@ -9,5 +9,8 @@ type AuthenticationNapConfig =
     | SAMLAuthentication of Credentials // TODO
     | OAuthV1Authentication of Credentials // TODO
     | OAuthV2Authentication of Credentials // TODO
+    with
+    member x.Basic credentials = 
+        BasicAuthentication(credentials)
     override x.ToString() =
         sprintf "%A" x

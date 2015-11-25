@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A9CC8956-2590-4DFC-B7A8-CB42F5ED26DE}</ProjectGuid>
+    <ProjectGuid>{B6770526-A0BF-4ACF-9A8E-38CB191638E3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nap.Tests</RootNamespace>
-    <AssemblyName>Nap.Tests</AssemblyName>
+    <RootNamespace>Nap.Immutable.Tests</RootNamespace>
+    <AssemblyName>Nap.Immutable.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -23,7 +23,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;IMMUTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -39,6 +39,10 @@
     <Reference Include="FakeItEasy, Version=1.24.0.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
       <HintPath>..\packages\FakeItEasy.1.24.0\lib\net40\FakeItEasy.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\FSharp.Core\lib\portable-net45+netcore45+wpa81+wp8\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="Moq, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
@@ -74,9 +78,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Configuration\NapConfigurationTests.cs" />
-    <Compile Include="Configuration\NapEmptyConfigurationTests.cs" />
-    <Compile Include="Configuration\NapSetupTests.cs" />
     <Compile Include="Serializers\Base\NapSerializerTestBase.cs" />
     <Compile Include="Serializers\NapFormsSerializerTests.cs" />
     <Compile Include="Serializers\NapHtmlSerializerTests.cs" />
@@ -88,20 +89,6 @@
     <Compile Include="TestClasses\ParentTestClass.cs" />
     <Compile Include="TestClasses\RequiresParameters_TestClass.cs" />
     <Compile Include="TestClasses\TestClass.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Nap.Configuration\Nap.Configuration.csproj">
-      <Project>{7d733248-2081-41eb-8c66-dd4bbacec1e8}</Project>
-      <Name>Nap.Configuration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Nap.Html\Nap.Html.csproj">
-      <Project>{de5db636-28e5-4d73-9d70-683e80d47254}</Project>
-      <Name>Nap.Html</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Nap\Nap.csproj">
-      <Project>{2d0869e5-ceb3-4719-bfc3-3faacc721384}</Project>
-      <Name>Nap</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -144,6 +131,16 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nap.Html\Nap.Immutable.Html.csproj">
+      <Project>{176a5029-8bba-499b-9596-9df0f795180a}</Project>
+      <Name>Nap.Immutable.Html</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nap.Immutable\Nap.Immutable.fsproj">
+      <Project>{e517f21c-31f6-4ea5-8cd4-dbf1b18abf64}</Project>
+      <Name>Nap.Immutable</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
@@ -164,7 +161,7 @@
   </Choose>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

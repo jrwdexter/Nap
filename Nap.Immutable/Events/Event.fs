@@ -1,7 +1,7 @@
 ﻿namespace Nap
 
 type Event<'T> =
-    | ModifyingEvent of ('T -> FinalizableType<'T>)
+    | ModifyingEvent of ('T -> FinalizableType<'T,'T>)
     | ActionEvent of ('T -> unit)
     with
     member x.RunEvent value = 

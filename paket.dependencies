@@ -1,0 +1,6 @@
+source https://nuget.org/api/v2
+
+nuget Newtonsoft.Json
+nuget FSharp.Core
+nuget System.Net.Http
+nuget System.Collections.Concurrent

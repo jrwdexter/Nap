@@ -26,6 +26,18 @@ namespace Nap.Tests.Serializers
             Assert.AreEqual("application/x-www-form-urlencoded", _formsSerializer.ContentType);
         }
 
+#if IMMUTABLE
+        [TestMethod]
+        [TestCategory("Serializers")]
+        public void Serialize_WhenNull_ThenNoExceptionIsThrown()
+        {
+            // Act
+            var result = _formsSerializer.Serialize(null);
+            
+            // Assert
+            Assert.AreEqual(string.Empty, result);
+        }
+#else
         [TestMethod]
         [TestCategory("Serializers")]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -34,6 +46,7 @@ namespace Nap.Tests.Serializers
             // Act
             _formsSerializer.Serialize(null);
         }
+#endif
 
         [TestMethod]
         [TestCategory("Serializers")]

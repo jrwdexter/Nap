@@ -6,16 +6,16 @@ open System.Reflection
 open Nap.Serializers.Base
 open Nap.ExceptionHelpers
 
-type FormsSerializer =
-    interface INapSerializer with
-        member this.ContentType = "application/x-www-form-urlencoded";
-        member this.Deserialize<'T> serialized =
+type NapFormsSerializer() =
+    inherit NapSerializerBase()
+        override x.ContentType with get () = "application/x-www-form-urlencoded";
+        override this.Deserialize<'T> serialized =
             notSupported "Forms deserialization is not supported."
             Option<'T>.None
 
-        member this.Serialize graph =
+        override this.Serialize graph =
             match graph with
-            | isNull -> ""
+            | null -> ""
             | _ -> 
                 let sb = new StringBuilder()
                 seq {

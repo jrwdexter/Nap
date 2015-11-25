@@ -21,7 +21,19 @@ namespace Nap.Tests
         private string _url;
 
         [TestInitialize]
-        public void Setup()
+#if IMMUTABLE
+        public void Setup_Immutable()
+        {
+            _url = "http://example.com/test";
+            _handler = new TestHandler();
+            _httpClient = new HttpClient(_handler);
+            var config =
+                NapConfig.Default.SetMetadataBehavior(true)
+                    .ConfigureAdvanced(a => a.SetClientCreator(request => _httpClient));
+            _nap = new NapClient(config);
+        }
+#else
+        public void Setup_Mutable()
         {
             _url = "http://example.com/test";
 
@@ -31,6 +43,7 @@ namespace Nap.Tests
             _httpClient = new HttpClient(_handler);
             _nap.Config.Advanced.ClientCreator = request => _httpClient;
         }
+#endif
 
         [TestMethod]
         [TestCategory("Nap")]
@@ -53,7 +66,11 @@ namespace Nap.Tests
             // Assert
             Assert.AreEqual(200, result.StatusCode);
             Assert.AreEqual(HttpMethod.Get, _handler.Request.Method);
+#if IMMUTABLE
+            Assert.AreEqual(string.Empty, _handler.RequestContent);
+#else
             Assert.AreEqual(null, _handler.Request.Content);
+#endif
             Assert.AreEqual(new Uri(_url), _handler.Request.RequestUri);
         }
 
@@ -101,7 +118,11 @@ namespace Nap.Tests
         public void Nap_PostJson_ContentTypeIncluded()
         {
             // Arrange
+#if IMMUTABLE
+            _nap = new NapClient(_nap.Config.SetDefaultSerialization(RequestFormat.Json));
+#else
             _nap.Config.Serialization = RequestFormat.Json;
+#endif
 
             // Act
             _nap.Post(_url).IncludeBody(new { Foo = "Bar" }).Execute();

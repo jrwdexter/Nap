@@ -102,11 +102,17 @@ type NapRequest =
             return NapRequest.RunEvents eventName finalizableRequest
         }
 
-    static member internal RunEvents eventName (finalizableRequest:FinalizableType<NapRequest>) =
-        let request = finalizableRequest |> Finalizable.get
-        request.Debug "Nap.NapRequest.RunEvents()" (sprintf "Running events for %s on %A" eventName request)
-        let result = request.RequestEvents.[eventName] |> List.fold (fun r event -> r >>= event.RunEvent) finalizableRequest
-        if eventName = "*" then result else result |> NapRequest.RunEvents "*"
+    static member internal RunEvents eventName (finalizableRequest:FinalizableType<NapRequest, _>) =
+        match finalizableRequest with
+        | Continuing(request) ->
+            let result =
+                match request.RequestEvents |> Map.tryFind eventName with
+                | Some(event) ->
+                    request.Debug "Nap.NapRequest.RunEvents()" (sprintf "Running events for %s on %A" eventName request)
+                    event |> List.fold (fun r event -> r >>= event.RunEvent) (Continuing(request))
+                | None -> finalizableRequest
+            if eventName = "*" then result else result |> NapRequest.RunEvents "*"
+        | Final(_) -> finalizableRequest
         
     (*** Logging helpers ***)
     member private x.Log logLevel path message =
@@ -170,7 +176,20 @@ type NapRequest =
                 | Some(serializer) -> 
                     request.Verbose path <| sprintf "Deserializing content with %s deserializer" (serializer.GetType().FullName)
                     { request with
-                        Response = { response with Deserialized = serializer.Deserialize response.Content } |> Some
+                        Response =
+                        {
+                            response with Deserialized =
+                                (serializer.Deserialize<'T> response.Content)
+                                |> fun o -> 
+                                        match o with
+                                        | None -> 
+                                            let parameterlessConstructor =
+                                                typeof<'T>.GetTypeInfo().DeclaredConstructors
+                                                |> Seq.tryFind (fun c -> c.GetParameters().Length = 0 && not <| c.ContainsGenericParameters)
+                                            parameterlessConstructor |> Option.bind (fun c -> c.Invoke(Array.empty) :?> 'T |> Some)
+                                        | x -> x
+                                |> Option.bind (box>>Some)
+                        } |> Some
                     }
                 | None ->
                     request.Warn path <| sprintf "No deserializer found for content type '%s'" response.Raw.Content.Headers.ContentType.MediaType
@@ -182,7 +201,7 @@ type NapRequest =
     static member private FillMetadata<'T> request =
         match request.Config.FillMetadata, request.Response, request.Response |> Option.bind(fun r -> r.Deserialized) with
         | true,Some(response),Some(deserializedObj) ->
-            let deserialized = unbox<'T> response.Deserialized
+            let deserialized = unbox<'T> deserializedObj
             let statusCodeProperty = typeof<'T>.GetRuntimeProperty("StatusCode")
             if isNull statusCodeProperty |> not then
                 statusCodeProperty.SetValue(deserialized, Convert.ChangeType(response.Raw.StatusCode, statusCodeProperty.PropertyType))

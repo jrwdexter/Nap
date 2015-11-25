@@ -4,13 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nap.Exceptions;
 using Nap.Serializers;
 using Nap.Tests.Serializers.Base;
 using Nap.Tests.TestClasses;
+
+#if IMMUTABLE
+using Microsoft.FSharp.Core;
+#endif
 
 namespace Nap.Tests.Serializers
 {
@@ -33,6 +36,40 @@ namespace Nap.Tests.Serializers
             Assert.AreEqual("application/xml", _xmlSerializer.ContentType);
         }
 
+#if IMMUTABLE
+        [TestMethod]
+        [TestCategory("Serializers")]
+        public void Serialize_Null_ReturnsEmptyString()
+        {
+            // Act
+            var result = _xmlSerializer.Serialize(null);
+
+            // Assert
+            Assert.AreEqual(string.Empty, result);
+        }
+
+        [TestMethod]
+        [TestCategory("Serializers")]
+        public void Deserialize_Null_ReturnsNone()
+        {
+            // Act
+            var result = _xmlSerializer.Deserialize<TestClass>(null);
+
+            // Assert
+            Assert.AreEqual(FSharpOption<TestClass>.None, result);
+        }
+
+        [TestMethod]
+        [TestCategory("Serializers")]
+        public void Deserialize_IntoClassWithoutParameterlessConstructor_ReturnsNone()
+        {
+            // Act
+            var result = _xmlSerializer.Deserialize<RequiresParameters_TestClass>("");
+
+            // Assert
+            Assert.AreEqual(FSharpOption<RequiresParameters_TestClass>.None, result);
+        }
+#else
         [TestMethod]
         [TestCategory("Serializers")]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -59,6 +96,7 @@ namespace Nap.Tests.Serializers
             // Act
             _xmlSerializer.Deserialize<RequiresParameters_TestClass>("");
         }
+#endif
 
         [TestMethod]
         [TestCategory("Serializers")]
@@ -131,7 +169,11 @@ namespace Nap.Tests.Serializers
 
             // Act
             var json = _xmlSerializer.Serialize(input);
+#if IMMUTABLE
+            var output = _xmlSerializer.Deserialize<TestClass>(json).Value;
+#else
             var output = _xmlSerializer.Deserialize<TestClass>(json);
+#endif
 
             // Assert
             Assert.AreEqual(input.FirstName, output.FirstName);
@@ -155,7 +197,11 @@ namespace Nap.Tests.Serializers
 
             // Act
             var json = _xmlSerializer.Serialize(input);
+#if IMMUTABLE
+            var output = _xmlSerializer.Deserialize<ParentTestClass>(json).Value;
+#else
             var output = _xmlSerializer.Deserialize<ParentTestClass>(json);
+#endif
 
             // Assert
             for (int i = 0; i < input.Children.Count(); i++)

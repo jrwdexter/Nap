@@ -1,6 +1,7 @@
 ﻿namespace Nap
 
 open System
+open System.Reflection
 open System.Threading.Tasks
 open System.Text
 open System.Text.RegularExpressions
@@ -37,6 +38,12 @@ module Map =
                 map1 |> Map.toSeq;
                 map2 |> Map.filter (fun k v -> not <| map1.ContainsKey k) |> Map.toSeq
             ])
+
+module Types =
+    let (|IsNull|_|) o =
+        match o with
+        | a : 'T when 'T : null -> Some(a)
+        | _ -> None
 
 module Text =
     let (|Prefix|_|) prefix (s:string) =

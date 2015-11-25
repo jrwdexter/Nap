@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nap.Exceptions;
 using Nap.Html;
 using Nap.Tests.Serializers.Base;
 using Nap.Tests.TestClasses;
+
+#if IMMUTABLE
+using Microsoft.FSharp.Core;
+#endif
 
 namespace Nap.Tests.Serializers
 {
@@ -41,7 +44,20 @@ namespace Nap.Tests.Serializers
 			_htmlSerializer.Serialize("<!DOCTYPE html><html lang=\"en\"><head></head><body></body></html>");
 		}
 
-		[TestMethod]
+#if IMMUTABLE
+        [TestMethod]
+		[TestCategory("Serializers")]
+		[TestCategory("Nap.Html")]
+		public void Deserialize_Null_IsNone()
+		{
+			// Act
+			var result = _htmlSerializer.Deserialize<TestClass>(null);
+
+            // Assert
+            Assert.AreEqual(FSharpOption<TestClass>.None, result);
+		}
+#else
+        [TestMethod]
 		[TestCategory("Serializers")]
 		[TestCategory("Nap.Html")]
 		[ExpectedException(typeof(ArgumentNullException))]
@@ -50,11 +66,12 @@ namespace Nap.Tests.Serializers
 			// Act
 			_htmlSerializer.Deserialize<TestClass>(null);
 		}
+#endif
 
 		[TestMethod]
 		[TestCategory("Serializers")]
 		[TestCategory("Nap.Html")]
-		[ExpectedException(typeof(ConstructorNotFoundException))]
+        [ExpectedException(typeof(ConstructorNotFoundException))]
 		public void Deserialize_IntoClassWithoutParameterlessConstructor_ThrowsException()
 		{
 			// Act
@@ -84,8 +101,12 @@ namespace Nap.Tests.Serializers
 			// Arrange
 			var html = GetFileContents("TestClass.html");
 
-			// Act
-			var person = _htmlSerializer.Deserialize<TestClass>(html);
+            // Act
+#if IMMUTABLE
+            var person = _htmlSerializer.Deserialize<TestClass>(html).Value;
+#else
+            var person = _htmlSerializer.Deserialize<TestClass>(html);
+#endif
 
 			// Assert
 			Assert.AreEqual("John", person.FirstName);
@@ -101,7 +122,11 @@ namespace Nap.Tests.Serializers
 			var html = GetFileContents("ParentTestClass.html");
 
 			// Act
+#if IMMUTABLE
+            var person = _htmlSerializer.Deserialize<ParentTestClass>(html).Value;
+#else
 			var person = _htmlSerializer.Deserialize<ParentTestClass>(html);
+#endif
 
 			// Assert
 			Assert.AreEqual("Jeff", person.Spouse.FirstName);

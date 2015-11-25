@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nap.Exceptions;
@@ -11,6 +10,10 @@ using Nap.Tests.TestClasses;
 
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
+
+#if IMMUTABLE
+using Microsoft.FSharp.Core;
+#endif
 
 namespace Nap.Tests.Serializers
 {
@@ -33,13 +36,47 @@ namespace Nap.Tests.Serializers
             Assert.AreEqual("application/json", _jsonSerializer.ContentType);
         }
 
+#if IMMUTABLE
         [TestMethod]
         [TestCategory("Serializers")]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void Serialize_WhenNull_ThenExceptionIsThrown()
+        public void Deserialize_IntoClassWithoutParameterlessConstructor_ReturnsNone()
         {
             // Act
-            _jsonSerializer.Serialize(null);
+            var result = _jsonSerializer.Deserialize<RequiresParameters_TestClass>("");
+
+            // Assert
+            Assert.AreEqual(FSharpOption<RequiresParameters_TestClass>.None, result);
+        }
+
+        [TestMethod]
+        [TestCategory("Serializers")]
+        public void Deserialize_Null_ReturnsNone()
+        {
+            // Act
+            var result = _jsonSerializer.Deserialize<TestClass>(null);
+            
+            // Assert
+            Assert.AreEqual(FSharpOption<RequiresParameters_TestClass>.None, result);
+        }
+
+        [TestMethod]
+        [TestCategory("Serializers")]
+        public void Serialize_WhenNull_ThenEmptyStringIsReturned()
+        {
+            // Act
+            var result = _jsonSerializer.Serialize(null);
+
+            // Assert
+            Assert.AreEqual(string.Empty, result);
+        }
+#else
+        [TestMethod]
+        [TestCategory("Serializers")]
+        [ExpectedException(typeof(ConstructorNotFoundException))]
+        public void Deserialize_IntoClassWithoutParameterlessConstructor_ThrowsException()
+        {
+            // Act
+            _jsonSerializer.Deserialize<RequiresParameters_TestClass>("");
         }
 
         [TestMethod]
@@ -53,12 +90,13 @@ namespace Nap.Tests.Serializers
 
         [TestMethod]
         [TestCategory("Serializers")]
-        [ExpectedException(typeof(ConstructorNotFoundException))]
-        public void Deserialize_IntoClassWithoutParameterlessConstructor_ThrowsException()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void Serialize_WhenNull_ThenExceptionIsThrown()
         {
             // Act
-            _jsonSerializer.Deserialize<RequiresParameters_TestClass>("");
+            _jsonSerializer.Serialize(null);
         }
+#endif
 
         [TestMethod]
         [TestCategory("Serializers")]
@@ -123,7 +161,11 @@ namespace Nap.Tests.Serializers
 
             // Act
             var json = _jsonSerializer.Serialize(input);
+#if IMMUTABLE
+            var output = _jsonSerializer.Deserialize<TestClass>(json).Value;
+#else
             var output = _jsonSerializer.Deserialize<TestClass>(json);
+#endif
 
             // Assert
             Assert.AreEqual(input.FirstName, output.FirstName);
@@ -147,7 +189,11 @@ namespace Nap.Tests.Serializers
 
             // Act
             var json = _jsonSerializer.Serialize(input);
+#if IMMUTABLE
+            var output = _jsonSerializer.Deserialize<ParentTestClass>(json).Value;
+#else
             var output = _jsonSerializer.Deserialize<ParentTestClass>(json);
+#endif
 
             // Assert
             for (int i = 0; i < input.Children.Count(); i++)
