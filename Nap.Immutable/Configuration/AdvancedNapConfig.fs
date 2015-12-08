@@ -1,20 +1,22 @@
 ﻿namespace Nap
 
 open System
+open System.Net
 open System.Net.Http
 
 type AdvancedNapConfig =
     {
-        ClientCreator : obj -> HttpClient
-        Proxy : ProxyNapConfig
+        Proxy : ProxyNapConfig option
         Authentication : AuthenticationNapConfig
+        ClientCreator : (obj -> HttpClient) option
     }
     with
-    (*** Client Creator ***)
-    member x.SetClientCreator (clientCreator:Func<_,_>) =
-        { x with ClientCreator = fun req -> clientCreator.Invoke(req) }
+    (*** Client creator ***)
+    member x.SetClientCreator (clientCreator:Func<obj, HttpClient>) =
+        { x with ClientCreator = (fun nr -> clientCreator.Invoke(nr)) |> Some }
+
     member x.ResetClientCreator () =
-        { x with ClientCreator = AdvancedNapConfig.Default.ClientCreator }
+        { x with ClientCreator = None }
 
     (*** Proxy ***)
     member x.ConfigureProxy (f:Func<_,_>) =
@@ -27,9 +29,9 @@ type AdvancedNapConfig =
     (*** Default/ToString ***)
     static member Default =
         {
-            ClientCreator = fun _ -> new HttpClient()
-            Proxy = ProxyNapConfig.Default
+            Proxy = None
             Authentication = Unauthenticated
+            ClientCreator = None
         }
     override x.ToString() =
         sprintf "%A" x

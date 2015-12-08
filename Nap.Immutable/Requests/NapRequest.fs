@@ -33,9 +33,24 @@ type NapRequest =
         Headers         : Map<string, string>
         Cookies         : (Uri*Cookie) list
         Content         : string
+        ClientCreator   : INapRequest -> HttpClient
     }
     with
     (*** Properties ***)
+    static member private CreateClient (irequest:INapRequest) = 
+        match irequest with
+        | :? NapRequest as request ->
+            let handler = new HttpClientHandler()
+            let request = downcast irequest
+            match request.Config.Advanced.Proxy with
+            | Some(proxy) -> () // TODO: Add proxy
+            | None -> ()
+            for (uri,cookie) in request.Cookies do
+                handler.CookieContainer.Add(uri, cookie)
+            new HttpClient(handler)
+        | _ ->
+            new HttpClient()
+
     static member internal Default =
         {
             Config = NapConfig.Default
@@ -47,6 +62,7 @@ type NapRequest =
             Headers = Map.empty
             Cookies = List.empty
             Content = ""
+            ClientCreator = NapRequest.CreateClient
         }
 
     (*** Config helpers ***)
@@ -58,8 +74,12 @@ type NapRequest =
             { request with
                 Config = config
                 Url = config.BaseUri
-                QueryParameters = x.Config.QueryParameters |> Map.join config.QueryParameters
-                Headers = x.Config.Headers |> Map.join config.Headers
+                QueryParameters = request.Config.QueryParameters |> Map.join config.QueryParameters
+                Headers = request.Config.Headers |> Map.join config.Headers
+                ClientCreator = 
+                    match config.Advanced.ClientCreator with
+                    | Some(creator) -> fun nr -> creator (box nr)
+                    | None -> NapRequest.CreateClient
             }
         |> NapRequest.RunEvents "AfterConfigurationApplied"
         |> Finalizable.get
@@ -151,11 +171,11 @@ type NapRequest =
 
     static member private RunRequestAsync request =
         async {
-            let excludedHeaders = ["content-type"]
-            use client = request.Config.Advanced.ClientCreator (box request)
+            let excludedHeaders = ["content-type"] |> Set.ofList
+            use client = request.ClientCreator (upcast request)
             let content = new StringContent(request.Content |?? "")
             let requestMessage = new HttpRequestMessage(request.Method, request.CreateUrl())
-            let allowedDefaultHeaders = request.Headers |> Map.filter (fun headerName _ -> excludedHeaders |> Seq.forall (fun eh -> eh.Equals(headerName, StringComparison.OrdinalIgnoreCase)))
+            let allowedDefaultHeaders = request.Headers |> Map.filter (fun headerName _ -> excludedHeaders |> Set.contains(headerName.ToLower()) |> not)
             for (h,v) in allowedDefaultHeaders |> Map.toSeq do
                 client.DefaultRequestHeaders.Add(h, v)
             match request.Headers |> Map.toSeq |> Seq.tryFind (fun (k,_) -> k.Equals("content-type", StringComparison.OrdinalIgnoreCase)) with
@@ -304,7 +324,8 @@ type NapRequest =
                 |> fun r -> upcast Finalizable.get r
         member x.IncludeCookie(url: string) (cookieName: string) (value: string): INapRequest = 
             x.Verbose "Nap.NapRequest.IncludeCookie()" (sprintf "Adding cookie for URL \"%s\". %s: %s" url cookieName value)
-            upcast { x with Cookies = x.Cookies |> List.append ([Uri(url), new Cookie(cookieName, value, url)]) }
+            let uri = new Uri(url)
+            upcast { x with Cookies = x.Cookies |> List.append ([uri, new Cookie(cookieName, value)]) }
         member x.IncludeHeader(name: string) (value: string): INapRequest = 
             x.Verbose "Nap.NapRequest.IncludeCookie()" (sprintf "Adding header: %s: %s" name value)
             upcast { x with Headers = x.Headers |> Map.add name value }
@@ -317,10 +338,12 @@ type NapRequest =
             x.Config
         member x.Authentication: AuthenticationNapConfig = 
             x.Config.Advanced.Authentication
-        member x.ClientCreator: obj -> HttpClient = 
-            x.Config.Advanced.ClientCreator
-        member x.Proxy: ProxyNapConfig = 
+        member x.Proxy =
             x.Config.Advanced.Proxy
+        member x.ClientCreator = 
+            x.ClientCreator
+        member x.SetClientCreator clientCreator =
+            upcast { x with ClientCreator = (fun nr -> clientCreator.Invoke nr) }
         member x.SetAuthentication(authenticationScheme: AuthenticationNapConfig): INapRequest = 
             x.Debug "Nap.NapRequest.SetAuthentication()" (sprintf "Setting authentication as %A" authenticationScheme)
             Continuing(x)
@@ -328,12 +351,9 @@ type NapRequest =
             |> Finalizable.get
             |> fun r ->
                 upcast { r with Config = { r.Config with Advanced = { r.Config.Advanced with Authentication = authenticationScheme }}}
-        member x.SetClientCreator(clientCreator : INapRequest -> HttpClient): INapRequest = 
-            let boxedCreator = unbox>>clientCreator
-            upcast { x with Config = { x.Config with Advanced = { x.Config.Advanced with ClientCreator = boxedCreator }}}
         member x.SetProxy(proxy: ProxyNapConfig): INapRequest = 
             x.Debug "Nap.NapRequest.SetProxy()" (sprintf "Setting proxy as %A" proxy)
-            upcast { x with Config = { x.Config with Advanced = { x.Config.Advanced with Proxy = proxy }}}
+            upcast { x with Config = { x.Config with Advanced = { x.Config.Advanced with Proxy = proxy |> Some }}}
         
         
     interface IRemovableNapRequestComponent with

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nap.Exceptions;
 using System.Net.Http.Headers;
-
+using FakeItEasy.ExtensionSyntax.Full;
 using Nap.Configuration;
 
 namespace Nap.Tests
@@ -19,29 +21,44 @@ namespace Nap.Tests
         private TestHandler _handler;
         private HttpClient _httpClient;
         private string _url;
+        private string _otherUrl;
 
         [TestInitialize]
 #if IMMUTABLE
         public void Setup_Immutable()
         {
             _url = "http://example.com/test";
+            _otherUrl = "http://foobar.com/test";
             _handler = new TestHandler();
-            _httpClient = new HttpClient(_handler);
             var config =
                 NapConfig.Default.SetMetadataBehavior(true)
-                    .ConfigureAdvanced(a => a.SetClientCreator(request => _httpClient));
+                    .ConfigureAdvanced(a => a.SetClientCreator(objRequest =>
+                    {
+                        _handler.CookieContainer = new CookieContainer();
+                        var request = (NapRequest) objRequest;
+                        foreach (var cookie in request.Cookies)
+                            _handler.CookieContainer.Add(cookie.Item1, cookie.Item2);
+                        return new HttpClient(_handler);
+                    }));
             _nap = new NapClient(config);
         }
 #else
         public void Setup_Mutable()
         {
             _url = "http://example.com/test";
+            _otherUrl = "http://foobar.com/test";
 
             _nap = new NapClient();
             _nap.Config.FillMetadata = true;
             _handler = new TestHandler();
             _httpClient = new HttpClient(_handler);
-            _nap.Config.Advanced.ClientCreator = request => _httpClient;
+            _nap.Config.Advanced.ClientCreator = request =>
+            {
+                _handler.CookieContainer = new CookieContainer();
+                foreach (var cookie in request.Cookies)
+                    _handler.CookieContainer.Add(cookie.Item1, cookie.Item2);
+                return new HttpClient(_handler);
+            };
         }
 #endif
 
@@ -133,7 +150,38 @@ namespace Nap.Tests
             Assert.AreEqual("application/json", _handler.Request.Content.Headers.ContentType.MediaType);
         }
 
-        public class TestHandler : HttpMessageHandler
+        [TestMethod]
+        [TestCategory("NapClient")]
+        public void Nap_IncludeHeader_SendsHeader()
+        {
+            // Act
+            const string key = "foo";
+            const string value = "bar";
+            _nap.Get(_url).IncludeHeader(key, value).Execute<Result>();
+
+            // Assert
+            Assert.AreEqual(1, _handler.Request.Headers.Count());
+            Assert.AreEqual(1, _handler.Request.Headers.Count(h => h.Key == key));
+            Assert.AreEqual(1, _handler.Request.Headers.First(h => h.Key == key).Value.Count());
+            Assert.AreEqual(value, _handler.Request.Headers.First(h => h.Key == key).Value.First());
+        }
+
+        [TestMethod]
+        [TestCategory("NapClient")]
+        public void Nap_IncludeCookie_SendsCookie()
+        {
+            // Act
+            const string key = "foo";
+            const string value = "bar";
+            _nap.Get(_url).IncludeCookie(_url, key, value).IncludeCookie(_otherUrl, value, key).Execute<Result>();
+
+            // Assert
+            Assert.AreEqual(1, _handler.Request.Headers.Count());
+            Assert.AreEqual(1, _handler.Request.Headers.Count(h => h.Key.ToLower() == "cookie"));
+            Assert.AreEqual($"{key}={value}", _handler.Request.Headers.First(h => h.Key == "cookie").Value.First());
+        }
+
+        public class TestHandler : HttpClientHandler
         {
             public HttpRequestMessage Request { get; set; }
 
@@ -141,6 +189,9 @@ namespace Nap.Tests
 
             protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
             {
+                var cookies = CookieContainer.GetCookies(request.RequestUri);
+                if (cookies.Count > 0)
+                    request.Headers.Add("cookie", string.Join(";", CookieContainer.GetCookies(request.RequestUri).OfType<Cookie>().Select(c => $"{c.Name}={c.Value}")));
                 Request = request;
                 RequestContent = request.Content == null ? string.Empty : await request.Content?.ReadAsStringAsync();
                 var content = new StringContent(string.Empty);

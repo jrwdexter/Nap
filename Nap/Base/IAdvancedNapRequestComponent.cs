@@ -13,7 +13,7 @@ namespace Nap
         /// Gets or sets the client creator, which is an optionally overridable way to create an <see cref="HttpClient"/> to send Nap requests.
         /// </summary>
         /// <remarks>When set to null, default <see cref="HttpClient"/> construction is performed.</remarks>
-        Func<INapRequest, HttpClient> ClientCreator { get; set; }
+        Func<NapRequest, HttpClient> ClientCreator { get; set; }
 
         /// <summary>
         /// Gets a <see cref="IAuthenticatedNapRequestComponent"/> object, which exposes authentication properties for futher configuration of the nap request.

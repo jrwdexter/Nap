@@ -12,6 +12,16 @@ type INapSetup =
 [<Sealed>]
 type NapSetup private(plugins : IPlugin list) =
     new() = NapSetup([])
+    member val ClientCreator =
+        fun (request:NapRequest) ->
+            let handler = new HttpClientHandler()
+            match request.Config.Advanced.Proxy with
+            | Some(proxy) -> () // TODO: Add proxy
+            | None -> ()
+            for (uri,cookie) in request.Cookies do
+                handler.CookieContainer.Add(uri, cookie)
+            new HttpClient(handler)
+        with get, set
     static member val GlobalPlugins = new System.Collections.Concurrent.ConcurrentBag<IPlugin>()
     static member InstallGlobalPlugin<'T when 'T :> IPlugin and 'T : (new : unit -> 'T)> () =
         new 'T() :> IPlugin |> NapSetup.InstallGlobalPlugin

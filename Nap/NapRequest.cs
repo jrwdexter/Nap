@@ -19,7 +19,7 @@ namespace Nap
     /// <summary>
     /// An easily configurable request.
     /// </summary>
-    internal partial class NapRequest : INapRequest
+    public partial class NapRequest : INapRequest
     {
         private readonly INapConfig _config;
         private readonly string _url;
@@ -53,6 +53,40 @@ namespace Nap
             _url = url;
             _method = method;
         }
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the set of cookies that has been configured for this request.
+        /// Required for configuration of the request with a custom <see cref="HttpClient"/>.
+        /// </summary>
+        public IReadOnlyList<Tuple<Uri, Cookie>> Cookies => _cookies;
+
+        /// <summary>
+        /// Gets the set of headers that have been configured for this request.
+        /// </summary>
+        public IReadOnlyDictionary<string, string> Headers => _headers; 
+
+        /// <summary>
+        /// Gets the set of query parameters that have been configured for this request.
+        /// </summary>
+        public IReadOnlyDictionary<string, string> QueryParamters => _queryParameters;
+
+        /// <summary>
+        /// Gets the method this request will be sent using.
+        /// </summary>
+        public HttpMethod Method => _method;
+
+        /// <summary>
+        /// Gets the content of this request, if any.
+        /// </summary>
+        public string Content => _content;
+
+        /// <summary>
+        /// Gets the
+        /// </summary>
+        public string Url => _url;
+        #endregion
 
         #region Include/Fill
 

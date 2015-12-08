@@ -1,5 +1,6 @@
 ﻿namespace Nap
 
+open System
 open System.Net.Http
 open System.Threading.Tasks
 
@@ -24,12 +25,12 @@ and IRemovableNapRequestComponent =
     abstract member IncludeQueryParameter : string -> INapRequest
 
 and IAdvancedNapRequestComponent =
-    abstract ClientCreator : (obj -> HttpClient) with get
-    abstract Proxy : ProxyNapConfig with get
+    abstract ClientCreator : (INapRequest -> HttpClient) with get
+    abstract Proxy : ProxyNapConfig option with get
     abstract Authentication : AuthenticationNapConfig with get
     abstract Configuration : NapConfig with get
     abstract member SetProxy : ProxyNapConfig -> INapRequest
-    abstract member SetClientCreator : (INapRequest -> HttpClient) -> INapRequest
+    abstract member SetClientCreator : Func<INapRequest, HttpClient> -> INapRequest
     abstract member SetAuthentication : AuthenticationNapConfig -> INapRequest
 
 

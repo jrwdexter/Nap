@@ -7,7 +7,7 @@ namespace Nap
     /// The partial component of the nap request that exposes advanced properties for further configuration.
     /// </summary>
     /// <remarks>Advanced properties are placed within this module to prevent pollution of the <see cref="INapRequest"/> object space.</remarks>
-    internal partial class NapRequest : IAdvancedNapRequestComponent
+    public partial class NapRequest : IAdvancedNapRequestComponent
     {
         /// <summary>
         /// Add a proxy for use in the <see cref="NapRequest"/>.
@@ -25,7 +25,7 @@ namespace Nap
         /// Gets or sets the client creator, which is an optionally overridable way to create an <see cref="HttpClient"/> to send Nap requests.
         /// </summary>
         /// <remarks>When set to null, default <see cref="HttpClient"/> construction is performed.</remarks>
-        public Func<INapRequest, HttpClient> ClientCreator { get; set; }
+        public Func<NapRequest, HttpClient> ClientCreator { get; set; }
 
         /// <summary>
         /// Gets a <see cref="IAuthenticatedNapRequestComponent"/> object, which exposes authentication properties for futher configuration of the nap request.

@@ -5,7 +5,7 @@ namespace Nap
     /// <summary>
     /// An easily configurable request.
     /// </summary>
-    internal partial class NapRequest : INapRemovableRequestComponent
+    public partial class NapRequest : INapRemovableRequestComponent
     {
         /// <summary>
         /// Fills the response object with metadata using special keys, such as "StatusCode".
