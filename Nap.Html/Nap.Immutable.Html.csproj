@@ -7,7 +7,7 @@
     <ProjectGuid>{176A5029-8BBA-499B-9596-9DF0F795180A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nap.Html.Immutable</RootNamespace>
+    <RootNamespace>Nap.Html</RootNamespace>
     <AssemblyName>Nap.Html.Immutable</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

@@ -6,10 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using Nap.Exceptions;
 using System.Net.Http.Headers;
-using FakeItEasy.ExtensionSyntax.Full;
 using Nap.Configuration;
 
 namespace Nap.Tests
@@ -48,8 +45,7 @@ namespace Nap.Tests
             _url = "http://example.com/test";
             _otherUrl = "http://foobar.com/test";
 
-            _nap = new NapClient();
-            _nap.Config.FillMetadata = true;
+            _nap = new NapClient { Config = { FillMetadata = true } };
             _handler = new TestHandler();
             _httpClient = new HttpClient(_handler);
             _nap.Config.Advanced.ClientCreator = request =>
@@ -196,7 +192,7 @@ namespace Nap.Tests
                 RequestContent = request.Content == null ? string.Empty : await request.Content?.ReadAsStringAsync();
                 var content = new StringContent(string.Empty);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-                return new HttpResponseMessage { StatusCode = System.Net.HttpStatusCode.OK, Content = content };
+                return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = content };
             }
         }
 
