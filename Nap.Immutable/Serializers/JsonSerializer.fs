@@ -1,7 +1,6 @@
 ﻿namespace Nap.Serializers
 
 open System.Reflection
-open Nap.Types
 open Nap.Serializers.Base
 open Newtonsoft.Json
 

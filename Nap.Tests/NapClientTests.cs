@@ -16,7 +16,6 @@ namespace Nap.Tests
     {
         private NapClient _nap;
         private TestHandler _handler;
-        private HttpClient _httpClient;
         private string _url;
         private string _otherUrl;
 
@@ -47,7 +46,6 @@ namespace Nap.Tests
 
             _nap = new NapClient { Config = { FillMetadata = true } };
             _handler = new TestHandler();
-            _httpClient = new HttpClient(_handler);
             _nap.Config.Advanced.ClientCreator = request =>
             {
                 _handler.CookieContainer = new CookieContainer();

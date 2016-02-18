@@ -198,17 +198,18 @@ type NapRequest =
                     { request with
                         Response =
                         {
-                            response with Deserialized =
-                                (serializer.Deserialize<'T> response.Content)
-                                |> fun o -> 
-                                        match o with
-                                        | None -> 
-                                            let parameterlessConstructor =
-                                                typeof<'T>.GetTypeInfo().DeclaredConstructors
-                                                |> Seq.tryFind (fun c -> c.GetParameters().Length = 0 && not <| c.ContainsGenericParameters)
-                                            parameterlessConstructor |> Option.bind (fun c -> c.Invoke(Array.empty) :?> 'T |> Some)
-                                        | x -> x
-                                |> Option.bind (box>>Some)
+                            response with
+                                Deserialized =
+                                    serializer.Deserialize<'T> response.Content
+                                    |> fun o -> 
+                                            match o with
+                                            | None -> 
+                                                let parameterlessConstructor =
+                                                    typeof<'T>.GetTypeInfo().DeclaredConstructors
+                                                    |> Seq.tryFind (fun c -> c.GetParameters().Length = 0 && not <| c.ContainsGenericParameters)
+                                                parameterlessConstructor |> Option.bind (fun c -> c.Invoke(Array.empty) :?> 'T |> Some)
+                                            | x -> x
+                                    |> Option.bind (box>>Some)
                         } |> Some
                     }
                 | None ->
@@ -297,7 +298,7 @@ type NapRequest =
 
         member x.ExecuteAsync(): Task<string> = 
             async {
-                let! result = x.ExecuteFSTypedAsync<'T> ()
+                let! result = x.ExecuteFSTypedAsync<string> ()
                 return defaultArg result null
             } |> Async.StartAsTask
 
