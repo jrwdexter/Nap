@@ -166,7 +166,8 @@ namespace Nap
         /// <returns>The <see cref="INapRequest"/> object.</returns>
         public INapRequest IncludeCookie(string uri, string cookieName, string value)
         {
-            _cookies.Add(new Tuple<Uri, Cookie>(new Uri(uri), new Cookie(cookieName, value)));
+            var asUri = new Uri(uri);
+            _cookies.Add(new Tuple<Uri, Cookie>(asUri, new Cookie(cookieName, value, asUri.AbsolutePath, asUri.Host)));
             return this;
         }
 

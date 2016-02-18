@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
-
 using CsQuery;
-
 using Nap.Html.Attributes.Base;
-using Nap.Html.Binders.Base;
 using Nap.Html.Enum;
+using Nap.Html.Serialization.Binders.Base;
 
-namespace Nap.Html.Binders
+namespace Nap.Html.Serialization.Binders
 {
 	/// <summary>
 	/// A simple binder for string types.
 	/// </summary>
-	public sealed class StringBinder : BaseBinder<string>
+	public sealed class DateBinder : BaseBinder<DateTime>
 	{
 		/// <summary>
 		/// Binds the specified input string to an output object of type <see cref="string"/>
@@ -30,7 +26,12 @@ namespace Nap.Html.Binders
 		[Pure]
 		public override object Handle(string input, CQ context, Type outputType, BaseHtmlAttribute attribute)
 		{
-			return input;
+			DateTime dateTime;
+			var success = DateTime.TryParse(input, out dateTime);
+			if (outputType.IsGenericType && outputType.GetGenericTypeDefinition() == typeof(Nullable<>))
+				return success ? (DateTime?)dateTime : null;
+
+			return dateTime;
 		}
 	}
 }

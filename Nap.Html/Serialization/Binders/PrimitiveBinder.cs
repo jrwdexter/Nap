@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
-
 using CsQuery;
-
 using Nap.Html.Attributes.Base;
-using Nap.Html.Binders.Base;
 using Nap.Html.Enum;
 using Nap.Html.Exceptions;
+using Nap.Html.Serialization.Binders.Base;
 
-namespace Nap.Html.Binders
+namespace Nap.Html.Serialization.Binders
 {
 	/// <summary>
 	/// A binder for most primitive types, including <see cref="int"/>, <see cref="double"/>, etc.

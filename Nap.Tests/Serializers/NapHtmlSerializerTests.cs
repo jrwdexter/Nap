@@ -56,6 +56,23 @@ namespace Nap.Tests.Serializers
             // Assert
             Assert.AreEqual(FSharpOption<TestClass>.None, result);
 		}
+
+		[TestMethod]
+		[TestCategory("Serializers")]
+		[TestCategory("Nap.Html")]
+		public void Deserialize_IntoClassWithoutParameterlessConstructor_DeserializesCorrectly()
+		{
+            // Arrange
+		    string html = GetFileContents("TestClass.html");
+
+			// Act
+			var result = _htmlSerializer.Deserialize<RequiresParameters_TestClass>(html);
+
+            // Assert
+			Assert.IsTrue(result.Value != null);
+            Assert.AreEqual("John", result.Value.FirstName);
+            Assert.AreEqual("Doe", result.Value.LastName);
+		}
 #else
         [TestMethod]
 		[TestCategory("Serializers")]
@@ -66,17 +83,24 @@ namespace Nap.Tests.Serializers
 			// Act
 			_htmlSerializer.Deserialize<TestClass>(null);
 		}
-#endif
 
 		[TestMethod]
 		[TestCategory("Serializers")]
 		[TestCategory("Nap.Html")]
-        [ExpectedException(typeof(ConstructorNotFoundException))]
-		public void Deserialize_IntoClassWithoutParameterlessConstructor_ThrowsException()
+		public void Deserialize_IntoClassWithoutParameterlessConstructor_DeserializesCorrectly()
 		{
+            // Arrange
+		    string html = GetFileContents("TestClass.html");
+
 			// Act
-			_htmlSerializer.Deserialize<RequiresParameters_TestClass>("");
+			var result = _htmlSerializer.Deserialize<RequiresParameters_TestClass>(html);
+
+            // Assert
+			Assert.IsNotNull(result);
+            Assert.AreEqual("John", result.FirstName);
+            Assert.AreEqual("Doe", result.LastName);
 		}
+#endif
 
 		[TestMethod]
 		[TestCategory("Serializers")]

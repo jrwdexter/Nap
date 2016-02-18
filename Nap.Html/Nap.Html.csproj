@@ -51,19 +51,19 @@
     <Compile Include="Attributes\Base\BaseHtmlAttribute.cs" />
     <Compile Include="Attributes\NumericalHtmlElementAttribute.cs" />
     <Compile Include="Attributes\HtmlElementAttribute.cs" />
-    <Compile Include="Binders\DateBinder.cs" />
-    <Compile Include="Binders\IntBinder.cs" />
+    <Compile Include="Serialization\Binders\DateBinder.cs" />
+    <Compile Include="Serialization\Binders\IntBinder.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Formats\DefaultBindingFormat.cs" />
     <Compile Include="Formats\DollarBindingFormat.cs" />
     <Compile Include="Formats\PercentageBindingFormat.cs" />
-    <Compile Include="Binders\Base\BaseBinder.cs" />
-    <Compile Include="Binders\Base\IBinder.cs" />
+    <Compile Include="Serialization\Binders\Base\BaseBinder.cs" />
+    <Compile Include="Serialization\Binders\Base\IBinder.cs" />
     <Compile Include="Formats\Base\IBindingFormat.cs" />
-    <Compile Include="Binders\ObjectBinder.cs" />
-    <Compile Include="Binders\DecimalBinder.cs" />
-    <Compile Include="Binders\PrimitiveBinder.cs" />
-    <Compile Include="Binders\StringBinder.cs" />
+    <Compile Include="Serialization\Binders\ObjectBinder.cs" />
+    <Compile Include="Serialization\Binders\DecimalBinder.cs" />
+    <Compile Include="Serialization\Binders\PrimitiveBinder.cs" />
+    <Compile Include="Serialization\Binders\StringBinder.cs" />
     <Compile Include="Exceptions\NapParsingException.cs" />
     <Compile Include="Exceptions\NapFindingException.cs" />
     <Compile Include="Factories\Base\BaseFactory.cs" />
@@ -82,6 +82,11 @@
     <Compile Include="Parsers\Base\IParser.cs" />
     <Compile Include="Parsers\HtmlElementParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\Contracts\Base\BaseContract.cs" />
+    <Compile Include="Serialization\Contracts\Base\ContractType.cs" />
+    <Compile Include="Serialization\Contracts\StringContract.cs" />
+    <Compile Include="Serialization\Contracts\PrimitiveContract.cs" />
+    <Compile Include="Serialization\Contracts\ObjectContract.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -93,6 +98,7 @@
       <Name>Nap</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -73,7 +73,6 @@ type NapRequest =
         <!> fun request ->
             { request with
                 Config = config
-                Url = config.BaseUri
                 QueryParameters = request.Config.QueryParameters |> Map.join config.QueryParameters
                 Headers = request.Config.Headers |> Map.join config.Headers
                 ClientCreator = 
@@ -173,15 +172,16 @@ type NapRequest =
         async {
             let excludedHeaders = ["content-type"] |> Set.ofList
             use client = request.ClientCreator (upcast request)
-            let content = new StringContent(request.Content |?? "")
             let requestMessage = new HttpRequestMessage(request.Method, request.CreateUrl())
             let allowedDefaultHeaders = request.Headers |> Map.filter (fun headerName _ -> excludedHeaders |> Set.contains(headerName.ToLower()) |> not)
             for (h,v) in allowedDefaultHeaders |> Map.toSeq do
                 client.DefaultRequestHeaders.Add(h, v)
-            match request.Headers |> Map.toSeq |> Seq.tryFind (fun (k,_) -> k.Equals("content-type", StringComparison.OrdinalIgnoreCase)) with
-            | Some((_,v)) -> content.Headers.ContentType.MediaType <- v
-            | None -> content.Headers.ContentType.MediaType <- (request.Config.Serializers.[request.Config.Serialization]).ContentType
-            requestMessage.Content <- content
+            if request.Method <> HttpMethod.Get && request.Method <> HttpMethod.Trace then
+                let content = new StringContent(request.Content |?? "")
+                requestMessage.Content <- content
+                match request.Headers |> Map.toSeq |> Seq.tryFind (fun (k,_) -> k.Equals("content-type", StringComparison.OrdinalIgnoreCase)) with
+                | Some((_,v)) -> content.Headers.ContentType.MediaType <- v
+                | None -> content.Headers.ContentType.MediaType <- (request.Config.Serializers.[request.Config.Serialization]).ContentType
             let! response = client.SendAsync(requestMessage) |> Async.AwaitTask
             let! content = response.Content.ReadAsStringAsync() |> Async.AwaitTask
             return { request with Response = { Raw = response; Content = content; Deserialized = None } |> Some }
@@ -325,7 +325,7 @@ type NapRequest =
         member x.IncludeCookie(url: string) (cookieName: string) (value: string): INapRequest = 
             x.Verbose "Nap.NapRequest.IncludeCookie()" (sprintf "Adding cookie for URL \"%s\". %s: %s" url cookieName value)
             let uri = new Uri(url)
-            upcast { x with Cookies = x.Cookies |> List.append ([uri, new Cookie(cookieName, value)]) }
+            upcast { x with Cookies = x.Cookies |> List.append ([uri, new Cookie(cookieName, value, uri.AbsolutePath, uri.Host)]) }
         member x.IncludeHeader(name: string) (value: string): INapRequest = 
             x.Verbose "Nap.NapRequest.IncludeCookie()" (sprintf "Adding header: %s: %s" name value)
             upcast { x with Headers = x.Headers |> Map.add name value }

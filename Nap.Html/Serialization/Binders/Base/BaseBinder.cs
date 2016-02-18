@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
-
 using CsQuery;
-
 using Nap.Html.Attributes.Base;
 using Nap.Html.Enum;
 
-namespace Nap.Html.Binders.Base
+namespace Nap.Html.Serialization.Binders.Base
 {
 	/// <summary>
 	/// A base class for binders, allowing simplified binding calls without type passed in.
