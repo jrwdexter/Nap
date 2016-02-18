@@ -12,6 +12,8 @@ assembly_info:
 install:
 - nuget restore
 - ps: >-
+    ./scripts/paket.exe restore
+- ps: >-
     ./scripts/SetReleaseVersion.ps1
 
 # Do the build
