@@ -10,7 +10,6 @@ assembly_info:
 
 # Before build
 install:
-- nuget restore
 - ps: >-
     ./scripts/paket.exe restore
 - ps: >-

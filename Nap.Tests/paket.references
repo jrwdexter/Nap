@@ -1,0 +1,6 @@
+AutoFixture
+AutoFixture.AutoMoq
+FakeItEasy
+FSharp.Core
+Moq
+Newtonsoft.Json
