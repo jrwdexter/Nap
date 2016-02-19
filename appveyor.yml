@@ -35,6 +35,10 @@ branches:
 
 configuration: Release
 
+environment:
+  COVERALLS_REPO_TOKEN:
+    secure: CT+N3PO6ROIpHj/yozEuEVDnbL1+OjJ3TynGgXXfhc4AGqyrJ074rkJNxyHkEDA2
+
 #---------------------------------#
 #        test configuration       #
 #---------------------------------#
@@ -42,6 +46,9 @@ configuration: Release
 test:
   assemblies:
     - '**\*.Tests.dll'
+after_test:
+  - cmd: .\packages\OpenCover\tools\OpenCover.Console.exe -register:user -filter:"+[*]*" -target:"C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe" -targetargs:".\Nap.Tests\bin\Release\Nap.Tests.dll .\Nap.Tests\bin\Release\Nap.Immutable.Tests.dll" -output:coverage.xml
+  - cmd: .\packages\coveralls.io\tools\coveralls.net.exe --opencover coverage.xml
 
 #---------------------------------#
 #     deployment configuration    #

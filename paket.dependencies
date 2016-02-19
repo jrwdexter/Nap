@@ -1,8 +1,10 @@
 source https://nuget.org/api/v2
 
+nuget coveralls.io
 nuget CsQuery 1.3.4 framework: >= net45
 nuget Fs30Unit.MsTest
 nuget FsUnit 2.0.0 framework: >= net452
 nuget Newtonsoft.Json 8.0.2
+nuget OpenCover
 nuget System.Net.Http 4.0.0
 nuget FSHarp.Core
