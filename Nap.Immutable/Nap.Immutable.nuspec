@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Nap.Immutable</id>
+    <version>$version$</version>
+    <title>Nap.Immutable</title>
+    <authors>Jonathan Dexter</authors>
+    <owners>Jonathan Dexter</owners>
+    <licenseUrl>https://github.com/mandest/Nap/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/mandest/Nap</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A short and sweet REST client</description>
+    <copyright>Copyright 2014</copyright>
+    <tags>REST Fluent HTTP API JSON XML</tags>
+    <dependencies>
+        <dependency id="FSharp.Core" version="4.0.0.1" />
+        <dependency id="Newtonsoft.Json" version="8.0.2" />
+        <dependency id="System.Net.Http" version="4.0.0" />
+    </dependencies>
+  </metadata>
+</package>
