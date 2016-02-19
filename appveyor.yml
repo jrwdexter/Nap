@@ -62,4 +62,3 @@ deploy:
 notifications:
   - provider: Webhook
     url: https://zapier.com/hooks/catch/25chs9/
-    User-Agent: Nap
