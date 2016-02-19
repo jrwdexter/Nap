@@ -14,7 +14,7 @@
     <tags>REST Fluent HTTP API JSON XML FSharp F# Immutable</tags>
     <dependencies>
         <dependency id="FSharp.Core" version="4.0.0.1" />
-        <dependency id="Newtonsoft.Json" version="8.0.2" />
+        <dependency id="Newtonsoft.Json" version="6.0.0.0" />
         <dependency id="System.Net.Http" version="4.0.0" />
     </dependencies>
   </metadata>
