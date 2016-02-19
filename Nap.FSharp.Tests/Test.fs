@@ -7,7 +7,7 @@ open System.Net.Http
 open System.Reflection
 open Nap
 open FsUnit
-open NUnit.Framework
+open FsUnit.MsTest
 open Microsoft.VisualStudio.TestTools.UnitTesting
 
 
