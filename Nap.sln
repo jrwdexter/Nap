@@ -28,12 +28,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configurat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Immutable.Html", "Nap.Html\Nap.Immutable.Html.csproj", "{176A5029-8BBA-499B-9596-9DF0F795180A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "paket", "paket", "{C7E184F2-745A-4061-8394-2C7998D57872}"
-	ProjectSection(SolutionItems) = preProject
-		paket.dependencies = paket.dependencies
-		paket.lock = paket.lock
-	EndProjectSection
-EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Nap.FSharp.Tests", "Nap.FSharp.Tests\Nap.FSharp.Tests.fsproj", "{90E79DCF-7EF1-44B9-99AB-514510280019}"
 EndProject
 Global
