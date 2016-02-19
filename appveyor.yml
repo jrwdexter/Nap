@@ -21,7 +21,7 @@ before_build:
 - ps: >-
     ./scripts/SetPackageVersions.ps1
 build:
-  verbosity: minimal
+  verbosity: detailed
   publish_nuget: true
   publish_nuget_symbols: true
 
