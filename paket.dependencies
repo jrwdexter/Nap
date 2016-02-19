@@ -7,3 +7,4 @@ nuget Newtonsoft.Json 6.0.2
 nuget OpenCover
 nuget System.Net.Http 4.0.0
 nuget FSharp.Core 4.0.0.1
+nuget Coveralls.IO
