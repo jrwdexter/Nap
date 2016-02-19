@@ -41,7 +41,7 @@ configuration: Release
 
 test:
   assemblies:
-    - **\*.Tests.dll
+    - ''**\*.Tests.dll'
 
 #---------------------------------#
 #     deployment configuration    #
