@@ -18,32 +18,30 @@ module FunctionalNapTests =
 
     let baseRequest = FNap.get url
 
-    [<Test>]
-    let thisIsATest =
-        1 |> should equal 1
+    [<TestClass>]
+    type FNapTests () =
+        [<TestMethod>]
+        member x.``FNap.get requests url with correct verb`` () =
+            (downcast FNap.get url).Url |> should equal url
+            (downcast FNap.get url).Method |> should equal HttpMethod.Get
 
-    [<Test>]
-    let ``FNap.get requests url with correct verb`` =
-        (downcast FNap.get url).Url |> should equal url
-        (downcast FNap.get url).Method |> should equal HttpMethod.Get
+        [<TestMethod>]
+        member x.``FNap.post requests url with correct verb`` () =
+            (downcast FNap.post url).Url |> should equal url
+            (downcast FNap.post url).Method |> should equal HttpMethod.Post
 
-    [<Test>]
-    let ``FNap.post requests url with correct verb`` =
-        (downcast FNap.post url).Url |> should equal url
-        (downcast FNap.post url).Method |> should equal HttpMethod.Post
+        [<TestMethod>]
+        member x.``FNap.put requests url with correct verb`` () =
+            (downcast FNap.put url).Url |> should equal url
+            (downcast FNap.put url).Method |> should equal HttpMethod.Put
 
-    [<Test>]
-    let ``FNap.put requests url with correct verb`` =
-        (downcast FNap.put url).Url |> should equal url
-        (downcast FNap.put url).Method |> should equal HttpMethod.Put
+        [<TestMethod>]
+        member x.``FNap.delete requests url with correct verb`` () =
+            (downcast FNap.delete url).Url |> should equal url
+            (downcast FNap.delete url).Method |> should equal HttpMethod.Delete
 
-    [<Test>]
-    let ``FNap.delete requests url with correct verb`` =
-        (downcast FNap.delete url).Url |> should equal url
-        (downcast FNap.delete url).Method |> should equal HttpMethod.Delete
-
-    [<Test>]
-    let ``FNap.withCookies adds a cookie`` =
-        let uri = Uri(url)
-        (downcast (baseRequest |> FNap.withCookie url key value)).Cookies |> should haveLength 1
-        (downcast (baseRequest |> FNap.withCookie url key value)).Cookies.Head |> should equal (url |> Uri,new Cookie(key, value, uri.AbsolutePath, uri.Host))
+        [<TestMethod>]
+        member x.``FNap.withCookies adds a cookie`` () =
+            let uri = Uri(url)
+            (downcast (baseRequest |> FNap.withCookie url key value)).Cookies |> should haveLength 1
+            (downcast (baseRequest |> FNap.withCookie url key value)).Cookies.Head |> should equal (url |> Uri,new Cookie(key, value, uri.AbsolutePath, uri.Host))
