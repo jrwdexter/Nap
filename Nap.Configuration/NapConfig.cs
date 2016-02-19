@@ -15,27 +15,27 @@ namespace Nap.Configuration
         /// </summary>
         public NapConfig()
         {
-            Formatters = new FormattersConfig();
+            Serializers = new SerializersConfig();
             Headers = new Headers();
             QueryParameters = new QueryParameters();
             Profiles = new Profiles();
         }
 
         /// <summary>
-        /// Gets or sets the formatters that can be used to both serialize and deserialize content.
+        /// Gets or sets the serializers that can be used to both serialize and deserialize content.
         /// </summary>
-        [ConfigurationProperty("formatters", IsDefaultCollection = false)]
-        [ConfigurationCollection(typeof(FormattersConfig), AddItemName = "add", RemoveItemName = "remove", ClearItemsName = "clear")]
-        public FormattersConfig Formatters
+        [ConfigurationProperty("serializers", IsDefaultCollection = false)]
+        [ConfigurationCollection(typeof(SerializersConfig), AddItemName = "add", RemoveItemName = "remove", ClearItemsName = "clear")]
+        public SerializersConfig Serializers
         {
-            get { return (FormattersConfig)this["formatters"]; }
-            private set { this["formatters"] = value; }
+            get { return (SerializersConfig)this["serializers"]; }
+            private set { this["serializers"] = value; }
         }
 
         /// <summary>
-        /// Gets or sets the formatters that can be used to both serialize and deserialize content.
+        /// Gets or sets the serializers that can be used to both serialize and deserialize content.
         /// </summary>
-        IFormattersConfig INapConfig.Formatters => Formatters;
+        ISerializersConfig INapConfig.Serializers => Serializers;
 
         /// <summary>
         /// Gets or sets the optional base URL for easy requests.
@@ -143,7 +143,7 @@ namespace Nap.Configuration
         {
             var clone = new NapConfig
             {
-                Formatters = new FormattersConfig(Formatters),
+                Serializers = new SerializersConfig(Serializers),
                 BaseUrl = BaseUrl,
                 FillMetadata = FillMetadata,
                 Serialization = Serialization,

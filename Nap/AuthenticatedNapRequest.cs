@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Nap
 {
-    internal partial class NapRequest : IAuthenticatedNapRequestComponent
+    public partial class NapRequest : IAuthenticatedNapRequestComponent
     {
         /// <summary>
         /// Configures the <see cref="NapRequest"/> for basic authentication, using plaintext <paramref name="username"/> and <paramref name="password"/>.

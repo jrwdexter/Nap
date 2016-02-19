@@ -13,7 +13,7 @@ namespace Nap.Configuration.Sections
         /// Gets or sets the overridable version of the construction of the <see cref="System.Net.Http.HttpClient"/> that handles Nap requests.
         /// </summary>
         /// <remarks>Cannot be set via a configuration setting; must be set programatically.</remarks>
-        public Func<INapRequest, HttpClient> ClientCreator { get; set; }
+        public Func<NapRequest, HttpClient> ClientCreator { get; set; }
 
         /// <summary>
         /// Gets or sets the optional proxy for requests.

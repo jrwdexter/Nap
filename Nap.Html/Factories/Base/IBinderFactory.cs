@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-
-using Nap.Html.Binders.Base;
+using Nap.Html.Serialization.Binders.Base;
 
 namespace Nap.Html.Factories.Base
 {

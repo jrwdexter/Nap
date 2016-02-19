@@ -6,8 +6,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nap.Configuration;
 
-using Nap.Formatters.Base;
-
 namespace Nap.Tests.Configuration
 {
     [TestClass]
@@ -20,7 +18,7 @@ namespace Nap.Tests.Configuration
 
         private sealed class TestNapConfig : INapConfig
         {
-	        public IFormattersConfig Formatters { get; set; }
+	        public ISerializersConfig Serializers { get; set; }
 
 	        public string BaseUrl { get; set; }
 

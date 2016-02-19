@@ -4,11 +4,11 @@ using Nap.Configuration;
 
 namespace Nap.Plugins.Base
 {
-	/// <summary>
-	/// An abstract class for overriding the basic behavior of Nap.
-	/// </summary>
-	public class NapPlugin : IPlugin
-	{
+    /// <summary>
+    /// An abstract class for overriding the basic behavior of Nap.
+    /// </summary>
+    public class NapPlugin : IPlugin
+    {
         /// <summary>
         /// Generate a <see cref="INapConfig"/> object for use with <see cref="INapRequest"/>s.
         /// If a non-null value is returned, execution of plugins and default behavior (<see cref="EmptyNapConfig"/>) is truncated, and the returned value is used.
@@ -62,5 +62,5 @@ namespace Nap.Plugins.Base
         /// <param name="request">The request being executed.</param>
         /// <returns>An instance of an <see cref="object"/> object if applicable; otherwise, null to use other plugin or default behavior.</returns>
         public virtual object Execute(INapRequest request) => null;
-	}
+    }
 }

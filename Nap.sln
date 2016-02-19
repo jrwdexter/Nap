@@ -1,8 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22609.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{D9BD0810-A274-47C5-91BB-740E81E5F84F}"
+	ProjectSection(SolutionItems) = preProject
+		paket.dependencies = paket.dependencies
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap", "Nap\Nap.csproj", "{2D0869E5-CEB3-4719-BFC3-3FAACC721384}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Tests", "Nap.Tests\Nap.Tests.csproj", "{A9CC8956-2590-4DFC-B7A8-CB42F5ED26DE}"
@@ -12,6 +17,18 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Html", "Nap.Html\Nap.Html.csproj", "{DE5DB636-28E5-4D73-9D70-683E80D47254}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A51A8509-EBE5-49AA-80BB-3EDA8FF6217B}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Nap.Immutable", "Nap.Immutable\Nap.Immutable.fsproj", "{E517F21C-31F6-4EA5-8CD4-DBF1B18ABF64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Immutable.Tests", "Nap.Tests\Nap.Immutable.Tests.csproj", "{B6770526-A0BF-4ACF-9A8E-38CB191638E3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Html", "Html", "{15895F73-F811-4880-BB01-2041BC8E7813}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{0490FEFC-70D0-43D0-9C6D-799443C4A9C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Immutable.Html", "Nap.Html\Nap.Immutable.Html.csproj", "{176A5029-8BBA-499B-9596-9DF0F795180A}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Nap.FSharp.Tests", "Nap.FSharp.Tests\Nap.FSharp.Tests.fsproj", "{90E79DCF-7EF1-44B9-99AB-514510280019}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,11 +52,32 @@ Global
 		{DE5DB636-28E5-4D73-9D70-683E80D47254}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE5DB636-28E5-4D73-9D70-683E80D47254}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE5DB636-28E5-4D73-9D70-683E80D47254}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E517F21C-31F6-4EA5-8CD4-DBF1B18ABF64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E517F21C-31F6-4EA5-8CD4-DBF1B18ABF64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E517F21C-31F6-4EA5-8CD4-DBF1B18ABF64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E517F21C-31F6-4EA5-8CD4-DBF1B18ABF64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6770526-A0BF-4ACF-9A8E-38CB191638E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6770526-A0BF-4ACF-9A8E-38CB191638E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6770526-A0BF-4ACF-9A8E-38CB191638E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6770526-A0BF-4ACF-9A8E-38CB191638E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{176A5029-8BBA-499B-9596-9DF0F795180A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{176A5029-8BBA-499B-9596-9DF0F795180A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{176A5029-8BBA-499B-9596-9DF0F795180A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{176A5029-8BBA-499B-9596-9DF0F795180A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90E79DCF-7EF1-44B9-99AB-514510280019}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90E79DCF-7EF1-44B9-99AB-514510280019}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90E79DCF-7EF1-44B9-99AB-514510280019}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90E79DCF-7EF1-44B9-99AB-514510280019}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A9CC8956-2590-4DFC-B7A8-CB42F5ED26DE} = {A51A8509-EBE5-49AA-80BB-3EDA8FF6217B}
+		{7D733248-2081-41EB-8C66-DD4BBACEC1E8} = {0490FEFC-70D0-43D0-9C6D-799443C4A9C0}
+		{DE5DB636-28E5-4D73-9D70-683E80D47254} = {15895F73-F811-4880-BB01-2041BC8E7813}
+		{B6770526-A0BF-4ACF-9A8E-38CB191638E3} = {A51A8509-EBE5-49AA-80BB-3EDA8FF6217B}
+		{176A5029-8BBA-499B-9596-9DF0F795180A} = {15895F73-F811-4880-BB01-2041BC8E7813}
+		{90E79DCF-7EF1-44B9-99AB-514510280019} = {A51A8509-EBE5-49AA-80BB-3EDA8FF6217B}
 	EndGlobalSection
 EndGlobal

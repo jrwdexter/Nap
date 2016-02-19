@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 
 using Nap.Configuration;
 using Nap.Exceptions;
-using Nap.Formatters.Base;
 using Nap.Plugins.Base;
 using Nap.Proxies;
+using Nap.Serializers.Base;
 
 namespace Nap
 {
     /// <summary>
     /// An easily configurable request.
     /// </summary>
-    internal partial class NapRequest : INapRequest
+    public partial class NapRequest : INapRequest
     {
         private readonly INapConfig _config;
         private readonly string _url;
@@ -53,6 +53,40 @@ namespace Nap
             _url = url;
             _method = method;
         }
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the set of cookies that has been configured for this request.
+        /// Required for configuration of the request with a custom <see cref="HttpClient"/>.
+        /// </summary>
+        public IReadOnlyList<Tuple<Uri, Cookie>> Cookies => _cookies;
+
+        /// <summary>
+        /// Gets the set of headers that have been configured for this request.
+        /// </summary>
+        public IReadOnlyDictionary<string, string> Headers => _headers; 
+
+        /// <summary>
+        /// Gets the set of query parameters that have been configured for this request.
+        /// </summary>
+        public IReadOnlyDictionary<string, string> QueryParamters => _queryParameters;
+
+        /// <summary>
+        /// Gets the method this request will be sent using.
+        /// </summary>
+        public HttpMethod Method => _method;
+
+        /// <summary>
+        /// Gets the content of this request, if any.
+        /// </summary>
+        public string Content => _content;
+
+        /// <summary>
+        /// Gets the
+        /// </summary>
+        public string Url => _url;
+        #endregion
 
         #region Include/Fill
 
@@ -90,7 +124,7 @@ namespace Nap
         }
 
         /// <summary>
-        /// Includes some content in the body, serialized according to <see cref="INapFormatter"/>s.
+        /// Includes some content in the body, serialized according to <see cref="INapSerializer"/>s.
         /// </summary>
         /// <param name="body">The object to serialize into the body.</param>
         /// <returns>The <see cref="INapRequest"/> object.</returns>
@@ -100,7 +134,7 @@ namespace Nap
 
             try
             {
-                _content = _config.Formatters.AsDictionary()[_config.Serialization].Serialize(body);
+                _content = _config.Serializers.AsDictionary()[_config.Serialization].Serialize(body);
             }
             catch (Exception ex)
             {
@@ -132,7 +166,8 @@ namespace Nap
         /// <returns>The <see cref="INapRequest"/> object.</returns>
         public INapRequest IncludeCookie(string uri, string cookieName, string value)
         {
-            _cookies.Add(new Tuple<Uri, Cookie>(new Uri(uri), new Cookie(cookieName, value)));
+            var asUri = new Uri(uri);
+            _cookies.Add(new Tuple<Uri, Cookie>(asUri, new Cookie(cookieName, value, asUri.AbsolutePath, asUri.Host)));
             return this;
         }
 
@@ -170,7 +205,7 @@ namespace Nap
         /// <typeparam name="T">The type to deserialize the object to.</typeparam>
         /// <returns>
         /// A task, that when run returns the body content deserialized to the object <typeparamref name="T"/>,
-        /// using the formatter matching <see cref="INapConfig.Formatters"/>.
+        /// using the serializer matching <see cref="INapConfig.Serializers"/>.
         /// </returns>
         public async Task<T> ExecuteAsync<T>() where T : class, new()
         {
@@ -178,7 +213,7 @@ namespace Nap
             if (napPluginResult != null)
                 return napPluginResult;
             var responseWithContent = await RunRequestAsync();
-            var toReturn = GetFormatter(responseWithContent.Response.Content.Headers.ContentType.MediaType).Deserialize<T>(responseWithContent.Content) ?? new T();
+            var toReturn = GetSerializer(responseWithContent.Response.Content.Headers.ContentType.MediaType).Deserialize<T>(responseWithContent.Content) ?? new T();
 
             if (_config.FillMetadata)
             {
@@ -213,7 +248,7 @@ namespace Nap
         /// <typeparam name="T">The type to deserialize the object to.</typeparam>
         /// <returns>
         /// The body content deserialized to the object <typeparamref name="T"/>,
-        /// using the formatter matching <see cref="INapConfig.Formatters"/>.
+        /// using the serializer matching <see cref="INapConfig.Serializers"/>.
         /// </returns>
         public T Execute<T>() where T : class, new()
         {
@@ -249,7 +284,7 @@ namespace Nap
                     content.Headers.ContentType.MediaType = contentType.Value;
                 }
                 else
-                    content.Headers.ContentType.MediaType = _config.Formatters.AsDictionary()[_config.Serialization].ContentType;
+                    content.Headers.ContentType.MediaType = _config.Serializers.AsDictionary()[_config.Serialization].ContentType;
 
                 HttpResponseMessage response = null;
                 if (_method == HttpMethod.Get)
@@ -317,25 +352,25 @@ namespace Nap
         }
 
         /// <summary>
-        /// Gets the formatter for a given content type.
+        /// Gets the serializer for a given content type.
         /// </summary>
         /// <param name="contentType">Type of the content (eg. application/json).</param>
-        /// <returns>The formatter matching the content type.</returns>
-        private INapFormatter GetFormatter(string contentType)
+        /// <returns>The serializer matching the content type.</returns>
+        private INapSerializer GetSerializer(string contentType)
         {
-            INapFormatter formatter;
-            var formatters = _config.Formatters.AsDictionary();
-            if (!formatters.TryGetValue(contentType, out formatter))
+            INapSerializer serializer;
+            var serializers = _config.Serializers.AsDictionary();
+            if (!serializers.TryGetValue(contentType, out serializer))
             {
                 var getSubType = new Func<string, string>(type => type.Substring(type.IndexOf("/")));
                 var subType = getSubType(contentType);
-                formatter = formatters.FirstOrDefault(f => getSubType(f.Key) == subType).Value;
+                serializer = serializers.FirstOrDefault(f => getSubType(f.Key) == subType).Value;
 
-                if (formatter == null)
-                    throw new NapSerializationException($"No formatter was found for content type {contentType}");
+                if (serializer == null)
+                    throw new NapSerializationException($"No serializer was found for content type {contentType}");
             }
 
-            return formatter;
+            return serializer;
         }
 
         private void RunBooleanPluginMethod(Func<IPlugin, bool> pluginMethod, string errorMessage)

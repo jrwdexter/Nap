@@ -7,9 +7,9 @@ If `Nap.Configuration` is installed, adding the following to the *.config file o
 ```xml
 ...
   <nap>
-    <formatters>
-      <add contentType="text/html" formatterType="Nap.Html.NapHtmlFormatter, Nap.Html" />
-    </formatters>
+    <serializers>
+      <add contentType="text/html" serializerType="Nap.Html.NapHtmlFormatter, Nap.Html" />
+    </serializers
   </nap>
 ...
 ```

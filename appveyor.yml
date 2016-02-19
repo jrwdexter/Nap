@@ -10,7 +10,8 @@ assembly_info:
 
 # Before build
 install:
-- nuget restore
+- ps: >-
+    ./scripts/paket.exe restore
 - ps: >-
     ./scripts/SetReleaseVersion.ps1
 
@@ -21,6 +22,7 @@ before_build:
     ./scripts/SetPackageVersions.ps1
 build:
   verbosity: minimal
+  project: Nap.sln
   publish_nuget: true
   publish_nuget_symbols: true
 
@@ -34,13 +36,28 @@ branches:
 
 configuration: Release
 
+environment:
+  COVERALLS_REPO_TOKEN:
+    secure: CT+N3PO6ROIpHj/yozEuEVDnbL1+OjJ3TynGgXXfhc4AGqyrJ074rkJNxyHkEDA2
+
+#---------------------------------#
+#        test configuration       #
+#---------------------------------#
+
+test:
+  assemblies:
+    - '**\*.Tests.dll'
+after_test:
+  - cmd: .\packages\OpenCover\tools\OpenCover.Console.exe -register:user -filter:"+[*]*" -target:"C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe" -targetargs:".\Nap.Tests\bin\Release\Nap.Tests.dll .\Nap.Tests\bin\Release\Nap.Immutable.Tests.dll" -output:coverage.xml
+  - cmd: .\packages\coveralls.io\tools\coveralls.net.exe --opencover coverage.xml
+
 #---------------------------------#
 #     deployment configuration    #
 #---------------------------------#
 deploy:
   - provider: NuGet
     artifact: /.*\.nupkg/
-    api_key: 
+    api_key:
       secure: ELbN5jzU0YJ7y3qZsMv6OTGmVVkVgBIaUVkWu2GhamhjCTnYQzNs+VSoXdZWs7Jw
     on:
       branch: master
@@ -51,7 +68,5 @@ deploy:
 #---------------------------------#
 
 notifications:
-  - provider: Slack
-    auth_token:
-      secure: Q/+09OarQaHIunGaEVxZgMvuge+VbsLEkgwpsPDBLeI4tLT6/JgnAMcAB/Dnay+D
-    channel: ci
+  - provider: Webhook
+    url: https://zapier.com/hooks/catch/25chs9/

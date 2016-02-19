@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 using Nap.Html.Exceptions;
 using Nap.Html.Formats.Base;
 
-using Nap.Html.Binders.Base;
-
 namespace Nap.Html.Attributes
 {
 	/// <summary>
