@@ -36,12 +36,20 @@ branches:
 configuration: Release
 
 #---------------------------------#
+#        test configuration       #
+#---------------------------------#
+
+test:
+  assemblies:
+    - **\*.Tests.dll
+
+#---------------------------------#
 #     deployment configuration    #
 #---------------------------------#
 deploy:
   - provider: NuGet
     artifact: /.*\.nupkg/
-    api_key: 
+    api_key:
       secure: ELbN5jzU0YJ7y3qZsMv6OTGmVVkVgBIaUVkWu2GhamhjCTnYQzNs+VSoXdZWs7Jw
     on:
       branch: master
