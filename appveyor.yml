@@ -22,6 +22,7 @@ before_build:
     ./scripts/SetPackageVersions.ps1
 build:
   verbosity: minimal
+  project: Nap.sln
   publish_nuget: true
   publish_nuget_symbols: true
 
