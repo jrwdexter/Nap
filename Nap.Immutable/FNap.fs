@@ -56,6 +56,9 @@ module FNap =
     let executeAsync<'T> (request:INapRequest) =
         request.ExecuteAsync<'T>()
 
+    let useSerializer serializer (request:INapRequest) =
+        request |> applyConfiguration ((downcast request).Config.AddSerializer serializer)
+
     let logUsing logger (request:INapRequest) =
         (request :?> NapRequest).ApplyConfig (
             (request :?> NapRequest).Config.SetLogging logger

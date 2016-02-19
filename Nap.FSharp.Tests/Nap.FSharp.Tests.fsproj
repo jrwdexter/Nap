@@ -49,13 +49,37 @@
     </Otherwise>
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Project="..\.paket\paket.targets" />
   <ItemGroup>
+    <None Include="Assets\Issue5.html" />
+    <None Include="Assets\ParentTestClass.html" />
+    <None Include="Assets\ParentTestClass.json" />
+    <None Include="Assets\ParentTestClass.schema.json" />
+    <Content Include="Assets\ParentTestClass.xml" />
+    <None Include="Assets\ParentTestClass.xsd" />
+    <None Include="Assets\TestClass.html" />
+    <None Include="Assets\TestClass.json" />
+    <None Include="Assets\TestClass.schema.json" />
+    <Content Include="Assets\TestClass.xml" />
+    <None Include="Assets\TestClass.xsd" />
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Test.fs" />
     <Content Include="paket.references" />
     <Content Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nap.Html\Nap.Immutable.Html.csproj">
+      <Name>Nap.Immutable.Html</Name>
+      <Project>{176a5029-8bba-499b-9596-9df0f795180a}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <Reference Include="FSharp.Core">
       <HintPath>..\packages\FSharp.Core\lib\portable-net45+netcore45+wpa81+wp8\FSharp.Core.dll</HintPath>
     </Reference>
@@ -77,14 +101,6 @@
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <Import Project="..\.paket\paket.targets" />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1')">
       <ItemGroup>

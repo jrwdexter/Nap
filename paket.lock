@@ -238,5 +238,5 @@ NUGET
       System.Runtime.Handles (>= 4.0.0) - framework: dnxcore50
       System.Runtime.InteropServices (>= 4.0.20) - framework: dnxcore50
       System.Threading (>= 4.0.10) - framework: dnxcore50
-    System.Threading.Tasks (4.0.10) - framework: dnxcore50
+    System.Threading.Tasks (4.0.10)
       System.Runtime (>= 4.0.0) - framework: dnxcore50

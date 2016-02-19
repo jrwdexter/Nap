@@ -8,3 +8,4 @@ nuget OpenCover
 nuget System.Net.Http 4.0.0
 nuget FSharp.Core 4.0.0.1
 nuget Coveralls.IO
+nuget System.Threading.Tasks

@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "properties": {
+    "FirstName": {
+      "required": true,
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "LastName": {
+      "required": true,
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}

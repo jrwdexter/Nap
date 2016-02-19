@@ -56,8 +56,14 @@ namespace Nap.Html.Serialization.Binders
                 context = new CQ(input);
             }
 
-            var properties = outputType.GetProperties().Where(p => p.CanWrite);
+            var contract = new ObjectContract(outputType);
+            var allProperties = outputType.GetProperties();
 
+            var properties = allProperties.Where(p => p.CanWrite)
+                .Union(
+                    allProperties.Where(p =>
+                        contract.Parameters.Any(
+                            param => param.Name.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase))));
 
             // Changing this from setting to creating a hash table of values
             var values = properties.ToDictionary(property => property.Name, property =>
@@ -122,9 +128,10 @@ namespace Nap.Html.Serialization.Binders
                 {
                     // TODO: Add contract.Properties to cache PropertyInfos
                     var pi =
-                        outputType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty)
+                        outputType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                             .FirstOrDefault(p => p.Name.Equals(value.Key, StringComparison.InvariantCultureIgnoreCase));
-                    pi?.SetValue(toReturn, value.Value);
+                    if(pi?.CanWrite ?? false)
+                        pi.SetValue(toReturn, value.Value);
                 }
             }
 
