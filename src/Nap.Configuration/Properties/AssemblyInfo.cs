@@ -4,10 +4,10 @@ using System.Reflection;
 [assembly: AssemblyTitleAttribute("Nap.Configuration")]
 [assembly: AssemblyProductAttribute("Nap")]
 [assembly: AssemblyDescriptionAttribute("A short and sweet REST client.")]
-[assembly: AssemblyVersionAttribute("1.0")]
-[assembly: AssemblyFileVersionAttribute("1.0")]
+[assembly: AssemblyVersionAttribute("0.3")]
+[assembly: AssemblyFileVersionAttribute("0.3")]
 namespace System {
     internal static class AssemblyVersionInformation {
-        internal const string Version = "1.0";
+        internal const string Version = "0.3";
     }
 }
