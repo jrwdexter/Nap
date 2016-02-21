@@ -56,7 +56,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="..\.paket\paket.targets" />
+  <Import Project="..\..\.paket\paket.targets" />
   <ItemGroup>
     <None Include="Assets\Issue5.html" />
     <None Include="Assets\ParentTestClass.html" />
@@ -75,19 +75,19 @@
     <Content Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nap.Html\Nap.Immutable.Html.csproj">
+    <ProjectReference Include="..\..\src\Nap.Html\Nap.Immutable.Html.csproj">
       <Name>Nap.Immutable.Html</Name>
       <Project>{176a5029-8bba-499b-9596-9df0f795180a}</Project>
       <Private>True</Private>
     </ProjectReference>
     <Reference Include="FSharp.Core">
-      <HintPath>..\packages\FSharp.Core\lib\portable-net45+netcore45+wpa81+wp8\FSharp.Core.dll</HintPath>
+      <HintPath>..\..\packages\FSharp.Core\lib\portable-net45+netcore45+wpa81+wp8\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="FsUnit.MsTest">
-      <HintPath>..\packages\Fs30Unit.MsTest\lib\net40\FsUnit.MsTest.dll</HintPath>
+      <HintPath>..\..\packages\Fs30Unit.MsTest\lib\net40\FsUnit.MsTest.dll</HintPath>
     </Reference>
     <Reference Include="FsUnit.NUnit">
-      <HintPath>..\packages\FsUnit\lib\net45\FsUnit.NUnit.dll</HintPath>
+      <HintPath>..\..\packages\FsUnit\lib\net45\FsUnit.NUnit.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="mscorlib" />
@@ -95,7 +95,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Numerics" />
-    <ProjectReference Include="..\Nap.Immutable\Nap.Immutable.fsproj">
+    <ProjectReference Include="..\..\src\Nap.Immutable\Nap.Immutable.fsproj">
       <Name>Nap.Immutable</Name>
       <Project>{e517f21c-31f6-4ea5-8cd4-dbf1b18abf64}</Project>
       <Private>True</Private>
@@ -105,7 +105,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1')">
       <ItemGroup>
         <Reference Include="NHamcrest">
-          <HintPath>..\packages\Fs30Unit.MsTest\lib\net40\NHamcrest.dll</HintPath>
+          <HintPath>..\..\packages\Fs30Unit.MsTest\lib\net40\NHamcrest.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -116,7 +116,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1')">
       <ItemGroup>
         <Reference Include="NHamcrest">
-          <HintPath>..\packages\FsUnit\lib\net45\NHamcrest.dll</HintPath>
+          <HintPath>..\..\packages\FsUnit\lib\net45\NHamcrest.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>
@@ -127,7 +127,7 @@
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1')">
       <ItemGroup>
         <Reference Include="nunit.framework">
-          <HintPath>..\packages\NUnit\lib\net45\nunit.framework.dll</HintPath>
+          <HintPath>..\..\packages\NUnit\lib\net45\nunit.framework.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

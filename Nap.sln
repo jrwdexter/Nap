@@ -8,27 +8,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{D9BD08
 		paket.dependencies = paket.dependencies
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap", "Nap\Nap.csproj", "{2D0869E5-CEB3-4719-BFC3-3FAACC721384}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap", "src\Nap\Nap.csproj", "{2D0869E5-CEB3-4719-BFC3-3FAACC721384}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Tests", "Nap.Tests\Nap.Tests.csproj", "{A9CC8956-2590-4DFC-B7A8-CB42F5ED26DE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Tests", "tests\Nap.Tests\Nap.Tests.csproj", "{A9CC8956-2590-4DFC-B7A8-CB42F5ED26DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Configuration", "Nap.Configuration\Nap.Configuration.csproj", "{7D733248-2081-41EB-8C66-DD4BBACEC1E8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Configuration", "src\Nap.Configuration\Nap.Configuration.csproj", "{7D733248-2081-41EB-8C66-DD4BBACEC1E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Html", "Nap.Html\Nap.Html.csproj", "{DE5DB636-28E5-4D73-9D70-683E80D47254}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Html", "src\Nap.Html\Nap.Html.csproj", "{DE5DB636-28E5-4D73-9D70-683E80D47254}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A51A8509-EBE5-49AA-80BB-3EDA8FF6217B}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Nap.Immutable", "Nap.Immutable\Nap.Immutable.fsproj", "{E517F21C-31F6-4EA5-8CD4-DBF1B18ABF64}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Nap.Immutable", "src\Nap.Immutable\Nap.Immutable.fsproj", "{E517F21C-31F6-4EA5-8CD4-DBF1B18ABF64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Immutable.Tests", "Nap.Tests\Nap.Immutable.Tests.csproj", "{B6770526-A0BF-4ACF-9A8E-38CB191638E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Immutable.Tests", "tests\Nap.Tests\Nap.Immutable.Tests.csproj", "{B6770526-A0BF-4ACF-9A8E-38CB191638E3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Html", "Html", "{15895F73-F811-4880-BB01-2041BC8E7813}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configuration", "{0490FEFC-70D0-43D0-9C6D-799443C4A9C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Immutable.Html", "Nap.Html\Nap.Immutable.Html.csproj", "{176A5029-8BBA-499B-9596-9DF0F795180A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nap.Immutable.Html", "src\Nap.Html\Nap.Immutable.Html.csproj", "{176A5029-8BBA-499B-9596-9DF0F795180A}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Nap.FSharp.Tests", "Nap.FSharp.Tests\Nap.FSharp.Tests.fsproj", "{90E79DCF-7EF1-44B9-99AB-514510280019}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Nap.FSharp.Tests", "tests\Nap.FSharp.Tests\Nap.FSharp.Tests.fsproj", "{90E79DCF-7EF1-44B9-99AB-514510280019}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
