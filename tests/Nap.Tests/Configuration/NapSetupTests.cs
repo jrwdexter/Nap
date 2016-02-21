@@ -2,31 +2,30 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Nap.Configuration;
+using Xunit;
 
 namespace Nap.Tests.Configuration
 {
-    [TestClass]
+#if IMMUTABLE
+    [Trait("Library", "Nap.Immutable")]
+#else
+    [Trait("Library", "Nap")]
+#endif
+    [Trait("Class", "NapSetup")]
     public class NapSetupTests
     {
-        [TestInitialize]
-        public void Setup()
-        {
-        }
-
         private sealed class TestNapConfig : INapConfig
         {
-	        public ISerializersConfig Serializers { get; set; }
+            public ISerializersConfig Serializers { get; set; }
 
-	        public string BaseUrl { get; set; }
+            public string BaseUrl { get; set; }
 
             public IHeaders Headers { get; set; }
 
             public IQueryParameters QueryParameters { get; set; }
 
-	        string INapConfig.Serialization { get; set; }
+            string INapConfig.Serialization { get; set; }
 
             public IAdvancedNapConfig Advanced { get; set; }
 

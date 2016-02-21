@@ -5,23 +5,28 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net.Http.Headers;
 using Nap.Configuration;
+using Xunit;
 
 namespace Nap.Tests
 {
-    [TestClass]
+#if IMMUTABLE
+    [Trait("Library", "Nap.Immutable")]
+#else
+    [Trait("Library", "Nap")]
+#endif
+    [Trait("Type", "Base Functionality")]
+    [Trait("Class", "NapClient")]
     public class NapClientTests
     {
         private NapClient _nap;
-        private TestHandler _handler;
-        private string _url;
-        private string _otherUrl;
+        private readonly TestHandler _handler;
+        private readonly string _url;
+        private readonly string _otherUrl;
 
-        [TestInitialize]
 #if IMMUTABLE
-        public void Setup_Immutable()
+        public NapClientTests()
         {
             _url = "http://example.com/test";
             _otherUrl = "http://foobar.com/test";
@@ -39,7 +44,7 @@ namespace Nap.Tests
             _nap = new NapClient(config);
         }
 #else
-        public void Setup_Mutable()
+        public NapClientTests()
         {
             _url = "http://example.com/test";
             _otherUrl = "http://foobar.com/test";
@@ -56,76 +61,70 @@ namespace Nap.Tests
         }
 #endif
 
-        [TestMethod]
-        [TestCategory("Nap")]
+        [Fact]
         public void Nap_CreatesNewNap()
         {
             // Arrange
             var nap = NapClient.Lets;
 
             // Assert
-            Assert.AreNotSame(NapClient.Lets, nap);
+            Assert.NotSame(NapClient.Lets, nap);
         }
 
-        [TestMethod]
-        [TestCategory("NapClient")]
+        [Fact]
         public void Nap_Get_PerformsHttpClientGet()
         {
             // Act
             var result = _nap.Get(_url).Execute<Result>();
 
             // Assert
-            Assert.AreEqual(200, result.StatusCode);
-            Assert.AreEqual(HttpMethod.Get, _handler.Request.Method);
+            Assert.Equal(200, result.StatusCode);
+            Assert.Equal(HttpMethod.Get, _handler.Request.Method);
 #if IMMUTABLE
-            Assert.AreEqual(string.Empty, _handler.RequestContent);
+            Assert.Equal(string.Empty, _handler.RequestContent);
 #else
-            Assert.AreEqual(null, _handler.Request.Content);
+            Assert.Equal(null, _handler.Request.Content);
 #endif
-            Assert.AreEqual(new Uri(_url), _handler.Request.RequestUri);
+            Assert.Equal(new Uri(_url), _handler.Request.RequestUri);
         }
 
-        [TestMethod]
-        [TestCategory("NapClient")]
+        [Fact]
         public void Nap_Post_PerformsHttpClientPost()
         {
             // Act
             var result = _nap.Post(_url).Execute<Result>();
 
             // Assert
-            Assert.AreEqual(200, result.StatusCode);
-            Assert.AreEqual(HttpMethod.Post, _handler.Request.Method);
-            Assert.AreEqual(new Uri(_url), _handler.Request.RequestUri);
+            Assert.Equal(200, result.StatusCode);
+            Assert.Equal(HttpMethod.Post, _handler.Request.Method);
+            Assert.Equal(new Uri(_url), _handler.Request.RequestUri);
         }
 
-        [TestMethod]
-        [TestCategory("NapClient")]
+        [Fact]
         public void Nap_Put_PerformsHttpClientPut()
         {
             // Act
             var result = _nap.Put(_url).Execute<Result>();
 
             // Assert
-            Assert.AreEqual(200, result.StatusCode);
-            Assert.AreEqual(HttpMethod.Put, _handler.Request.Method);
-            Assert.AreEqual(new Uri(_url), _handler.Request.RequestUri);
+            Assert.Equal(200, result.StatusCode);
+            Assert.Equal(HttpMethod.Put, _handler.Request.Method);
+            Assert.Equal(new Uri(_url), _handler.Request.RequestUri);
         }
 
-        [TestMethod]
-        [TestCategory("NapClient")]
+        [Fact]
         public void Nap_Delete_PerformsHttpClientDelete()
         {
             // Act
             var result = _nap.Delete(_url).Execute<Result>();
 
             // Assert
-            Assert.AreEqual(200, result.StatusCode);
-            Assert.AreEqual(HttpMethod.Delete, _handler.Request.Method);
-            Assert.AreEqual(new Uri(_url), _handler.Request.RequestUri);
+            Assert.Equal(200, result.StatusCode);
+            Assert.Equal(HttpMethod.Delete, _handler.Request.Method);
+            Assert.Equal(new Uri(_url), _handler.Request.RequestUri);
         }
 
-        [TestMethod]
-        [TestCategory("NapClient")]
+        [Fact]
         public void Nap_PostJson_ContentTypeIncluded()
         {
             // Arrange
@@ -139,13 +138,12 @@ namespace Nap.Tests
             _nap.Post(_url).IncludeBody(new { Foo = "Bar" }).Execute();
 
             //
-            Assert.AreEqual(HttpMethod.Post, _handler.Request.Method);
-            Assert.AreEqual("{\"Foo\":\"Bar\"}", _handler.RequestContent);
-            Assert.AreEqual("application/json", _handler.Request.Content.Headers.ContentType.MediaType);
+            Assert.Equal(HttpMethod.Post, _handler.Request.Method);
+            Assert.Equal("{\"Foo\":\"Bar\"}", _handler.RequestContent);
+            Assert.Equal("application/json", _handler.Request.Content.Headers.ContentType.MediaType);
         }
 
-        [TestMethod]
-        [TestCategory("NapClient")]
+        [Fact]
         public void Nap_IncludeHeader_SendsHeader()
         {
             // Act
@@ -154,14 +152,13 @@ namespace Nap.Tests
             _nap.Get(_url).IncludeHeader(key, value).Execute<Result>();
 
             // Assert
-            Assert.AreEqual(1, _handler.Request.Headers.Count());
-            Assert.AreEqual(1, _handler.Request.Headers.Count(h => h.Key == key));
-            Assert.AreEqual(1, _handler.Request.Headers.First(h => h.Key == key).Value.Count());
-            Assert.AreEqual(value, _handler.Request.Headers.First(h => h.Key == key).Value.First());
+            Assert.Equal(1, _handler.Request.Headers.Count());
+            Assert.Equal(1, _handler.Request.Headers.Count(h => h.Key == key));
+            Assert.Equal(1, _handler.Request.Headers.First(h => h.Key == key).Value.Count());
+            Assert.Equal(value, _handler.Request.Headers.First(h => h.Key == key).Value.First());
         }
 
-        [TestMethod]
-        [TestCategory("NapClient")]
+        [Fact]
         public void Nap_IncludeCookie_SendsCookie()
         {
             // Act
@@ -170,9 +167,9 @@ namespace Nap.Tests
             _nap.Get(_url).IncludeCookie(_url, key, value).IncludeCookie(_otherUrl, value, key).Execute<Result>();
 
             // Assert
-            Assert.AreEqual(1, _handler.Request.Headers.Count());
-            Assert.AreEqual(1, _handler.Request.Headers.Count(h => h.Key.ToLower() == "cookie"));
-            Assert.AreEqual($"{key}={value}", _handler.Request.Headers.First(h => h.Key == "cookie").Value.First());
+            Assert.Equal(1, _handler.Request.Headers.Count());
+            Assert.Equal(1, _handler.Request.Headers.Count(h => h.Key.ToLower() == "cookie"));
+            Assert.Equal($"{key}={value}", _handler.Request.Headers.First(h => h.Key == "cookie").Value.First());
         }
 
         public class TestHandler : HttpClientHandler

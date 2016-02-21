@@ -17,7 +17,7 @@ type NapClient (config:NapConfig option, setup:INapSetup option) =
             plugins |> Seq.fold (fun c p -> p.ModifyConfiguration c) configuration
         let someConfig = match config with | Some(c) -> c | None -> NapConfig.Default
         let someSetup = match setup with | Some(s) -> s | None -> upcast NapSetup.Empty
-        someConfig |> applyPlugins NapSetup.GlobalPlugins |> applyPlugins someSetup.Plugins
+        someConfig |> applyPlugins someSetup.Plugins
     static member Lets
         with get () = new NapClient()
     member x.Get () = x.CreateRequest(HttpMethod.Get) :> INapRequest
@@ -32,5 +32,4 @@ type NapClient (config:NapConfig option, setup:INapSetup option) =
         let applyPlugins (plugins:IPlugin seq) (request:NapRequest) =
             plugins |> Seq.fold (fun c p -> p.PrepareRequest c) request
         { NapRequest.Default with Method = httpMethod }.ApplyConfig(x.Config)
-        |> applyPlugins NapSetup.GlobalPlugins
         |> applyPlugins x.Setup.Plugins

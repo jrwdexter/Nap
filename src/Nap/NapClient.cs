@@ -1,7 +1,8 @@
 ﻿using System.Linq;
 using System.Net.Http;
 using System;
-
+using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 using Nap.Configuration;
 using Nap.Exceptions;
 using Nap.Plugins.Base;
@@ -16,6 +17,7 @@ namespace Nap
     {
         private readonly static object _padlock = new object();
         private INapConfig _config;
+        private readonly NapSetup _setup;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NapClient"/> class.
@@ -35,25 +37,39 @@ namespace Nap
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="NapClient" /> class.
+        /// </summary>
+        /// <param name="config">The initial configuration to utilize on creation.</param>
+        public NapClient(INapConfig config) : this(config.BaseUrl)
+        {
+            _config = config;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NapClient" /> class.
+        /// </summary>
+        /// <param name="setup">The setup to utilize during creation of any requests, or operation of the Nap library.</param>
+        public NapClient(NapSetup setup) : this()
+        {
+            _setup = setup;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NapClient" /> class.
+        /// </summary>
+        /// <param name="config">The initial configuration to utilize on creation.</param>
+        /// <param name="setup">The setup to utilize during creation of any requests, or operation of the Nap library.</param>
+        public NapClient(INapConfig config, NapSetup setup) : this(config.BaseUrl)
+        {
+            _setup = setup;
+            _config = config;
+        }
+
+
+        /// <summary>
         /// Gets a new instance of the <see cref="NapClient"/>, which can be used to perform requests swiftly.
         /// </summary>
-        public static NapClient Lets
-        {
-            get
-            {
-                return new NapClient();
-                //if (_instance == null)
-                //{
-                //    lock (_padlock)
-                //    {
-                //        if (_instance == null)
-                //            _instance = new Nap();
-                //    }
-                //}
-
-                //return _instance;
-            }
-        }
+        public static NapClient Lets => new NapClient();
 
         /// <summary>
         /// Gets or sets the configuration that is used as the base for all requests.
@@ -67,7 +83,7 @@ namespace Nap
                     lock (_padlock)
                     {
                         if (_config == null)
-                            _config = NapSetup.Plugins.Aggregate<IPlugin, INapConfig>(null, (current, plugin) => current ?? plugin.GetConfiguration())
+                            _config = _setup?.Plugins.Aggregate<IPlugin, INapConfig>(null, (current, plugin) => current ?? plugin.GetConfiguration())
                                       ?? new EmptyNapConfig();
                     }
                 }
@@ -146,11 +162,11 @@ namespace Nap
         /// <summary>
         /// Helper method to run all plugin methods that need to be executed before <see cref="INapRequest"/> creation.
         /// </summary>
-        private static void ApplyBeforeRequestPlugins()
+        private void ApplyBeforeRequestPlugins()
         {
             try
             {
-                if (!NapSetup.Plugins.Aggregate(true, (current, plugin) => current && plugin.BeforeNapRequestCreation()))
+                if (!(_setup?.Plugins.Aggregate(true, (current, plugin) => current && plugin.BeforeNapRequestCreation()) ?? true))
                     throw new Exception("Nap pre-request creation aborted."); // TODO: Specific exception
             }
             catch (Exception e)
@@ -162,12 +178,13 @@ namespace Nap
         /// <summary>
         /// Helper method to run all plugin methods that need to be executed on <see cref="INapRequest"/> creation.
         /// </summary>
-        private static INapRequest CreateNapRequest(INapConfig config, string url, HttpMethod method)
+        private INapRequest CreateNapRequest(INapConfig config, string url, HttpMethod method)
         {
             try
             {
-                var request = NapSetup.Plugins.Aggregate<IPlugin, INapRequest>(null, (current, plugin) => current ?? plugin.GenerateNapRequest(config, url, method));
-                request = request ?? new NapRequest(config, url, method);
+                var request = _setup?.Plugins.Aggregate<IPlugin, INapRequest>(null, (current, plugin) => current ?? plugin.GenerateNapRequest(config, url, method));
+                var plugins = _setup?.Plugins.ToArray() ?? new IPlugin[] { }; // Enumerate plugins to make sure no other threads are going to add/remove plugins halfway through
+                request = request ?? new NapRequest(plugins, config, url, method);
                 return request;
             }
             catch (Exception e)
@@ -179,11 +196,11 @@ namespace Nap
         /// <summary>
         /// Helper method to run all plugin methods that need to be executed after <see cref="INapRequest"/> creation.
         /// </summary>
-        private static void ApplyAfterRequestPlugins(INapRequest request)
+        private void ApplyAfterRequestPlugins(INapRequest request)
         {
             try
             {
-                if (!NapSetup.Plugins.Aggregate(true, (current, plugin) => current && plugin.AfterNapRequestCreation(request)))
+                if (!(_setup?.Plugins.Aggregate(true, (current, plugin) => current && plugin.AfterNapRequestCreation(request)) ?? true))
                     throw new NapPluginException("Nap post-request creation aborted.");
             }
             catch (Exception e)

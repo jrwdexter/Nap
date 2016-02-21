@@ -1,2 +1,4 @@
-FsUnit
-Fs30Unit.MsTest
+group Test
+  FsUnit
+  FsUnit.xUnit
+  xunit

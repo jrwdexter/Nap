@@ -65,16 +65,22 @@ namespace Nap.Html.Factories
             IBinder binder;
             if (!_cachedBinders.TryGetValue(type, out binder))
             {
-                binder = Values.FirstOrDefault(b => BinderMatchesType(b, type));
-                if (binder == null && type.IsPrimitive)
-                    binder = Values.FirstOrDefault(b => b is PrimitiveBinder);
-                if (binder == null && type.IsClass)
-                    binder = Values.FirstOrDefault(b => b is ObjectBinder);
+                lock (Padlock)
+                {
+                    if (!_cachedBinders.TryGetValue(type, out binder))
+                    {
+                        binder = Values.FirstOrDefault(b => BinderMatchesType(b, type));
+                        if (binder == null && type.IsPrimitive)
+                            binder = Values.FirstOrDefault(b => b is PrimitiveBinder);
+                        if (binder == null && type.IsClass)
+                            binder = Values.FirstOrDefault(b => b is ObjectBinder);
 
-                if (binder == null)
-                    throw new NapBindingException($"No binder found that matches type {type.FullName}.");
+                        if (binder == null)
+                            throw new NapBindingException($"No binder found that matches type {type.FullName}.");
 
-                _cachedBinders.Add(type, binder);
+                        _cachedBinders.Add(type, binder);
+                    }
+                }
             }
 
             return binder;

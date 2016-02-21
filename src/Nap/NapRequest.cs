@@ -21,6 +21,7 @@ namespace Nap
     /// </summary>
     public partial class NapRequest : INapRequest
     {
+        private readonly IReadOnlyCollection<IPlugin> _plugins;
         private readonly INapConfig _config;
         private readonly string _url;
         private readonly HttpMethod _method;
@@ -33,12 +34,14 @@ namespace Nap
         /// <summary>
         /// Initializes a new instance of the <see cref="NapRequest" /> class.
         /// </summary>
+        /// <param name="plugins">The set of plugins to apply during execution of this request.</param>
         /// <param name="initialConfiguration">The initial configuration for the request.</param>
         /// <param name="url">The URL to perform the request against.  Can be a full URL or a partial.</param>
         /// <param name="method">The method to use in the request.</param>
-        internal NapRequest(INapConfig initialConfiguration, string url, HttpMethod method)
+        internal NapRequest(IReadOnlyCollection<IPlugin> plugins, INapConfig initialConfiguration, string url, HttpMethod method)
         {
             // Set up initial configuration parameters.
+            _plugins = plugins;
             _config = initialConfiguration;
             foreach (var header in _config.Headers)
                 _headers.Add(header.Key, header.Value);
@@ -193,7 +196,7 @@ namespace Nap
         /// <returns>A task, that when run returns the body content.</returns>
         public async Task<string> ExecuteAsync()
         {
-            var napPluginResult = NapSetup.Plugins.Aggregate<IPlugin, string>(null, (current, plugin) => current ?? plugin.Execute(this) as string);
+            var napPluginResult = _plugins.Aggregate<IPlugin, string>(null, (current, plugin) => current ?? plugin.Execute(this) as string);
             if (napPluginResult != null)
                 return napPluginResult;
             return (await RunRequestAsync()).Content;
@@ -209,7 +212,7 @@ namespace Nap
         /// </returns>
         public async Task<T> ExecuteAsync<T>() where T : class, new()
         {
-            var napPluginResult = NapSetup.Plugins.Aggregate<IPlugin, T>(null, (current, plugin) => current ?? plugin.Execute(this) as T);
+            var napPluginResult = _plugins.Aggregate<IPlugin, T>(null, (current, plugin) => current ?? plugin.Execute(this) as T);
             if (napPluginResult != null)
                 return napPluginResult;
             var responseWithContent = await RunRequestAsync();
@@ -377,7 +380,7 @@ namespace Nap
         {
             try
             {
-                if (!NapSetup.Plugins.Aggregate(true, (current, plugin) => current && pluginMethod.Invoke(plugin)))
+                if (!_plugins.Aggregate(true, (current, plugin) => current && pluginMethod.Invoke(plugin)))
                     throw new NapPluginException(errorMessage);
             }
             catch (Exception e)

@@ -1,65 +1,57 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using Nap.Exceptions;
 using Nap.Html;
 using Nap.Tests.Serializers.Base;
 using Nap.Tests.TestClasses;
-
+using Xunit;
 #if IMMUTABLE
 using Microsoft.FSharp.Core;
 #endif
 
 namespace Nap.Tests.Serializers
 {
-	[TestClass]
-	public class NapHtmlSerializerTests : NapSerializerTestBase
-	{
-		private NapHtmlSerializer _htmlSerializer;
+#if IMMUTABLE
+    [Trait("Library", "Nap.Immutable")]
+#else
+    [Trait("Library", "Nap")]
+#endif
+    [Trait("Type", "Serialization")]
+    [Trait("Class", "NapHtmlSerializer")]
+    public class NapHtmlSerializerTests : NapSerializerTestBase
+    {
+        private readonly NapHtmlSerializer _htmlSerializer;
 
-		[TestInitialize]
-		public void Setup()
-		{
-			_htmlSerializer = new NapHtmlSerializer();
-		}
+        public NapHtmlSerializerTests()
+        {
+            _htmlSerializer = new NapHtmlSerializer();
+        }
 
-		[TestMethod]
-		[TestCategory("Serializers")]
-		[TestCategory("Nap.Html")]
-		public void GetContentType_EqualsTextHtml()
-		{
-			// Assert
-			Assert.AreEqual("text/html", _htmlSerializer.ContentType);
-		}
+        [Fact]
+        public void GetContentType_EqualsTextHtml()
+        {
+            // Assert
+            Assert.Equal("text/html", _htmlSerializer.ContentType);
+        }
 
-		[TestMethod]
-		[TestCategory("Serializers")]
-		[TestCategory("Nap.Html")]
-		[ExpectedException(typeof(NotSupportedException))]
-		public void Serialize_NotSupportedExceptionIsThrown()
-		{
-			// Act
-			_htmlSerializer.Serialize("<!DOCTYPE html><html lang=\"en\"><head></head><body></body></html>");
-		}
+        [Fact]
+        public void Serialize_NotSupportedExceptionIsThrown()
+        {
+            // Act
+            Assert.Throws<NotSupportedException>(() => _htmlSerializer.Serialize("<!DOCTYPE html><html lang=\"en\"><head></head><body></body></html>"));
+        }
 
 #if IMMUTABLE
-        [TestMethod]
-		[TestCategory("Serializers")]
-		[TestCategory("Nap.Html")]
+        [Fact]
 		public void Deserialize_Null_IsNone()
 		{
 			// Act
 			var result = _htmlSerializer.Deserialize<TestClass>(null);
 
             // Assert
-            Assert.AreEqual(FSharpOption<TestClass>.None, result);
+            Assert.Equal(FSharpOption<TestClass>.None, result);
 		}
 
-		[TestMethod]
-		[TestCategory("Serializers")]
-		[TestCategory("Nap.Html")]
+		[Fact]
 		public void Deserialize_IntoClassWithoutParameterlessConstructor_DeserializesCorrectly()
 		{
             // Arrange
@@ -69,61 +61,52 @@ namespace Nap.Tests.Serializers
 			var result = _htmlSerializer.Deserialize<RequiresParameters_TestClass>(html);
 
             // Assert
-			Assert.IsTrue(result.Value != null);
-            Assert.AreEqual("John", result.Value.FirstName);
-            Assert.AreEqual("Doe", result.Value.LastName);
+			Assert.True(result.Value != null);
+            Assert.Equal("John", result.Value.FirstName);
+            Assert.Equal("Doe", result.Value.LastName);
 		}
 #else
-        [TestMethod]
-		[TestCategory("Serializers")]
-		[TestCategory("Nap.Html")]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void Deserialize_Null_ThrowsException()
-		{
-			// Act
-			_htmlSerializer.Deserialize<TestClass>(null);
-		}
+        [Fact]
+        public void Deserialize_Null_ThrowsException()
+        {
+            // Act
+            Assert.Throws<ArgumentNullException>(() => _htmlSerializer.Deserialize<TestClass>(null));
+        }
 
-		[TestMethod]
-		[TestCategory("Serializers")]
-		[TestCategory("Nap.Html")]
-		public void Deserialize_IntoClassWithoutParameterlessConstructor_DeserializesCorrectly()
-		{
+        [Fact]
+        public void Deserialize_IntoClassWithoutParameterlessConstructor_DeserializesCorrectly()
+        {
             // Arrange
-		    string html = GetFileContents("TestClass.html");
+            string html = GetFileContents("TestClass.html");
 
-			// Act
-			var result = _htmlSerializer.Deserialize<RequiresParameters_TestClass>(html);
+            // Act
+            var result = _htmlSerializer.Deserialize<RequiresParameters_TestClass>(html);
 
             // Assert
-			Assert.IsNotNull(result);
-            Assert.AreEqual("John", result.FirstName);
-            Assert.AreEqual("Doe", result.LastName);
-		}
+            Assert.NotNull(result);
+            Assert.Equal("John", result.FirstName);
+            Assert.Equal("Doe", result.LastName);
+        }
 #endif
 
-		[TestMethod]
-		[TestCategory("Serializers")]
-		[TestCategory("Nap.Html")]
-		public void Deserialize_BasicHtml_DoesNotThrowException()
-		{
-			// Arrange
-			string html = GetFileContents("TestClass.html");
+        [Fact]
+        public void Deserialize_BasicHtml_DoesNotThrowException()
+        {
+            // Arrange
+            string html = GetFileContents("TestClass.html");
 
-			// Act
-			var result = _htmlSerializer.Deserialize<TestClass>(html);
+            // Act
+            var result = _htmlSerializer.Deserialize<TestClass>(html);
 
-			// Assert
-			Assert.IsNotNull(result);
-		}
+            // Assert
+            Assert.NotNull(result);
+        }
 
-		[TestMethod]
-		[TestCategory("Serializers")]
-		[TestCategory("Nap.Html")]
-		public void Deserialization_TestClass_MatchesAppropriateValues()
-		{
-			// Arrange
-			var html = GetFileContents("TestClass.html");
+        [Fact]
+        public void Deserialization_TestClass_MatchesAppropriateValues()
+        {
+            // Arrange
+            var html = GetFileContents("TestClass.html");
 
             // Act
 #if IMMUTABLE
@@ -132,33 +115,31 @@ namespace Nap.Tests.Serializers
             var person = _htmlSerializer.Deserialize<TestClass>(html);
 #endif
 
-			// Assert
-			Assert.AreEqual("John", person.FirstName);
-			Assert.AreEqual("Doe", person.LastName);
-		}
+            // Assert
+            Assert.Equal("John", person.FirstName);
+            Assert.Equal("Doe", person.LastName);
+        }
 
-		[TestMethod]
-		[TestCategory("Serializers")]
-		[TestCategory("Nap.Html")]
-		public void Deserialization_ParentTestClass_MatchesAppropriateValues()
-		{
-			// Arrange
-			var html = GetFileContents("ParentTestClass.html");
+        [Fact]
+        public void Deserialization_ParentTestClass_MatchesAppropriateValues()
+        {
+            // Arrange
+            var html = GetFileContents("ParentTestClass.html");
 
-			// Act
+            // Act
 #if IMMUTABLE
             var person = _htmlSerializer.Deserialize<ParentTestClass>(html).Value;
 #else
-			var person = _htmlSerializer.Deserialize<ParentTestClass>(html);
+            var person = _htmlSerializer.Deserialize<ParentTestClass>(html);
 #endif
 
-			// Assert
-			Assert.AreEqual("Jeff", person.Spouse.FirstName);
-			Assert.AreEqual("Doe", person.Spouse.LastName);
-			Assert.AreEqual("John", person.Children.First().FirstName);
-			Assert.AreEqual("Doe", person.Children.First().LastName);
-			Assert.AreEqual("Jane", person.Children.Last().FirstName);
-			Assert.AreEqual("Doe", person.Children.Last().LastName);
-		}
-	}
+            // Assert
+            Assert.Equal("Jeff", person.Spouse.FirstName);
+            Assert.Equal("Doe", person.Spouse.LastName);
+            Assert.Equal("John", person.Children.First().FirstName);
+            Assert.Equal("Doe", person.Children.First().LastName);
+            Assert.Equal("Jane", person.Children.Last().FirstName);
+            Assert.Equal("Doe", person.Children.Last().LastName);
+        }
+    }
 }

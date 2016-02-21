@@ -2,132 +2,140 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nap.Configuration;
 using Nap.Configuration.Sections;
 using Nap.Exceptions;
 using Nap.Html;
+using Xunit;
 
 namespace Nap.Configuration.Tests
 {
-    [TestClass]
+#if IMMUTABLE
+    [Trait("Library", "Nap.Immutable")]
+#else
+    [Trait("Library", "Nap")]
+#endif
+    [Trait("Type", "Configuration")]
     public class NapConfigurationTests
     {
+        private readonly NapSetup _setup;
         // Tests to ensure that *.config files get parsed correctly.
 
-        [TestInitialize]
-        public void Setup()
+        public NapConfigurationTests()
         {
-            NapSetup.RegisterPlugin<NapConfigurationPlugin>();
+            _setup = new NapSetup();
+            _setup.InstallPlugin<NapConfigurationPlugin>();
         }
 
-        [TestMethod]
-        [TestCategory("Configuration")]
+        [Fact]
         public void GetConfiguration_FromConfigFile_DoesNotThrowException()
         {
-            var config = NapClient.Lets.Config;
+            var config = new NapClient(_setup);
         }
 
-        [TestMethod]
-        [TestCategory("Configuration")]
+        [Fact]
         public void GetConfiguration_FromConfigFile_BaseUrl_Matches()
         {
-            Assert.AreEqual("http://example.com", NapClient.Lets.Config.BaseUrl);
+            var nap = new NapClient(_setup);
+            Assert.Equal("http://example.com", nap.Config.BaseUrl);
         }
 
-        [TestMethod]
-        [TestCategory("Configuration")]
+        [Fact]
         public void GetConfiguration_FromConfigFile_Headers_Match()
         {
-            var headers = NapClient.Lets.Config.Headers.AsDictionary();
+            var nap = new NapClient(_setup);
+            var headers = nap.Config.Headers.AsDictionary();
 
             // Assert
-            Assert.IsNotNull(headers);
-            Assert.AreEqual(1, headers.Count, "App.Config should create one, and only one, header.");
-            Assert.AreEqual("testHeader", headers.First().Key);
-            Assert.AreEqual("testHeaderValue", headers.First().Value);
+            Assert.NotNull(headers);
+            Assert.Equal(1, headers.Count);
+            Assert.Equal("testHeader", headers.First().Key);
+            Assert.Equal("testHeaderValue", headers.First().Value);
         }
 
-        [TestMethod]
-        [TestCategory("Configuration")]
+        [Fact]
         public void GetConfiguration_FromConfigFile_QueryParameters_Match()
         {
-            var queryParameters = NapClient.Lets.Config.QueryParameters.AsDictionary();
+            var nap = new NapClient(_setup);
+            var queryParameters = nap.Config.QueryParameters.AsDictionary();
 
             // Assert
-            Assert.IsNotNull(queryParameters);
-            Assert.AreEqual(1, queryParameters.Count, "App.Config should create one, and only one, query parameter.");
-            Assert.AreEqual("testQueryParameter", queryParameters.First().Key);
-            Assert.AreEqual("testQueryParameterValue", queryParameters.First().Value);
+            Assert.NotNull(queryParameters);
+            Assert.Equal(1, queryParameters.Count);
+            Assert.Equal("testQueryParameter", queryParameters.First().Key);
+            Assert.Equal("testQueryParameterValue", queryParameters.First().Value);
         }
 
-        [TestMethod]
-        [TestCategory("Configuration")]
-        [ExpectedException(typeof(NapConfigurationException))]
+        [Fact]
         public void AddInvalidHeader_ThrowsConfigurationException()
         {
-            var config = NapClient.Lets.Config;
-            ((Headers)config.Headers).Add(new EmptyHeader());
+            Assert.Throws<NapConfigurationException>(() =>
+            {
+                var nap = new NapClient(_setup);
+                var config = nap.Config;
+                ((Headers)config.Headers).Add(new EmptyHeader());
+            });
         }
 
-        [TestMethod]
-        [TestCategory("Configuration")]
-        [ExpectedException(typeof(NapConfigurationException))]
+        [Fact]
         public void AddInvalidQueryParameter_ThrowsConfigurationException()
         {
-            var config = NapClient.Lets.Config;
-            ((QueryParameters)config.QueryParameters).Add(new EmptyQueryParameter());
+            Assert.Throws<NapConfigurationException>(() =>
+            {
+                var nap = new NapClient(_setup);
+                var config = nap.Config;
+                ((QueryParameters)config.QueryParameters).Add(new EmptyQueryParameter());
+            });
         }
 
-        [TestMethod]
-        [TestCategory("Configuration")]
-        [TestCategory("Nap.Html")]
+        [Fact]
         public void GetConfiguration_FromConfigFile_Serializers_Match()
         {
-            var serializers = NapClient.Lets.Config.Serializers.AsDictionary();
+            var nap = new NapClient(_setup);
+            var serializers = nap.Config.Serializers.AsDictionary();
 
             // Assert
-            Assert.IsNotNull(serializers);
-            Assert.AreEqual(4, serializers.Count, "App.Config should populate one serializer, and 3 should be added by default.");
-            Assert.AreEqual("text/html", serializers.Last().Key);
-            Assert.IsInstanceOfType(serializers.Last().Value, typeof(NapHtmlSerializer));
+            Assert.NotNull(serializers);
+            Assert.Equal(4, serializers.Count);
+            Assert.Equal("text/html", serializers.Last().Key);
+            Assert.IsType<NapHtmlSerializer>(serializers.Last().Value);
         }
 
-        [TestMethod]
-        [TestCategory("Configuration")]
+        [Fact]
         public void GetConfiguration_FromConfigFile_Profile_HasProfile()
         {
-            var config = (NapConfig)NapClient.Lets.Config;
+            var nap = new NapClient(_setup);
+            var config = (NapConfig)nap.Config;
 
             // Assert
-            Assert.IsTrue(config.Profiles.Any(), "App.config should have at least one profile");
+            Assert.True(config.Profiles.Any(), "App.config should have at least one profile");
         }
 
-        [TestMethod]
-        [TestCategory("Configuration")]
+        [Fact]
         public void GetConfiguration_FromConfigFile_Profile_IsForFoobar()
         {
-            var config = (NapConfig)NapClient.Lets.Config;
+            var nap = new NapClient(_setup);
+            var config = (NapConfig)nap.Config;
 
             // Assert
-            Assert.IsTrue(config.Profiles.AsDictionary().ContainsKey("foobar"), "App.config should have a profile for foobar.com");
+            Assert.True(config.Profiles.AsDictionary().ContainsKey("foobar"), "App.config should have a profile for foobar.com");
         }
 
-        [TestMethod]
-        [TestCategory("Configuration")]
+        [Fact]
         public void GetConfiguration_FromConfigFile_Profile_Foobar_HasValidValues()
         {
-            var config = (NapConfig)NapClient.Lets.Config;
+            var nap = new NapClient(_setup);
+            var config = (NapConfig)nap.Config;
             var profile = config.Profiles.AsDictionary()["foobar"];
 
             // Assert
-            Assert.AreEqual("http://www.foobar.com", profile.BaseUrl);
-            Assert.IsFalse(profile.FillMetadata, "Foobar profile should have fillMetadata=false");
-            Assert.AreEqual("Json", profile.Serialization);
-            Assert.IsTrue(profile.Headers.Any(), "Foobar profile should have at least one header");
-            Assert.IsTrue(profile.Headers.Any(h => h.Key == "TOKEN"), "Foobar profile should have at least one header with key 'TOKEN'");
-            Assert.AreEqual("LONG_GUID", profile.Headers.First(h => h.Key == "TOKEN").Value);
+            Assert.Equal("http://www.foobar.com", profile.BaseUrl);
+            Assert.False(profile.FillMetadata, "Foobar profile should have fillMetadata=false");
+            Assert.Equal("Json", profile.Serialization);
+            Assert.True(profile.Headers.Any(), "Foobar profile should have at least one header");
+            Assert.True(profile.Headers.Any(h => h.Key == "TOKEN"), "Foobar profile should have at least one header with key 'TOKEN'");
+            Assert.Equal("LONG_GUID", profile.Headers.First(h => h.Key == "TOKEN").Value);
         }
     }
 }

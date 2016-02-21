@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nap.Exceptions;
 using Nap.Serializers;
@@ -10,6 +9,7 @@ using Nap.Tests.TestClasses;
 
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
+using Xunit;
 
 #if IMMUTABLE
 using Microsoft.FSharp.Core;
@@ -17,89 +17,83 @@ using Microsoft.FSharp.Core;
 
 namespace Nap.Tests.Serializers
 {
-    [TestClass]
+#if IMMUTABLE
+    [Trait("Library", "Nap.Immutable")]
+#else
+    [Trait("Library", "Nap")]
+#endif
+    [Trait("Type", "Serialization")]
+    [Trait("Class", "NapJsonSerializer")]
     public class NapJsonSerializerTests : NapSerializerTestBase
     {
-        private NapJsonSerializer _jsonSerializer;
+        private readonly NapJsonSerializer _jsonSerializer;
 
-        [TestInitialize]
-        public void Setup()
+        public NapJsonSerializerTests()
         {
             _jsonSerializer = new NapJsonSerializer();
         }
 
-        [TestMethod]
-        [TestCategory("Serializers")]
+        [Fact]
         public void GetContentType_EqualsApplicationJson()
         {
             // Assert
-            Assert.AreEqual("application/json", _jsonSerializer.ContentType);
+            Assert.Equal("application/json", _jsonSerializer.ContentType);
         }
 
 #if IMMUTABLE
-        [TestMethod]
-        [TestCategory("Serializers")]
+        [Fact]
         public void Deserialize_IntoClassWithoutParameterlessConstructor_ReturnsNone()
         {
             // Act
             var result = _jsonSerializer.Deserialize<RequiresParameters_TestClass>("");
 
             // Assert
-            Assert.AreEqual(FSharpOption<RequiresParameters_TestClass>.None, result);
+            Assert.Equal(FSharpOption<RequiresParameters_TestClass>.None, result);
         }
 
-        [TestMethod]
-        [TestCategory("Serializers")]
+        [Fact]
         public void Deserialize_Null_ReturnsNone()
         {
             // Act
             var result = _jsonSerializer.Deserialize<TestClass>(null);
             
             // Assert
-            Assert.AreEqual(FSharpOption<RequiresParameters_TestClass>.None, result);
+            Assert.Equal(FSharpOption<TestClass>.None, result);
         }
 
-        [TestMethod]
-        [TestCategory("Serializers")]
+        [Fact]
         public void Serialize_WhenNull_ThenEmptyStringIsReturned()
         {
             // Act
             var result = _jsonSerializer.Serialize(null);
 
             // Assert
-            Assert.AreEqual(string.Empty, result);
+            Assert.Equal(string.Empty, result);
         }
 #else
-        [TestMethod]
-        [TestCategory("Serializers")]
-        [ExpectedException(typeof(ConstructorNotFoundException))]
+        [Fact]
         public void Deserialize_IntoClassWithoutParameterlessConstructor_ThrowsException()
         {
             // Act
-            _jsonSerializer.Deserialize<RequiresParameters_TestClass>("");
+            Assert.Throws<ConstructorNotFoundException>(() => _jsonSerializer.Deserialize<RequiresParameters_TestClass>(""));
         }
 
-        [TestMethod]
-        [TestCategory("Serializers")]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Fact]
         public void Deserialize_Null_ThrowsException()
         {
             // Act
-            _jsonSerializer.Deserialize<TestClass>(null);
+            Assert.Throws<ArgumentNullException>(() => _jsonSerializer.Deserialize<TestClass>(null));
         }
 
-        [TestMethod]
-        [TestCategory("Serializers")]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [Fact]
         public void Serialize_WhenNull_ThenExceptionIsThrown()
         {
             // Act
-            _jsonSerializer.Serialize(null);
+            Assert.Throws<ArgumentNullException>(() => _jsonSerializer.Serialize(null));
         }
 #endif
 
-        [TestMethod]
-        [TestCategory("Serializers")]
+        [Fact]
         public void Serialize_TestClass_MatchesSchema()
         {
             // Arrange
@@ -111,11 +105,10 @@ namespace Nap.Tests.Serializers
             var jsonObject = JObject.Parse(json);
 
             // Assert
-            Assert.IsTrue(jsonObject.IsValid(schema), "JSON serialization for [TestClass] does not match schema.");
+            Assert.True(jsonObject.IsValid(schema), "JSON serialization for [TestClass] does not match schema.");
         }
 
-        [TestMethod]
-        [TestCategory("Serializers")]
+        [Fact]
         public void Serialize_ParentTestClass_MatchesSchema()
         {
             // Arrange
@@ -135,11 +128,10 @@ namespace Nap.Tests.Serializers
             var jsonObject = JObject.Parse(json);
 
             // Assert
-            Assert.IsTrue(jsonObject.IsValid(schema), "JSON serialization for [ParentTestClass] does not match schema.");
+            Assert.True(jsonObject.IsValid(schema), "JSON serialization for [ParentTestClass] does not match schema.");
         }
 
-        [TestMethod]
-        [TestCategory("Serializers")]
+        [Fact]
         public void Deserialize_BasicJson_DoesNotThrowException()
         {
             // Arrange
@@ -149,11 +141,10 @@ namespace Nap.Tests.Serializers
             var result = _jsonSerializer.Deserialize<TestClass>(json);
 
             // Assert
-            Assert.IsNotNull(result);
+            Assert.NotNull(result);
         }
 
-        [TestMethod]
-        [TestCategory("Serializers")]
+        [Fact]
         public void Serialization_ThenDeserialization_OfTestClass_MatchesInput()
         {
             // Arrange
@@ -168,12 +159,11 @@ namespace Nap.Tests.Serializers
 #endif
 
             // Assert
-            Assert.AreEqual(input.FirstName, output.FirstName);
-            Assert.AreEqual(input.LastName, output.LastName);
+            Assert.Equal(input.FirstName, output.FirstName);
+            Assert.Equal(input.LastName, output.LastName);
         }
 
-        [TestMethod]
-        [TestCategory("Serializers")]
+        [Fact]
         public void Serialization_ThenDeserialization_OfParentTestClass_MatchesInput()
         {
             // Arrange
@@ -196,13 +186,13 @@ namespace Nap.Tests.Serializers
 #endif
 
             // Assert
-            for (int i = 0; i < input.Children.Count(); i++)
+            for (int i = 0; i < input.Children.Count; i++)
             {
-                Assert.AreEqual(input.Children.ToList()[i].FirstName, output.Children.ToList()[i].FirstName);
-                Assert.AreEqual(input.Children.ToList()[i].LastName, output.Children.ToList()[i].LastName);
+                Assert.Equal(input.Children.ToList()[i].FirstName, output.Children.ToList()[i].FirstName);
+                Assert.Equal(input.Children.ToList()[i].LastName, output.Children.ToList()[i].LastName);
             }
-            Assert.AreEqual(input.Spouse.FirstName, output.Spouse.FirstName);
-            Assert.AreEqual(input.Spouse.LastName, output.Spouse.LastName);
+            Assert.Equal(input.Spouse.FirstName, output.Spouse.FirstName);
+            Assert.Equal(input.Spouse.LastName, output.Spouse.LastName);
         }
     }
 }

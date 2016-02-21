@@ -1,44 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace Nap.Tests.Configuration
 {
-    [TestClass]
+#if IMMUTABLE
+    [Trait("Library", "Nap.Immutable")]
+#else
+    [Trait("Library", "Nap")]
+#endif
+    [Trait("Type", "Configuration")]
     public class NapEmptyConfigurationTests
     {
-        private const string _exampleUrl = "http://example.com";
+        private const string ExampleUrl = "http://example.com";
 
-        [TestInitialize]
-        public void Setup()
-        {
-        }
-
-        [TestMethod]
-        [TestCategory("Configuration")]
+        [Fact]
         public void GetConfiguration_DoesNotThrowException()
         {
             var config = NapClient.Lets.Config;
         }
 
-        [TestMethod]
-        [TestCategory("Configuration")]
+        [Fact]
         public void GetConfiguration_BaseUrl_Matches()
         {
             // Arrange
             var nap = NapClient.Lets;
 
             // Act
-            nap.Config.BaseUrl = _exampleUrl;
+            nap.Config.BaseUrl = ExampleUrl;
 
             // Assert
-            Assert.AreEqual(_exampleUrl, nap.Config.BaseUrl);
+            Assert.Equal(ExampleUrl, nap.Config.BaseUrl);
         }
 
-        [TestMethod]
-        [TestCategory("Configuration")]
+        [Fact]
         public void GetConfiguration_Headers_Match()
         {
             // Arrange
@@ -48,28 +43,26 @@ namespace Nap.Tests.Configuration
             nap.Config.Headers.Add("foo", "bar");
 
             // Assert
-            Assert.AreEqual(1, nap.Config.Headers.Count, "One and only one header was added.");
-            Assert.AreEqual("foo", nap.Config.Headers.AsDictionary().Keys.First());
-            Assert.AreEqual("bar", nap.Config.Headers.AsDictionary()["foo"]);
+            Assert.Equal(1, nap.Config.Headers.Count);
+            Assert.Equal("foo", nap.Config.Headers.AsDictionary().Keys.First());
+            Assert.Equal("bar", nap.Config.Headers.AsDictionary()["foo"]);
         }
 
-        [TestMethod]
-        [TestCategory("Configuration")]
+        [Fact]
         public void GetConfiguration_Headers_RemoveHeader_LeavesNoHeader()
         {
             // Arrange
             var nap = NapClient.Lets;
-            
+
             // Act
             nap.Config.Headers.Add("foo", "bar");
             nap.Config.Headers.Remove("foo");
 
             // Assert
-            Assert.AreEqual(0, nap.Config.Headers.Count, "No query parameters should remain");
+            Assert.Equal(0, nap.Config.Headers.Count);
         }
 
-        [TestMethod]
-        [TestCategory("Configuration")]
+        [Fact]
         public void GetConfiguration_QueryParameters_Match()
         {
             // Arrange
@@ -79,13 +72,12 @@ namespace Nap.Tests.Configuration
             nap.Config.QueryParameters.Add("foo", "bar");
 
             // Assert
-            Assert.AreEqual(1, nap.Config.QueryParameters.Count, "One and only one header was added.");
-            Assert.AreEqual("foo", nap.Config.QueryParameters.AsDictionary().Keys.First());
-            Assert.AreEqual("bar", nap.Config.QueryParameters.AsDictionary()["foo"]);
+            Assert.Equal(1, nap.Config.QueryParameters.Count);
+            Assert.Equal("foo", nap.Config.QueryParameters.AsDictionary().Keys.First());
+            Assert.Equal("bar", nap.Config.QueryParameters.AsDictionary()["foo"]);
         }
 
-        [TestMethod]
-        [TestCategory("Configuration")]
+        [Fact]
         public void GetConfiguration_QueryParameters_RemoveQueryParameter_LeavesNoQueryParameter()
         {
             // Arrange
@@ -96,7 +88,7 @@ namespace Nap.Tests.Configuration
             nap.Config.QueryParameters.Remove("foo");
 
             // Assert
-            Assert.AreEqual(0, nap.Config.QueryParameters.Count, "No query parameters should remain");
+            Assert.Equal(0, nap.Config.QueryParameters.Count);
         }
     }
 }
