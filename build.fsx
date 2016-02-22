@@ -161,7 +161,7 @@ Target "OpenCover" (fun _ ->
     { p with
         ExePath = "./packages/test/OpenCover/tools/OpenCover.Console.exe"
         TestRunnerExePath = "./packages/test/xunit.runner.console/tools/xunit.console.exe"
-        Output = "coverage.xml"
+        Output = "./coverage.xml"
         Register = RegisterType.RegisterUser
         Filter = "+[*]*"
         WorkingDir = "./"
@@ -174,7 +174,7 @@ Target "Coveralls" (fun _ ->
   ExecProcessWithLambdas (fun p ->
     p.WorkingDirectory <- "./"
     p.FileName <- "./packages/test/coveralls.io/tools/coveralls.net.exe"
-    p.Arguments <- "--opencover coverage.xml"
+    p.Arguments <- "--opencover ./coverage.xml"
   ) TimeSpan.MaxValue false ignore ignore |> ignore
 )
 
