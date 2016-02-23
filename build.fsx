@@ -165,7 +165,7 @@ Target "OpenCover" (fun _ ->
         Register = RegisterType.RegisterUser
         Filter = "+[*]*"
         WorkingDir = "./"
-  }) "./tests/Nap.Tests/bin/Release/Nap.Tests.dll ./tests/Nap.Tests/bin/Release/Nap.Immutable.Tests.dll ./tests/Nap.FSharp.Tests/bin/Release/Nap.FSharp.Tests.dll -parallel none"
+  }) "./tests/Nap.Tests/bin/Release/Nap.Tests.dll ./tests/Nap.Tests/bin/Release/Nap.Immutable.Tests.dll ./tests/Nap.FSharp.Tests/bin/Release/Nap.FSharp.Tests.dll -parallel none -noshadow"
 )
 
 // --------------------------------------------------------------------------------------
