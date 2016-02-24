@@ -26,4 +26,4 @@ group Test
   nuget xunit
   nuget xunit.runner.console
   nuget OpenCover
-  nuget Coveralls.IO
+  nuget Coveralls.net
