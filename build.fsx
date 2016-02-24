@@ -63,6 +63,28 @@ let gitName = "Nap"
 // The url for the raw files hosted
 let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/mandest"
 
+let coverallsRepoToken = environVar "COVERALLS_REPO_TOKEN"
+
+type CommitState = {
+  CommitId : string
+  Branch : string
+  Author : string
+  Email : string
+  Message : string
+  JobId : string
+}
+
+let gitDirectory = __SOURCE_DIRECTORY__
+
+let currentCommit = {
+  CommitId = environVarOrDefault "APPVEYOR_REPO_COMMIT" (Fake.Git.Information.getCurrentSHA1 gitDirectory)
+  Branch = environVarOrDefault "APPVEYOR_REPO_BRANCH" (Fake.Git.Information.getBranchName gitDirectory)
+  Author = environVarOrDefault "APPVEYOR_REPO_COMMIT_AUTHOR" (Fake.Git.CommandHelper.runSimpleGitCommand gitDirectory "show --quiet --format=%an HEAD")
+  Email = environVarOrDefault "APPVEYOR_REPO_COMMIT_AUTHOR" (Fake.Git.CommandHelper.runSimpleGitCommand gitDirectory "show --quiet --format=%ae HEAD")
+  Message = environVarOrDefault "APPVEYOR_REPO_COMMIT_MESSAGE" (Fake.Git.CommitMessage.getCommitMessage gitDirectory)
+  JobId = environVarOrDefault "APPVEYOR_JOB_ID" "Manual"
+}
+
 // --------------------------------------------------------------------------------------
 // END TODO: The rest of the file includes standard build steps
 // --------------------------------------------------------------------------------------
@@ -163,7 +185,7 @@ Target "OpenCover" (fun _ ->
         TestRunnerExePath = "./packages/test/xunit.runner.console/tools/xunit.console.exe"
         Output = "./coverage.xml"
         Register = RegisterType.RegisterUser
-        Filter = "+[*]*"
+        Filter = "+[Nap*]* -[*.Tests]*"
         WorkingDir = "./"
   }) "./tests/Nap.Tests/bin/Release/Nap.Tests.dll ./tests/Nap.Tests/bin/Release/Nap.Immutable.Tests.dll ./tests/Nap.FSharp.Tests/bin/Release/Nap.FSharp.Tests.dll -parallel none -noshadow"
 )
@@ -173,8 +195,16 @@ Target "OpenCover" (fun _ ->
 Target "Coveralls" (fun _ ->
   ExecProcessWithLambdas (fun p ->
     p.WorkingDirectory <- "./"
-    p.FileName <- "./packages/test/coveralls.io/tools/coveralls.net.exe"
-    p.Arguments <- "--opencover ./coverage.xml"
+    p.FileName <- "./packages/test/coveralls.net/tools/csmacnz.coveralls.exe"
+    p.Arguments <-
+        sprintf "--opencover -i coverage.xml --repoToken %s --commitId \"%s\" --commitBranch \"%s\" --commitAuthor \"%s\" --commitEmail \"%s\" --commitMessage \"%s\" --jobId \"%s\""
+          coverallsRepoToken
+          (currentCommit.CommitId)
+          (currentCommit.Branch)
+          (currentCommit.Author)
+          (currentCommit.Email)
+          (currentCommit.Message)
+          (currentCommit.JobId)
   ) TimeSpan.MaxValue false ignore ignore |> ignore
 )
 
