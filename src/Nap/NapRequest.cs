@@ -449,7 +449,12 @@ namespace Nap
         public static Finalizable<T> Continuing<T>(T item) => new Finalizable<T>(item, true);
     }
 
-    public delegate INapRequest Event(INapRequest)
+    /// <summary>
+    /// An event that occurs during NapRequest pipline.
+    /// </summary>
+    /// <param name="napRequest">The request that is causing the event.</param>
+    /// <returns>A new modified <see cref="NapRequest"/> to continue.</returns>
+    public delegate INapRequest Event(INapRequest napRequest);
 
     /// <summary>
     /// Event codes for events that can happen to a response.
