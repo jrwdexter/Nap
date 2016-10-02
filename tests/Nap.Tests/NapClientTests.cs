@@ -41,6 +41,7 @@ namespace Nap.Tests
             _otherUrl = "http://foobar.com/test";
 
             _handler = new TestHandler();
+            _fixture = new Fixture().Customize(new AutoFakeItEasyCustomization());
 #if IMMUTABLE
             var config =
                 NapConfig.Default.SetMetadataBehavior(true)
@@ -52,6 +53,7 @@ namespace Nap.Tests
                             _handler.CookieContainer.Add(cookie.Item1, cookie.Item2);
                         return new HttpClient(_handler);
                     }));
+            _fixture.Inject(config);
             _nap = new NapClient(config);
 #else
 
@@ -73,7 +75,6 @@ namespace Nap.Tests
             A.CallTo(() => _plugin.GenerateNapRequest(A<INapConfig>._, A<string>._, A<HttpMethod>._)).Returns(_napRequest);
 #endif
 
-            _fixture = new Fixture().Customize(new AutoFakeItEasyCustomization());
             _config = _fixture.Freeze<NapConfig>();
             _napRequest = _fixture.Freeze<INapRequest>();
         }
