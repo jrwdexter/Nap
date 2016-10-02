@@ -86,7 +86,7 @@
     <Compile Include="Serializers\NapJsonSerializer.cs" />
     <Compile Include="Base\INapRequest.cs" />
     <Compile Include="Base\INapRemovableRequestComponent.cs" />
-    <Compile Include="Plugins\Base\NapPlugin.cs" />
+    <Compile Include="Plugins\Base\NapPluginBase.cs" />
     <Compile Include="Plugins\Base\IPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configuration\RequestFormat.cs" />

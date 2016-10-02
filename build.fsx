@@ -65,6 +65,8 @@ let gitRaw = environVarOrDefault "gitRaw" "https://raw.github.com/mandest"
 
 let coverallsRepoToken = environVar "COVERALLS_REPO_TOKEN"
 
+let builder = if bool.Parse(environVarOrDefault "APPVEYOR" "False") then "appveyor" else "local"
+
 type CommitState = {
   CommitId : string
   Branch : string
@@ -197,7 +199,7 @@ Target "Coveralls" (fun _ ->
     p.WorkingDirectory <- "./"
     p.FileName <- "./packages/test/coveralls.net/tools/csmacnz.coveralls.exe"
     p.Arguments <-
-        sprintf "--opencover -i coverage.xml --repoToken %s --commitId \"%s\" --commitBranch \"%s\" --commitAuthor \"%s\" --commitEmail \"%s\" --commitMessage \"%s\" --jobId \"%s\""
+        sprintf "--opencover -i coverage.xml --repoToken %s --commitId \"%s\" --commitBranch \"%s\" --commitAuthor \"%s\" --commitEmail \"%s\" --commitMessage \"%s\" --jobId \"%s\" --serviceName \"%s\""
           coverallsRepoToken
           (currentCommit.CommitId)
           (currentCommit.Branch)
@@ -205,6 +207,7 @@ Target "Coveralls" (fun _ ->
           (currentCommit.Email)
           (currentCommit.Message)
           (currentCommit.JobId)
+          builder
   ) TimeSpan.MaxValue false ignore ignore |> ignore
 )
 

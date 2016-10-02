@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-
+using FakeItEasy;
 using Nap.Configuration;
+using Nap.Plugins.Base;
+using Nap.Tests.AutoFixtureConfiguration;
+using Ploeh.AutoFixture;
+using Ploeh.AutoFixture.Xunit2;
 using Xunit;
 
 namespace Nap.Tests.Configuration
@@ -15,26 +19,47 @@ namespace Nap.Tests.Configuration
     [Trait("Class", "NapSetup")]
     public class NapSetupTests
     {
-        private sealed class TestNapConfig : INapConfig
+        private readonly NapSetup _napSetup;
+
+        public NapSetupTests()
         {
-            public ISerializersConfig Serializers { get; set; }
+            _napSetup = new NapSetup();
+        }
 
-            public string BaseUrl { get; set; }
+        [Fact]
+        public void InitialState_ContainsNoPlugins()
+        {
+            Assert.Empty(_napSetup.Plugins);
+        }
 
-            public IHeaders Headers { get; set; }
+        [Theory, AutoFakeItEasy]
+        public void InstallPlugin_AddsPluginToList([Frozen]IPlugin plugin)
+        {
+            _napSetup.InstallPlugin(plugin);
 
-            public IQueryParameters QueryParameters { get; set; }
+            Assert.Contains(plugin, _napSetup.Plugins);
+        }
 
-            string INapConfig.Serialization { get; set; }
+        [Theory, AutoFakeItEasy]
+        public void InstallPlugin_ThenUninstall_LeavesNoPlugins([Frozen] IPlugin plugin)
+        {
+            _napSetup.InstallPlugin(plugin);
+            _napSetup.UninstallPlugin(plugin);
 
-            public IAdvancedNapConfig Advanced { get; set; }
+            Assert.DoesNotContain(plugin, _napSetup.Plugins);
+        }
 
-            public bool FillMetadata { get; set; }
+        [Theory, AutoData]
+        public void InstallPlugin_ThenUninstallByType_LeavesNoPlugins([Frozen] TestPlugin plugin)
+        {
+            _napSetup.InstallPlugin(plugin);
+            _napSetup.UninstallPlugin<TestPlugin>();
 
-            public INapConfig Clone()
-            {
-                throw new NotImplementedException();
-            }
+            Assert.DoesNotContain(plugin, _napSetup.Plugins);
+        }
+
+        public class TestPlugin : NapPluginBase
+        {
         }
     }
 }

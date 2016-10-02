@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 using Nap.Configuration;
@@ -28,6 +29,7 @@ namespace Nap
         private readonly Dictionary<string, string> _queryParameters = new Dictionary<string, string>();
         private readonly Dictionary<string, string> _headers = new Dictionary<string, string>();
         private readonly List<Tuple<Uri, Cookie>> _cookies = new List<Tuple<Uri, Cookie>>();
+        private readonly Dictionary<EventCode, List<Event>> _events;
         private string _content;
         private bool _doNot;
 
@@ -43,6 +45,7 @@ namespace Nap
             // Set up initial configuration parameters.
             _plugins = plugins;
             _config = initialConfiguration;
+            _events = new Dictionary<EventCode, List<Event>>();
             foreach (var header in _config.Headers)
                 _headers.Add(header.Key, header.Value);
             foreach (var queryParameter in _config.QueryParameters)
@@ -68,7 +71,7 @@ namespace Nap
         /// <summary>
         /// Gets the set of headers that have been configured for this request.
         /// </summary>
-        public IReadOnlyDictionary<string, string> Headers => _headers; 
+        public IReadOnlyDictionary<string, string> Headers => _headers;
 
         /// <summary>
         /// Gets the set of query parameters that have been configured for this request.
@@ -407,4 +410,94 @@ namespace Nap
             public string Content { get; set; }
         }
     }
+
+    public class Finalizable<T>
+    {
+        /// <summary>
+        /// Gets the state of the finalizable item - true if the item should not continue down the pipeline, false.
+        /// </summary>
+        public bool IsFinal { get; }
+
+        /// <summary>
+        /// The item which is being processed by some pipeline.
+        /// </summary>
+        public T Item { get; set; }
+
+        /// <summary>
+        /// The default constructor for a Finalizable type 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="isFinal"></param>
+        public Finalizable(T item, bool isFinal)
+        {
+            Item = item;
+            IsFinal = isFinal;
+        }
+
+        /// <summary>
+        /// Create a new <see cref="Finalizable{T}"/> type with a status of final marked.
+        /// </summary>
+        /// <param name="item">The item to wrap in a finalizable state.</param>
+        /// <returns>The new item that was created.</returns>
+        public static Finalizable<T> Final(T item) => new Finalizable<T>(item, true);
+
+        /// <summary>
+        /// Create a new <see cref="Finalizable{T}"/> type with a status of continuing marked.
+        /// </summary>
+        /// <param name="item">The item to wrap in a finalizable state.</param>
+        /// <returns>The new item that was created.</returns>
+        public static Finalizable<T> Continuing<T>(T item) => new Finalizable<T>(item, true);
+    }
+
+    public delegate INapRequest Event(INapRequest)
+
+    /// <summary>
+    /// Event codes for events that can happen to a response.
+    /// </summary>
+    public enum EventCode
+    {
+        /// <summary>
+        /// An event that is executed before a the configuration is applied to the request.
+        /// </summary>
+        BeforeConfigurationApplied = 0x01,
+
+        /// <summary>
+        /// An event that is executed immediately following configuration application to a request.
+        /// </summary>
+        AfterConfigurationApplied = 0x02,
+
+        /// <summary>
+        /// An event that is executed immediately before a request is sent off.
+        /// </summary>
+        BeforeRequestExecution = 0x04,
+
+        /// <summary>
+        /// An event that is executed immediately after a request is sent off (after it returns, successfully or not).
+        /// </summary>
+        AfterRequestExecution = 0x08,
+
+        /// <summary>
+        /// An event that is executed immediately before respone deserialization is slated to happen. Will not occur if deserialization is not set to occur.
+        /// </summary>
+        BeforeResponseDeserialization = 0x10,
+
+        /// <summary>
+        /// An event that is executed immediately after response deserialization happens. Will not occur if no deserialization occurred.
+        /// </summary>
+        AfterResponseDeserialization = 0x20,
+
+        /// <summary>
+        /// An event that is executed immediately prior to a request being serialized by any serializer.
+        /// </summary>
+        BeforeRequestSerialization = 0x40,
+
+        /// <summary>
+        /// An event that is executed immediately prior to a request being serialized by any serializer.
+        /// </summary>
+        AfterRequestSerialization = 0x80,
+        CreatingNapRequest = 0x100,
+        SetAuthentication = 0x200,
+        All = 0x3FF
+    }
+
 }

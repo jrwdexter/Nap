@@ -14,6 +14,7 @@ open Finalizable
 open AsyncFinalizable
 open Operators
 open Text
+    
 
 type InternalResponse =
     {
@@ -26,7 +27,7 @@ type NapRequest =
     {
         Config          : NapConfig
         Response        : InternalResponse option
-        RequestEvents   : Map<string, Event<NapRequest> list>
+        RequestEvents   : Map<EventCode, Event<NapRequest> list>
         Url             : string
         Method          : HttpMethod
         QueryParameters : Map<string, string>
@@ -69,7 +70,7 @@ type NapRequest =
     member x.ApplyConfig config =
         x.Verbose "NapRequest.ApplyConfig()" <| sprintf "Applying configuration %A" config
         Continuing(x)
-        |> NapRequest.RunEvents "BeforeConfigurationApplied"
+        |> NapRequest.RunEvents EventCode.BeforeConfigurationApplied
         <!> fun request ->
             { request with
                 Config = config
@@ -80,27 +81,27 @@ type NapRequest =
                     | Some(creator) -> fun nr -> creator (box nr)
                     | None -> NapRequest.CreateClient
             }
-        |> NapRequest.RunEvents "AfterConfigurationApplied"
+        |> NapRequest.RunEvents EventCode.AfterConfigurationApplied
         |> Finalizable.get
 
     (*** Constructors ***)
     static member Create () =
         NapRequest.Default
         |> Continuing
-        |> NapRequest.RunEvents "CreatingNapRequest"
+        |> NapRequest.RunEvents EventCode.CreatingNapRequest
         |> Finalizable.get
         |> fun x -> x :> INapRequest
     static member Create config =
         NapRequest.Default
         |> Continuing
-        |> NapRequest.RunEvents "CreatingNapRequest"
+        |> NapRequest.RunEvents EventCode.CreatingNapRequest
         |> Finalizable.get
         |> fun x -> x.ApplyConfig(config)
         |> fun x -> x :> INapRequest
     static member Create (config,uri) =
         NapRequest.Default
         |> Continuing
-        |> NapRequest.RunEvents "CreatingNapRequest"
+        |> NapRequest.RunEvents EventCode.CreatingNapRequest
         <!> fun x -> x.ApplyConfig(config)
         |> Finalizable.get
         |> fun x -> { x with Url = uri }
@@ -108,7 +109,7 @@ type NapRequest =
     static member Create (config,uri,httpMethod) =
         NapRequest.Default
         |> Continuing
-        |> NapRequest.RunEvents "CreatingNapRequest"
+        |> NapRequest.RunEvents EventCode.CreatingNapRequest
         <!> fun x -> x.ApplyConfig(config)
         |> Finalizable.get
         |> fun x -> { x with Url = uri; Method = httpMethod}
@@ -127,10 +128,10 @@ type NapRequest =
             let result =
                 match request.RequestEvents |> Map.tryFind eventName with
                 | Some(event) ->
-                    request.Debug "Nap.NapRequest.RunEvents()" (sprintf "Running events for %s on %A" eventName request)
+                    request.Debug "Nap.NapRequest.RunEvents()" (sprintf "Running events for %A on %A" eventName request)
                     event |> List.fold (fun r event -> r >>= event.RunEvent) (Continuing(request))
                 | None -> finalizableRequest
-            if eventName = "*" then result else result |> NapRequest.RunEvents "*"
+            if eventName = EventCode.All then result else result |> NapRequest.RunEvents EventCode.All
         | Final(_) -> finalizableRequest
         
     (*** Logging helpers ***)
@@ -244,12 +245,12 @@ type NapRequest =
             x.Verbose path <| sprintf "Executing %O request with parameters full structure %A" x.Method x
             let! processedRequest =
                 async.Return <| Continuing(x)
-                |> NapRequest.RunEventsAsync "BeforeNapRequestExecution"
+                |> NapRequest.RunEventsAsync EventCode.BeforeRequestExecution
                 |> AsyncFinalizable.bindAsync (NapRequest.RunRequestAsync)
-                |> NapRequest.RunEventsAsync "AfterNapRequestExecution"
-                |> NapRequest.RunEventsAsync "BeforeResponseDeserialization"
+                |> NapRequest.RunEventsAsync EventCode.AfterRequestExecution
+                |> NapRequest.RunEventsAsync EventCode.BeforeResponseDeserialization
                 <!!> fun response -> NapRequest.Deserialize<'T> response
-                |> NapRequest.RunEventsAsync "AfterResponseDeserialization"
+                |> NapRequest.RunEventsAsync EventCode.AfterResponseDeserialization
                 |> AsyncFinalizable.get
                 |> Async.map (fun request -> NapRequest.FillMetadata<'T> request)
             let deserializedObj = processedRequest.Response |> Option.bind (fun response -> response.Deserialized)
@@ -267,9 +268,9 @@ type NapRequest =
             x.Verbose path <| sprintf "Executing %O request with parameters full structure %A" x.Method x
             let! processedRequest =
                 async.Return <| Continuing(x)
-                |> NapRequest.RunEventsAsync "BeforeNapRequestExecution"
+                |> NapRequest.RunEventsAsync EventCode.BeforeRequestExecution
                 |> AsyncFinalizable.bindAsync (NapRequest.RunRequestAsync)
-                |> NapRequest.RunEventsAsync "AfterNapRequestExecution"
+                |> NapRequest.RunEventsAsync EventCode.AfterRequestExecution
                 |> AsyncFinalizable.get
             return processedRequest.Response |> Option.bind (fun response -> response.Content |> Some)
         }
@@ -314,14 +315,14 @@ type NapRequest =
                 x.Verbose "Nap.NapRequest.Includebody()" (sprintf "Serializing %O" body)
                 x.Debug "Nap.NapRequest.Includebody()" (sprintf "Serializing object of type %s" (body.GetType().FullName))
                 Continuing(x)
-                |> NapRequest.RunEvents "BeforeRequestSerialization"
+                |> NapRequest.RunEvents EventCode.BeforeRequestSerialization
                 <!> fun request ->
                     match request.Config.Serializers |> Map.tryFind request.Config.Serialization with
                     | Some(serializer) -> { request with Content = serializer.Serialize(body) }
                     | None -> 
                         x.Error "Nap.NapRequest.IncludeBody()" (sprintf "Could not serialize content of type %s with serializer %s" (body.GetType().ToString()) x.Config.Serialization)
                         request
-                |> NapRequest.RunEvents "AfterRequestSerialization"
+                |> NapRequest.RunEvents EventCode.AfterRequestSerialization
                 |> fun r -> upcast Finalizable.get r
         member x.IncludeCookie(url: string) (cookieName: string) (value: string): INapRequest = 
             x.Verbose "Nap.NapRequest.IncludeCookie()" (sprintf "Adding cookie for URL \"%s\". %s: %s" url cookieName value)
@@ -348,7 +349,7 @@ type NapRequest =
         member x.SetAuthentication(authenticationScheme: AuthenticationNapConfig): INapRequest = 
             x.Debug "Nap.NapRequest.SetAuthentication()" (sprintf "Setting authentication as %A" authenticationScheme)
             Continuing(x)
-            |> NapRequest.RunEvents "SetAuthentication"
+            |> NapRequest.RunEvents EventCode.SetAuthentication
             |> Finalizable.get
             |> fun r ->
                 upcast { r with Config = { r.Config with Advanced = { r.Config.Advanced with Authentication = authenticationScheme }}}

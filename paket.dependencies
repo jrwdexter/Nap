@@ -27,3 +27,5 @@ group Test
   nuget xunit.runner.console
   nuget OpenCover
   nuget Coveralls.net
+  nuget AutoFixture.AutoFakeItEasy
+  nuget AutoFixture.Xunit2

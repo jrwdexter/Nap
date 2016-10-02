@@ -7,7 +7,7 @@ namespace Nap.Plugins.Base
     /// <summary>
     /// An abstract class for overriding the basic behavior of Nap.
     /// </summary>
-    public class NapPlugin : IPlugin
+    public abstract class NapPluginBase : IPlugin
     {
         /// <summary>
         /// Generate a <see cref="INapConfig"/> object for use with <see cref="INapRequest"/>s.

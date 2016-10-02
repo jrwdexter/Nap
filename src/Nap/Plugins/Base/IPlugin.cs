@@ -7,7 +7,7 @@ namespace Nap.Plugins.Base
 	/// <summary>
 	/// An interface for overriding the basic behavior of Nap.
 	/// </summary>
-	internal interface IPlugin
+	public interface IPlugin
 	{
 		/// <summary>
 		/// Generate a <see cref="INapConfig"/> object for use with <see cref="INapRequest"/>s.

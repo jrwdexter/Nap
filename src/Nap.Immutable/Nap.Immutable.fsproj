@@ -58,6 +58,7 @@
     <Compile Include="Serializers\FormsSerializer.fs" />
     <Compile Include="Events\Finalizable.fs" />
     <Compile Include="Events\Event.fs" />
+    <Compile Include="Events\EventCodes.fs" />
     <Compile Include="Configuration\RequestFormat.fs" />
     <Compile Include="Configuration\Credentials.fs" />
     <Compile Include="Configuration\AuthenticationNapConfig.fs" />

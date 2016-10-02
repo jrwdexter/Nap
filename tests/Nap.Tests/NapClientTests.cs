@@ -6,7 +6,14 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using System.Net.Http.Headers;
+using FakeItEasy;
+using FakeItEasy.ExtensionSyntax;
 using Nap.Configuration;
+using Nap.Plugins.Base;
+using Nap.Tests.AutoFixtureConfiguration;
+using Ploeh.AutoFixture;
+using Ploeh.AutoFixture.AutoFakeItEasy;
+using Ploeh.AutoFixture.Xunit2;
 using Xunit;
 
 namespace Nap.Tests
@@ -24,13 +31,18 @@ namespace Nap.Tests
         private readonly TestHandler _handler;
         private readonly string _url;
         private readonly string _otherUrl;
+        private readonly IFixture _fixture;
+        private readonly IPlugin _plugin;
+        private readonly NapConfig _config;
+        private readonly INapRequest _napRequest;
 
-#if IMMUTABLE
         public NapClientTests()
         {
             _url = "http://example.com/test";
             _otherUrl = "http://foobar.com/test";
+
             _handler = new TestHandler();
+#if IMMUTABLE
             var config =
                 NapConfig.Default.SetMetadataBehavior(true)
                     .ConfigureAdvanced(a => a.SetClientCreator(objRequest =>
@@ -42,15 +54,9 @@ namespace Nap.Tests
                         return new HttpClient(_handler);
                     }));
             _nap = new NapClient(config);
-        }
 #else
-        public NapClientTests()
-        {
-            _url = "http://example.com/test";
-            _otherUrl = "http://foobar.com/test";
 
             _nap = new NapClient { Config = { FillMetadata = true } };
-            _handler = new TestHandler();
             _nap.Config.Advanced.ClientCreator = request =>
             {
                 _handler.CookieContainer = new CookieContainer();
@@ -58,8 +64,20 @@ namespace Nap.Tests
                     _handler.CookieContainer.Add(cookie.Item1, cookie.Item2);
                 return new HttpClient(_handler);
             };
-        }
 #endif
+
+            _fixture = new Fixture().Customize(new AutoFakeItEasyCustomization());
+            _plugin = _fixture.Freeze<IPlugin>();
+            _config = _fixture.Freeze<NapConfig>();
+            _napRequest = _fixture.Freeze<INapRequest>();
+            A.CallTo(() => _plugin.BeforeNapRequestCreation()).Returns(true);
+            A.CallTo(() => _plugin.AfterNapRequestCreation(A<INapRequest>._)).Returns(true);
+            A.CallTo(() => _plugin.BeforeRequestSerialization(A<INapRequest>._)).Returns(true);
+            A.CallTo(() => _plugin.AfterRequestSerialization(A<INapRequest>._)).Returns(true);
+            A.CallTo(() => _plugin.Execute(A<INapRequest>._)).Returns(null);
+            A.CallTo(() => _plugin.GetConfiguration()).Returns(_config);
+            A.CallTo(() => _plugin.GenerateNapRequest(A<INapConfig>._, A<string>._, A<HttpMethod>._)).Returns(_napRequest);
+        }
 
         [Fact]
         public void Nap_CreatesNewNap()
@@ -69,6 +87,65 @@ namespace Nap.Tests
 
             // Assert
             Assert.NotSame(NapClient.Lets, nap);
+        }
+
+        [Theory, AutoData]
+        public void Nap_WithUrl_CreatesNewNap_WithUrl(Uri uri)
+        {
+            var nap = new NapClient(uri.ToString());
+
+            Assert.Equal(uri.ToString(), nap.Config.BaseUrl);
+        }
+
+        [Fact]
+        public void Nap_WithConfig_CreatesNewNap_WithConfig()
+        {
+            var nap = new NapClient(_config);
+
+            Assert.Same(_config, nap.Config);
+        }
+
+        [Fact]
+        public void Nap_WithSetup_CreatesNewNap_WithSetupApplied_And_PluginMethodsRun()
+        {
+            // Arrange
+            var setup = new NapSetup();
+            setup.InstallPlugin(_plugin);
+
+            // Act
+            var nap = new NapClient(setup);
+            nap.Get("test");
+
+            // Assert
+            A.CallTo(() => _plugin.BeforeNapRequestCreation()).MustHaveHappened();
+            A.CallTo(() => _plugin.AfterNapRequestCreation(A<INapRequest>._)).MustHaveHappened();
+            A.CallTo(() => _plugin.GenerateNapRequest(A<NapConfig>._, A<string>._, HttpMethod.Get));
+            A.CallTo(() => _plugin.GetConfiguration()).MustHaveHappened(); // Happens once when a configuration is not present in the creation (above)
+            A.CallTo(() => _plugin.BeforeRequestSerialization(A<INapRequest>._)).MustNotHaveHappened();
+            A.CallTo(() => _plugin.AfterRequestSerialization(A<INapRequest>._)).MustNotHaveHappened();
+            A.CallTo(() => _plugin.Execute(A<INapRequest>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public void Nap_WithSetup_AndConfiguraiton_CreatesNewNap_WithSetupApplied_And_PluginMethodsRun()
+        {
+            // Arrange
+            var setup = new NapSetup();
+            setup.InstallPlugin(_plugin);
+
+            // Act
+            var nap = new NapClient(_config, setup);
+            var request = nap.Get("test");
+
+            // Assert
+            Assert.Same(_config, nap.Config);
+            A.CallTo(() => _plugin.BeforeNapRequestCreation()).MustHaveHappened();
+            A.CallTo(() => _plugin.AfterNapRequestCreation(A<INapRequest>._)).MustHaveHappened();
+            A.CallTo(() => _plugin.GenerateNapRequest(A<NapConfig>._, A<string>._, HttpMethod.Get));
+            A.CallTo(() => _plugin.GetConfiguration()).MustNotHaveHappened();
+            A.CallTo(() => _plugin.BeforeRequestSerialization(A<INapRequest>._)).MustNotHaveHappened();
+            A.CallTo(() => _plugin.AfterRequestSerialization(A<INapRequest>._)).MustNotHaveHappened();
+            A.CallTo(() => _plugin.Execute(A<INapRequest>._)).MustNotHaveHappened();
         }
 
         [Fact]

@@ -262,7 +262,15 @@ GROUP Test
 NUGET
   remote: https://www.nuget.org/api/v2
   specs:
+    AutoFixture (3.40.0)
+    AutoFixture.AutoFakeItEasy (3.40.0)
+      AutoFixture (>= 3.40.0)
+      FakeItEasy (>= 1.7.0)
+    AutoFixture.Xunit2 (3.40.0)
+      AutoFixture (>= 3.40.0)
+      xunit.core (>= 2.0.0 < 3.0.0)
     coveralls.net (0.6.0)
+    FakeItEasy (1.25.3)
     FSharp.Core (4.0.0.1)
     FsUnit (2.0.0)
       FSharp.Core (>= 3.1.2.5)
@@ -391,7 +399,7 @@ NUGET
     xunit (2.1.0)
       xunit.assert (2.1.0)
       xunit.core (2.1.0)
-    xunit.abstractions (2.0.0) - framework: >= net45, dnx451, dnxcore50, monoandroid, monotouch, portable-net45+win80+wp80+wpa81, xamarinios, winv4.5, wpv8.1, wpv8.0
+    xunit.abstractions (2.0.0) - framework: >= net45, dnx451, dnxcore50, monoandroid, monotouch, portable-net45+win80+wp80+wpa81, xamarinios, winv4.5, wpv8.0
     xunit.assert (2.1.0)
       System.Collections (>= 4.0.0) - framework: dnxcore50
       System.Diagnostics.Debug (>= 4.0.0) - framework: dnxcore50
@@ -415,11 +423,11 @@ NUGET
       System.Runtime.Extensions (>= 4.0.0) - framework: dnxcore50
       System.Threading.Tasks (>= 4.0.0) - framework: dnxcore50
       xunit.abstractions (>= 2.0.0) - framework: dnxcore50
-      xunit.extensibility.core (2.1.0) - framework: >= net45, dnx451, dnxcore50, monoandroid, monotouch, portable-net45+win80+wp80+wpa81, xamarinios, winv4.5, wpv8.1, wpv8.0
-      xunit.extensibility.execution (2.1.0) - framework: >= net45, dnx451, dnxcore50, monoandroid, monotouch, portable-net45+win80+wp80+wpa81, xamarinios, winv4.5, wpv8.1, wpv8.0
-    xunit.extensibility.core (2.1.0) - framework: >= net45, dnx451, dnxcore50, monoandroid, monotouch, portable-net45+win80+wp80+wpa81, xamarinios, winv4.5, wpv8.1, wpv8.0
+      xunit.extensibility.core (2.1.0) - framework: >= net45, dnx451, dnxcore50, monoandroid, monotouch, portable-net45+win80+wp80+wpa81, xamarinios, winv4.5, wpv8.0
+      xunit.extensibility.execution (2.1.0) - framework: >= net45, dnx451, dnxcore50, monoandroid, monotouch, portable-net45+win80+wp80+wpa81, xamarinios, winv4.5, wpv8.0
+    xunit.extensibility.core (2.1.0) - framework: >= net45, dnx451, dnxcore50, monoandroid, monotouch, portable-net45+win80+wp80+wpa81, xamarinios, winv4.5, wpv8.0
       xunit.abstractions (2.0.0)
-    xunit.extensibility.execution (2.1.0) - framework: >= net45, dnx451, dnxcore50, monoandroid, monotouch, portable-net45+win80+wp80+wpa81, xamarinios, winv4.5, wpv8.1, wpv8.0
+    xunit.extensibility.execution (2.1.0) - framework: >= net45, dnx451, dnxcore50, monoandroid, monotouch, portable-net45+win80+wp80+wpa81, xamarinios, winv4.5, wpv8.0
       System.Collections (>= 4.0.0) - framework: dnxcore50
       System.Diagnostics.Debug (>= 4.0.0) - framework: dnxcore50
       System.Globalization (>= 4.0.0) - framework: dnxcore50
@@ -434,5 +442,5 @@ NUGET
       System.Threading (>= 4.0.0) - framework: dnxcore50
       System.Threading.Tasks (>= 4.0.0) - framework: dnxcore50
       xunit.abstractions (>= 2.0.0) - framework: dnxcore50
-      xunit.extensibility.core (2.1.0) - framework: >= net45, dnx451, dnxcore50, monoandroid, monotouch, xamarinios, winv4.5, wpv8.1, wpv8.0
+      xunit.extensibility.core (2.1.0) - framework: >= net45, dnx451, dnxcore50, monoandroid, monotouch, xamarinios, winv4.5, wpv8.0
     xunit.runner.console (2.1.0)
