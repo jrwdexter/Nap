@@ -1,4 +1,5 @@
-﻿namespace Nap
+﻿namespace Nap.Plugins.Base
+open Nap
 
 [<AbstractClass>]
 type BasePlugin() =

@@ -1,4 +1,6 @@
-﻿namespace Nap
+﻿namespace Nap.Plugins.Base
+
+open Nap
 
 type IPlugin =
     // Modify configuration as necessary. This is called after a configuration is initially created.

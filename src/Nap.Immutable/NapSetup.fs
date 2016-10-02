@@ -3,6 +3,7 @@
 open System
 open System.Net
 open System.Net.Http
+open Nap.Plugins.Base
 
 type INapSetup =
     abstract member Plugins : IPlugin list

@@ -1,6 +1,8 @@
-﻿namespace Nap
+﻿namespace Nap.Plugins
 
 open System
+open Nap
+open Nap.Plugins.Base
 
 type DefaultPlugin() =
     inherit BasePlugin()

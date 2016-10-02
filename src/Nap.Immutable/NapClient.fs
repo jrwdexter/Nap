@@ -1,6 +1,7 @@
 ﻿namespace Nap
 
 open System.Net.Http
+open Nap.Plugins.Base
 
 type NapClient (config:NapConfig option, setup:INapSetup option) =
     (*** Constructors ***)

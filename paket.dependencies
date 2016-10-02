@@ -29,3 +29,4 @@ group Test
   nuget Coveralls.net
   nuget AutoFixture.AutoFakeItEasy
   nuget AutoFixture.Xunit2
+  nuget FakeItEasy 2.3.1

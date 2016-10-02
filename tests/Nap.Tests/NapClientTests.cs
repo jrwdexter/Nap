@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 using System.Net.Http.Headers;
 using FakeItEasy;
-using FakeItEasy.ExtensionSyntax;
 using Nap.Configuration;
 using Nap.Plugins.Base;
 using Nap.Tests.AutoFixtureConfiguration;
