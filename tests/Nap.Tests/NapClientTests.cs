@@ -63,12 +63,7 @@ namespace Nap.Tests
                     _handler.CookieContainer.Add(cookie.Item1, cookie.Item2);
                 return new HttpClient(_handler);
             };
-#endif
-
-            _fixture = new Fixture().Customize(new AutoFakeItEasyCustomization());
             _plugin = _fixture.Freeze<IPlugin>();
-            _config = _fixture.Freeze<NapConfig>();
-            _napRequest = _fixture.Freeze<INapRequest>();
             A.CallTo(() => _plugin.BeforeNapRequestCreation()).Returns(true);
             A.CallTo(() => _plugin.AfterNapRequestCreation(A<INapRequest>._)).Returns(true);
             A.CallTo(() => _plugin.BeforeRequestSerialization(A<INapRequest>._)).Returns(true);
@@ -76,6 +71,11 @@ namespace Nap.Tests
             A.CallTo(() => _plugin.Execute(A<INapRequest>._)).Returns(null);
             A.CallTo(() => _plugin.GetConfiguration()).Returns(_config);
             A.CallTo(() => _plugin.GenerateNapRequest(A<INapConfig>._, A<string>._, A<HttpMethod>._)).Returns(_napRequest);
+#endif
+
+            _fixture = new Fixture().Customize(new AutoFakeItEasyCustomization());
+            _config = _fixture.Freeze<NapConfig>();
+            _napRequest = _fixture.Freeze<INapRequest>();
         }
 
         [Fact]
@@ -104,6 +104,8 @@ namespace Nap.Tests
             Assert.Same(_config, nap.Config);
         }
 
+#if IMMUTABLE
+#else
         [Fact]
         public void Nap_WithSetup_CreatesNewNap_WithSetupApplied_And_PluginMethodsRun()
         {
@@ -146,6 +148,7 @@ namespace Nap.Tests
             A.CallTo(() => _plugin.AfterRequestSerialization(A<INapRequest>._)).MustNotHaveHappened();
             A.CallTo(() => _plugin.Execute(A<INapRequest>._)).MustNotHaveHappened();
         }
+#endif
 
         [Fact]
         public void Nap_Get_PerformsHttpClientGet()

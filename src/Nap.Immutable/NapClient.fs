@@ -9,6 +9,7 @@ type NapClient (config:NapConfig option, setup:INapSetup option) =
     new(config:NapConfig) = new NapClient(config |> Some, Option<INapSetup>.None)
     new(setup:INapSetup) = new NapClient(Option<NapConfig>.None, setup |> Some)
     new(config, setup) = new NapClient(config |> Some, setup |> Some)
+    new(uri) = new NapClient({NapConfig.Default with BaseUrl = uri} |> Some, None)
     member val Setup =
         match setup with
         | Some(someSetup) -> someSetup

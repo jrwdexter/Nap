@@ -9,7 +9,7 @@ open Nap.Serializers.Base
 type NapConfig = 
     {
         Advanced        : AdvancedNapConfig
-        BaseUri         : string
+        BaseUrl         : string
         Headers         : Map<string, string>
         QueryParameters : Map<string, string>
         FillMetadata    : bool
@@ -39,7 +39,7 @@ type NapConfig =
 
     (*** Base URL ***)
     member x.SetBaseUrl url =
-        { x with BaseUri = url}
+        { x with BaseUrl = url}
 
     (*** Headers ***)
     member x.AddHeader headerName headerValue =
@@ -80,7 +80,7 @@ type NapConfig =
                 [ new NapJsonSerializer() :> INapSerializer; new NapXmlSerializer() :> INapSerializer; new NapFormsSerializer() :> INapSerializer ]
                 |> Seq.map (fun s -> (s.ContentType, s))
                 |> Map.ofSeq
-            BaseUri = ""
+            BaseUrl = ""
             Headers = Map.empty
             QueryParameters = Map.empty
             Serialization = RequestFormat.Json

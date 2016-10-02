@@ -152,7 +152,7 @@ type NapRequest =
         |> fun url ->
             match url with
             | Prefix "http" _ -> url
-            | _ -> new Uri(new Uri(x.Config.BaseUri), url) |> string
+            | _ -> new Uri(new Uri(x.Config.BaseUrl), url) |> string
         |> fun url ->
             match x.QueryParameters |> Map.toArray with 
             | [||] -> url
