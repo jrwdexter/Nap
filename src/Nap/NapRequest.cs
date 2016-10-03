@@ -238,18 +238,16 @@ namespace Nap
         }
 
         /// <summary>
-        /// Runs the request.
+        /// Runs the request using a threadpool thread, and blocks the current thread until completion.
         /// </summary>
         /// <returns>The response body content.</returns>
         public string Execute()
         {
-            var execution = ExecuteAsync();
-            execution.ConfigureAwait(false);
-            return execution.Result;
+            return Task.Run(ExecuteAsync).Result;
         }
 
         /// <summary>
-        /// Runs the request.
+        /// Runs the request using a threadpool thread, and blocks the current thread until completion.
         /// </summary>
         /// <typeparam name="T">The type to deserialize the object to.</typeparam>
         /// <returns>
@@ -258,9 +256,7 @@ namespace Nap
         /// </returns>
         public T Execute<T>() where T : class, new()
         {
-            var execution = ExecuteAsync<T>();
-            execution.ConfigureAwait(false);
-            return execution.Result;
+            return Task.Run(ExecuteAsync<T>).Result;
         }
 
         #endregion
