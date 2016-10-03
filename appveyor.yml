@@ -25,7 +25,7 @@ build_script:
   - cmd: build.cmd BuildPackage
 
 artifacts:
-  - path: nuget/*.nupkg
+  - path: bin/*.nupkg
     name: NuGet packages
 
 # build:

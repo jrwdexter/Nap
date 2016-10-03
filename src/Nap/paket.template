@@ -8,3 +8,5 @@ requireLicenseAcceptance false
 description A short and sweet REST client
 copyright Copyright 2014
 tags REST Fluent HTTP API JSON XML
+dependencies
+  Newtonsoft.Json >= 6.0.2
