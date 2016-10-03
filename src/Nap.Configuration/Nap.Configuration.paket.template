@@ -1,0 +1,14 @@
+type project
+id Nap.Configuration
+version $version$
+title Nap.Configuration
+authors Jonathan Dexter
+owners Jonathan Dexter
+licenseUrl https://github.com/mandest/Nap/blob/master/LICENSE
+projectUrl https://github.com/mandest/Nap
+requireLicenseAcceptance false
+description An add-on to Nap to allow for configuration in *.config files.
+copyright Copyright 2014
+tags REST Fluent Configuration Nap
+dependencies
+  Nap ~> CURRENTVERSION

@@ -1,0 +1,14 @@
+type project
+id Nap.Html
+title Nap.Html
+authors Jonathan Dexter
+owners Jonathan Dexter
+licenseUrl https://github.com/mandest/Nap/blob/master/LICENSE
+projectUrl https://github.com/mandest/Nap
+requireLicenseAcceptance false
+description An add-on for Nap to allow binding of HTML elements to POCO elements via CSS selectors.
+copyright Copyright 2014
+tags REST Fluent HTML Binding Nap
+dependencies
+  Nap ~> CURRENTVERSION
+  CsQuery >= 1.3.3.249

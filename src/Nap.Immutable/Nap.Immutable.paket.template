@@ -1,0 +1,15 @@
+type project
+id Nap.Immutable
+version $version$
+title Nap.Immutable
+authors Jonathan Dexter
+owners Jonathan Dexter
+licenseUrl https://github.com/mandest/Nap/blob/master/LICENSE
+projectUrl https://github.com/mandest/Nap
+requireLicenseAcceptance false
+description A short and sweet REST client
+copyright Copyright 2014
+tags REST Fluent HTTP API JSON XML FSharp F# Immutable
+dependencies
+  FSharp.Core >= 4.0.0.1
+  Newtonsoft.Json >= 6.0.2
