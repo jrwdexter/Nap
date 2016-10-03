@@ -1,0 +1,10 @@
+type project
+id Nap
+authors Jonathan Dexter
+owners Jonathan Dexter
+licenseUrl https://github.com/mandest/Nap/blob/master/LICENSE
+projectUrl https://github.com/mandest/Nap
+requireLicenseAcceptance false
+description A short and sweet REST client
+copyright Copyright 2014
+tags REST Fluent HTTP API JSON XML
