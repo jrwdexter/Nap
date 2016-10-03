@@ -23,6 +23,11 @@ install:
 
 build_script:
   - cmd: build.cmd BuildPackage
+
+artifacts:
+  - path: nuget/*.nupkg
+  - name: NuGet packages
+
 # build:
 #   verbosity: minimal
 #   project: Nap.sln
