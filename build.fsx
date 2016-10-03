@@ -451,6 +451,7 @@ Target "All" DoNothing
 #else
   =?> ("SourceLink", Pdbstr.tryFind().IsSome )
 #endif
+  ==> "Coveralls"
   ==> "NuGet"
   ==> "BuildPackage"
 

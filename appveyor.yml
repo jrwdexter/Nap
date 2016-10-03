@@ -22,7 +22,7 @@ install:
 #     ./scripts/SetPackageVersions.ps1
 
 build_script:
-  - cmd: build.cmd Coveralls
+  - cmd: build.cmd BuildPackage
 # build:
 #   verbosity: minimal
 #   project: Nap.sln
