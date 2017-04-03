@@ -77,7 +77,6 @@
     <Compile Include="FNap.fs" />
     <None Include="Script.fsx" />
     <None Include="paket.references" />
-    <None Include="IntellisenseFix.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
