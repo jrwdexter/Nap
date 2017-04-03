@@ -1,3 +1,7 @@
+### 0.4.1
+* Adjustments for functional script types
+* Updated profile version to 111.
+
 ### 0.4.0
 * Nap.Immutable created for truly immutable workflows
 * Nap & Nap.Immutable feature parity at roughly 80%
