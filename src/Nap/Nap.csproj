@@ -80,6 +80,7 @@
     <Compile Include="NapClient.cs" />
     <Compile Include="NapRemovableRequest.cs" />
     <Compile Include="NapRequest.cs" />
+    <Compile Include="NapResponse.cs" />
     <Compile Include="Serializers\Base\INapSerializer.cs" />
     <Compile Include="Serializers\NapFormsSerializer.cs" />
     <Compile Include="Serializers\NapXmlSerializer.cs" />

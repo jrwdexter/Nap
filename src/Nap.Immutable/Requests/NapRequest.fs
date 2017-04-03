@@ -215,7 +215,12 @@ type NapRequest =
                     }
                 | None ->
                     request.Warn path <| sprintf "No deserializer found for content type '%s'" response.Raw.Content.Headers.ContentType.MediaType
-                    request
+                    let emptyDeserializedResponse =
+                        typeof<'T>.GetTypeInfo().DeclaredConstructors
+                        |> Seq.tryFind (fun c -> c.GetParameters().Length = 0 && not <| c.ContainsGenericParameters)
+                        |> Option.map (fun c -> c.Invoke(Array.empty) :?> 'T)
+                        |> Option.map (box)
+                    { request with Response = { response with Deserialized = emptyDeserializedResponse } |> Some }
             | None ->
                 request.Warn path "No response recieved."
                 request
