@@ -351,8 +351,12 @@ NUGET
     FsUnit.xUnit (1.4.1)
       FSharp.Core (>= 3.1.2.5)
       xunit (2.1)
+    Microsoft.DotNet.PlatformAbstractions (1.1.1) - framework: netcore10
+    Microsoft.Extensions.DependencyModel (1.1.1) - framework: netcore10
     Microsoft.NETCore.Platforms (1.0.1) - framework: dnxcore50
     Microsoft.NETCore.Targets (1.0.1) - framework: dnxcore50
+    Microsoft.TestPlatform.ObjectModel (15.0) - framework: netcore10
+    NETStandard.Library (1.6.1) - framework: netcore10
     NUnit (3.4.1)
     OpenCover (4.6.519)
     System.Collections (4.0.11) - framework: dnxcore50
@@ -460,6 +464,7 @@ NUGET
       Microsoft.NETCore.Platforms (>= 1.0.1) - framework: dnxcore50, netstandard10, >= netstandard13
       Microsoft.NETCore.Targets (>= 1.0.1) - framework: dnxcore50, netstandard10, >= netstandard13
       System.Runtime (>= 4.1) - framework: dnxcore50, netstandard10, >= netstandard13
+    System.Threading.ThreadPool (4.3) - framework: netcore10
     xunit (2.1)
       xunit.assert (2.1)
       xunit.core (2.1)
@@ -508,3 +513,9 @@ NUGET
       xunit.abstractions (>= 2.0) - framework: dnxcore50
       xunit.extensibility.core (2.1) - framework: >= net45, dnx451, dnxcore50, monoandroid, monotouch, xamarinios, winv4.5, wpv8.0, wpav8.1
     xunit.runner.console (2.1)
+    xunit.runner.visualstudio (2.2)
+      Microsoft.DotNet.PlatformAbstractions (>= 1.1) - framework: netcore10
+      Microsoft.Extensions.DependencyModel (>= 1.1) - framework: netcore10
+      Microsoft.TestPlatform.ObjectModel (>= 11.0) - framework: netcore10
+      NETStandard.Library (>= 1.6) - framework: netcore10
+      System.Threading.ThreadPool (>= 4.0.10) - framework: netcore10
