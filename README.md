@@ -9,8 +9,8 @@ Nap is in Beta, and not ready to be used on production projects yet.
 ## Build/Test Status
 | Branch | Status | Coverage |
 | ------ | ------ | -------- |
-| **Master** | [![Master Build status](https://ci.appveyor.com/api/projects/status/hwj660imaji1hr4l/branch/master?svg=true&pendingText=master Building...&passingText=master OK&failingText=master Failed)](https://ci.appveyor.com/project/mandest/Nap/branch/master) | [![Coverage Status](https://coveralls.io/repos/github/mandest/Nap/badge.svg?branch=master)](https://coveralls.io/github/mandest/Nap?branch=master) |
-| **Develop** | [![Develop Build status](https://ci.appveyor.com/api/projects/status/hwj660imaji1hr4l/branch/develop?svg=true&pendingText=develop Building...&passingText=develop OK&failingText=develop Failed)](https://ci.appveyor.com/project/mandest/Nap/branch/develop) | [![Coverage Status](https://coveralls.io/repos/github/mandest/Nap/badge.svg?branch=develop)](https://coveralls.io/github/mandest/Nap?branch=develop) |
+| **Master** | [![Master Build status](https://ci.appveyor.com/api/projects/status/hwj660imaji1hr4l/branch/master?svg=true&pendingText=master%20Building...&passingText=master%20OK&failingText=master%20Failed)](https://ci.appveyor.com/project/mandest/Nap/branch/master) | [![Coverage Status](https://coveralls.io/repos/github/mandest/Nap/badge.svg?branch=master)](https://coveralls.io/github/mandest/Nap?branch=master) |
+| **Develop** | [![Develop Build status](https://ci.appveyor.com/api/projects/status/hwj660imaji1hr4l/branch/develop?svg=true&pendingText=develop%20Building...&passingText=develop%20OK&failingText=develop%20Failed)](https://ci.appveyor.com/project/mandest/Nap/branch/develop) | [![Coverage Status](https://coveralls.io/repos/github/mandest/Nap/badge.svg?branch=develop)](https://coveralls.io/github/mandest/Nap?branch=develop) |
 
 
 ## Summary
