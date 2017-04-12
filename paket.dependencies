@@ -26,6 +26,7 @@ group Test
   nuget FsUnit.xUnit
   nuget xunit
   nuget xunit.runner.console
+  nuget xunit.runner.visualstudio
   nuget OpenCover
   nuget Coveralls.net
   nuget AutoFixture.AutoFakeItEasy

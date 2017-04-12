@@ -6,14 +6,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nap.Exceptions;
 using Nap.Html;
-using Nap.Tests.Formatters.Base;
+using Nap.Tests.Serializers.Base;
 using Nap.Tests.TestClasses;
 using Nap.Html.Exceptions;
 
-namespace Nap.Tests.Formatters
+namespace Nap.Tests.Serializers
 {
 	[TestClass]
-	public class NapHtmlFormatterTests : NapFormatterTestBase
+	public class NapHtmlSerializerTests : NapSerializerTestBase
 	{
 		private NapHtmlSerializer _htmlFormatter;
 

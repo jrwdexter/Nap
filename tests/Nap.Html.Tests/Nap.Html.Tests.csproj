@@ -51,8 +51,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Formatters\Base\NapFormatterTestBase.cs" />
-    <Compile Include="Formatters\NapHtmlFormatterTests.cs" />
+    <Compile Include="Serializers\Base\NapSerializerTestBase.cs" />
+    <Compile Include="Serializers\NapHtmlSerializerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestClasses\ParentTestClass.cs" />
     <Compile Include="TestClasses\RequiresParameters_TestClass.cs" />

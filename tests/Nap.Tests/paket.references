@@ -6,3 +6,4 @@ group Test
   AutoFixture.AutoFakeItEasy
   AutoFixture.Xunit2
   xunit
+  xunit.runner.visualstudio
