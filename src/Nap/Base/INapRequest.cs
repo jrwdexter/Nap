@@ -94,14 +94,14 @@ namespace Nap
         /// Execute the request and retrieve a pre-built response type.
         /// The pre-built <see cref="NapResponse"/> contains many commonly utilized properties.
         /// </summary>
-        /// <returns>A <see cref="NapResponse"/> that equates to the server's response.</returns>
-        NapResponse ExecuteRaw();
+        /// <returns>A <see cref="Task"/> that when awaited produces a <see cref="NapResponse"/> that equates to the server's response.</returns>
+        Task<NapResponse> ExecuteRawAsync();
 
         /// <summary>
         /// Execute the request and retrieve a pre-built response type.
         /// The pre-built <see cref="NapResponse"/> contains many commonly utilized properties.
         /// </summary>
-        /// <returns>A <see cref="Task"/> that when awaited produces a <see cref="NapResponse"/> that equates to the server's response.</returns>
-        Task<NapResponse> ExecuteRawAsync();
+        /// <returns>A <see cref="NapResponse"/> that equates to the server's response.</returns>
+        NapResponse ExecuteRaw();
     }
 }

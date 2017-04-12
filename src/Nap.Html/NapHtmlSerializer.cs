@@ -13,8 +13,14 @@ using Microsoft.FSharp.Core;
 
 namespace Nap.Html
 {
+    /// <summary>
+    /// The main de-serializer for HTML responses to object bindings.
+    /// </summary>
     public class NapHtmlSerializer : INapSerializer
     {
+        /// <summary>
+        /// The content type that the <see cref="NapHtmlSerializer"/> supports is "text/html".
+        /// </summary>
         public string ContentType => "text/html";
 
         /// <summary>
@@ -50,21 +56,21 @@ namespace Nap.Html
         /// for HTML deserialization.
         /// </example>
 #if IMMUTABLE
-		public FSharpOption<T> Deserialize<T>(string serialized)
-		{
-		    if (serialized == null)
-		        return FSharpOption<T>.None;
-
-			try
-			{
-			    var result = (T) BinderFactory.Instance.GetBinder<T>().Handle(serialized, null, typeof (T));
-                return FSharpOption<T>.Some(result);
-			}
-			catch (ArgumentNullException)
-			{
+        public FSharpOption<T> Deserialize<T>(string serialized)
+        {
+            if (serialized == null)
                 return FSharpOption<T>.None;
-			}
-		}
+
+            try
+            {
+                var result = (T) BinderFactory.Instance.GetBinder<T>().Handle(serialized, null, typeof (T));
+                return FSharpOption<T>.Some(result);
+            }
+            catch (ArgumentNullException)
+            {
+                return FSharpOption<T>.None;
+            }
+        }
 #else
         public T Deserialize<T>(string serialized)
         {

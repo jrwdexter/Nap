@@ -9,19 +9,17 @@ using Nap.Html;
 using Nap.Tests.Formatters.Base;
 using Nap.Tests.TestClasses;
 
-using Nap.Formatters;
-
 namespace Nap.Tests.Formatters
 {
 	[TestClass]
 	public class NapHtmlFormatterTests : NapFormatterTestBase
 	{
-		private NapHtmlFormatter _htmlFormatter;
+		private NapHtmlSerializer _htmlFormatter;
 
 		[TestInitialize]
 		public void Setup()
 		{
-			_htmlFormatter = new NapHtmlFormatter();
+			_htmlFormatter = new NapHtmlSerializer();
 		}
 
 		[TestMethod]
