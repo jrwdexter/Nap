@@ -8,6 +8,7 @@ using Nap.Exceptions;
 using Nap.Html;
 using Nap.Tests.Formatters.Base;
 using Nap.Tests.TestClasses;
+using Nap.Html.Exceptions;
 
 namespace Nap.Tests.Formatters
 {
@@ -54,7 +55,7 @@ namespace Nap.Tests.Formatters
 		[TestMethod]
 		[TestCategory("Formatters")]
 		[TestCategory("Nap.Html")]
-		[ExpectedException(typeof(ConstructorNotFoundException))]
+		[ExpectedException(typeof(NapBindingException))]
 		public void Deserialize_IntoClassWithoutParameterlessConstructor_ThrowsException()
 		{
 			// Act

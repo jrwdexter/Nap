@@ -6,6 +6,13 @@
     public interface IPlugin
     {
         /// <summary>
+        /// Setup a <see cref="NapClient"/> for initial use.
+        /// </summary>
+        /// <param name="client">The client to permute and setup.</param>
+        /// <returns>A new or modified client for generation of requests.</returns>
+        NapClient Setup(NapClient client);
+
+        /// <summary>
         /// Prepare a request for sending.
         /// </summary>
         /// <param name="request">The request to prepare.</param>
