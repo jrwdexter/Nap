@@ -18,45 +18,45 @@ namespace Nap
         /// <summary>
         /// Gets the request that generated this response.
         /// </summary>
-        public NapRequest Request { get; set; }
+        public NapRequest Request { get; }
 
         /// <summary>
         /// Gets the URI that the request was made against.
         /// </summary>
-        public Uri Url { get; }
+        public Uri Url { get; set; }
 
         /// <summary>
         /// The status code for the response.
         /// </summary>
-        public HttpStatusCode StatusCode { get; }
+        public HttpStatusCode StatusCode { get; set;  }
 
         /// <summary>
         /// The key/value pair collection of headers present in the response.
         /// Also contains all <see cref="ContentHeaders"/> and <see cref="NonContentHeaders"/> in a more raw form.
         /// </summary>
-        public IReadOnlyCollection<KeyValuePair<string, string>> Headers { get; }
+        public IReadOnlyCollection<KeyValuePair<string, string>> Headers { get; set; }
 
         /// <summary>
         /// Get content headers for more in-depth use.
         /// All of these headers are also contained within <see cref="Headers"/>.
         /// </summary>
-        public HttpContentHeaders ContentHeaders { get; }
+        public HttpContentHeaders ContentHeaders { get; set;  }
 
         /// <summary>
         /// Get non-content headers for more in-depth use.
         /// All of these headers are also contained within <see cref="Headers"/>.
         /// </summary>
-        public HttpResponseHeaders NonContentHeaders { get; }
+        public HttpResponseHeaders NonContentHeaders { get; set; }
 
         /// <summary>
         /// Gets the set of headers that are of key 'Set-Cookie' and casts them to cookies.
         /// </summary>
-        public IReadOnlyCollection<NapCookie> Cookies { get; }
+        public IReadOnlyCollection<NapCookie> Cookies { get; set; }
 
         /// <summary>
         /// Gets the body of the response.
         /// </summary>
-        public string Body { get; }
+        public string Body { get; set; }
 
         /// <summary>
         /// Create a new instance of the <see cref="NapResponse"/> object, populated with response information.

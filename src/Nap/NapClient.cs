@@ -83,8 +83,7 @@ namespace Nap
                     lock (_padlock)
                     {
                         if (_config == null)
-                            _config = _setup?.Plugins.Aggregate<IPlugin, INapConfig>(null, (current, plugin) => current ?? plugin.GetConfiguration())
-                                      ?? new EmptyNapConfig();
+                            _config = new EmptyNapConfig();
                     }
                 }
 
@@ -104,10 +103,8 @@ namespace Nap
         public INapRequest Get(string url)
         {
             Authenticate();
-            ApplyBeforeRequestPlugins();
             // TODO: Do authentication (if not done yet) here
             var request = CreateNapRequest(Config.Clone(), url, HttpMethod.Get);
-            ApplyAfterRequestPlugins(request);
             return request;
         }
 
@@ -120,9 +117,7 @@ namespace Nap
         public INapRequest Post(string url)
         {
             // TODO: Do authentication (if not done yet) here
-            ApplyBeforeRequestPlugins();
             var request = CreateNapRequest(Config.Clone(), url, HttpMethod.Post);
-            ApplyAfterRequestPlugins(request);
             return request;
         }
 
@@ -133,9 +128,7 @@ namespace Nap
         /// <returns>The configurable request object.  Run <see cref="INapRequest.ExecuteAsync{T}"/> or equivalent method.</returns>
         public INapRequest Delete(string url)
         {
-            ApplyBeforeRequestPlugins();
             var request = CreateNapRequest(Config.Clone(), url, HttpMethod.Delete);
-            ApplyAfterRequestPlugins(request);
             return request;
         }
 
@@ -146,9 +139,7 @@ namespace Nap
         /// <returns>The configurable request object.  Run <see cref="INapRequest.ExecuteAsync{T}"/> or equivalent method.</returns>
         public INapRequest Put(string url)
         {
-            ApplyBeforeRequestPlugins();
             var request = CreateNapRequest(Config.Clone(), url, HttpMethod.Put);
-            ApplyAfterRequestPlugins(request);
             return request;
         }
 
@@ -160,52 +151,19 @@ namespace Nap
         }
 
         /// <summary>
-        /// Helper method to run all plugin methods that need to be executed before <see cref="INapRequest"/> creation.
-        /// </summary>
-        private void ApplyBeforeRequestPlugins()
-        {
-            try
-            {
-                if (!(_setup?.Plugins.Aggregate(true, (current, plugin) => current && plugin.BeforeNapRequestCreation()) ?? true))
-                    throw new Exception("Nap pre-request creation aborted."); // TODO: Specific exception
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Nap pre-request creation aborted.  See inner exception for details.", e); // TODO: Specific exception
-            }
-        }
-
-        /// <summary>
         /// Helper method to run all plugin methods that need to be executed on <see cref="INapRequest"/> creation.
         /// </summary>
         private INapRequest CreateNapRequest(INapConfig config, string url, HttpMethod method)
         {
             try
             {
-                var request = _setup?.Plugins.Aggregate<IPlugin, INapRequest>(null, (current, plugin) => current ?? plugin.GenerateNapRequest(config, url, method));
                 var plugins = _setup?.Plugins.ToArray() ?? new IPlugin[] { }; // Enumerate plugins to make sure no other threads are going to add/remove plugins halfway through
-                request = request ?? new NapRequest(plugins, config, url, method);
+                var request = new NapRequest(plugins, config, url, method);
                 return request;
             }
             catch (Exception e)
             {
                 throw new Exception("Nap request creation aborted.  See inner exception for details.", e); // TODO: Specific exception
-            }
-        }
-
-        /// <summary>
-        /// Helper method to run all plugin methods that need to be executed after <see cref="INapRequest"/> creation.
-        /// </summary>
-        private void ApplyAfterRequestPlugins(INapRequest request)
-        {
-            try
-            {
-                if (!(_setup?.Plugins.Aggregate(true, (current, plugin) => current && plugin.AfterNapRequestCreation(request)) ?? true))
-                    throw new NapPluginException("Nap post-request creation aborted.");
-            }
-            catch (Exception e)
-            {
-                throw new NapPluginException("Nap post-request creation aborted.  See inner exception for details.", e);
             }
         }
     }

@@ -137,8 +137,6 @@ namespace Nap
         /// <returns>The <see cref="INapRequest"/> object.</returns>
         public INapRequest IncludeBody(object body)
         {
-            RunBooleanPluginMethod(p => p.BeforeRequestSerialization(this), "Nap plugin returned false.  Request serialization cancelled.");
-
             try
             {
                 _content = _config.Serializers.AsDictionary()[_config.Serialization].Serialize(body);
@@ -148,7 +146,6 @@ namespace Nap
                 throw new NapSerializationException($"Serialization failed for data:\n {body}", ex);
             }
 
-            RunBooleanPluginMethod(p => p.AfterRequestSerialization(this), "Nap plugin returned false.  Request post-serialization cancelled.");
             return this;
         }
 
@@ -287,8 +284,12 @@ namespace Nap
         /// Runs the request.
         /// </summary>
         /// <returns>The content and response.</returns>
-        private async Task<NapResponse> RunRequestAsync()
+        private async Task<NapResponse> RunRequestAsync(bool skipPreparePlugins = false)
         {
+            // If plugins have not been run, run those and then run the request.
+            if (!skipPreparePlugins)
+                return await _plugins.Aggregate(this, (request, plugin) => plugin.Prepare(request)).RunRequestAsync(true);
+
             var excludedHeaders = new[] { "content-type" };
             using (var client = ClientCreator != null ? ClientCreator(this) : CreateClient())
             {
@@ -326,7 +327,7 @@ namespace Nap
                     await response.Content.CopyToAsync(ms);
                     ms.Position = 0;
                     var responseContent = await sr.ReadToEndAsync();
-                    return new NapResponse(this, response, responseContent);
+                    return _plugins.Aggregate(new NapResponse(this, response, responseContent), (r, plugin) => plugin.Process(r));
                 }
             }
         }
