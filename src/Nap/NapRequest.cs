@@ -197,7 +197,7 @@ namespace Nap
         /// <returns>A task, that when run returns the body content.</returns>
         public async Task<string> ExecuteAsync()
         {
-            var napPluginResult = _plugins.Aggregate<IPlugin, string>(null, (current, plugin) => current ?? plugin.Execute(this) as string);
+            var napPluginResult = _plugins.Aggregate<IPlugin, string>(null, (current, plugin) => current ?? plugin.Execute<string>(this) as string);
             if (napPluginResult != null)
                 return napPluginResult;
             return (await RunRequestAsync()).Body;
@@ -213,7 +213,7 @@ namespace Nap
         /// </returns>
         public async Task<T> ExecuteAsync<T>() where T : class, new()
         {
-            var napPluginResult = _plugins.Aggregate<IPlugin, T>(null, (current, plugin) => current ?? plugin.Execute(this) as T);
+            var napPluginResult = _plugins.Aggregate<IPlugin, T>(null, (current, plugin) => current ?? plugin.Execute<T>(this) as T);
             if (napPluginResult != null)
                 return napPluginResult;
             var response = await RunRequestAsync();
@@ -239,7 +239,7 @@ namespace Nap
         /// <returns>A <see cref="Task"/> that when awaited produces a <see cref="NapResponse"/> that equates to the server's response.</returns>
         public async Task<NapResponse> ExecuteRawAsync()
         {
-            var napPluginResult = _plugins.Aggregate<IPlugin, NapResponse>(null, (current, plugin) => current ?? plugin.Execute(this) as NapResponse);
+            var napPluginResult = _plugins.Aggregate<IPlugin, NapResponse>(null, (current, plugin) => current ?? plugin.Execute<NapResponse>(this) as NapResponse);
             if (napPluginResult != null)
                 return napPluginResult;
             return await RunRequestAsync();

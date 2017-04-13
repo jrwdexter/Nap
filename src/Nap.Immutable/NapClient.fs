@@ -16,7 +16,7 @@ type NapClient (config:NapConfig option, setup:INapSetup option) =
         | None -> upcast new NapSetup()
     member val Config =
         let applyPlugins (plugins:IPlugin seq) (configuration:NapConfig) =
-            plugins |> Seq.fold (fun c p -> p.ModifyConfiguration c) configuration
+            plugins |> Seq.fold (fun c p -> p.Configure c) configuration
         let someConfig = match config with | Some(c) -> c | None -> NapConfig.Default
         let someSetup = match setup with | Some(s) -> s | None -> upcast NapSetup.Empty
         someConfig |> applyPlugins someSetup.Plugins
@@ -31,7 +31,4 @@ type NapClient (config:NapConfig option, setup:INapSetup option) =
     member x.Put url = x.CreateRequest(HttpMethod.Put) |> fun req -> { req with Url = url} :> INapRequest
     member x.Delete url = x.CreateRequest(HttpMethod.Delete) |> fun req -> { req with Url = url} :> INapRequest
     member x.CreateRequest httpMethod =
-        let applyPlugins (plugins:IPlugin seq) (request:NapRequest) =
-            plugins |> Seq.fold (fun c p -> p.PrepareRequest c) request
         { NapRequest.Default with Method = httpMethod }.ApplyConfig(x.Config)
-        |> applyPlugins x.Setup.Plugins

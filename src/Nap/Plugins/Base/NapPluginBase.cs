@@ -26,7 +26,7 @@ namespace Nap.Plugins.Base
         /// </summary>
         /// <param name="request">The request being executed.</param>
         /// <returns>An instance of an <see cref="object"/> object if applicable; otherwise, null to use other plugin or default behavior.</returns>
-        public virtual object Execute(INapRequest request) => null;
+        public virtual T Execute<T>(INapRequest request) where T : class => null;
 
         /// <summary>
         /// Process the response after recieving it.

@@ -70,7 +70,7 @@ namespace Nap.Tests
             _plugin = _fixture.Freeze<IPlugin>();
             A.CallTo(() => _plugin.Configure(A<INapConfig>._)).Returns(_fixture.Freeze<NapConfig>());
             A.CallTo(() => _plugin.Prepare(A<NapRequest>._)).Returns(_napRequest as NapRequest);
-            A.CallTo(() => _plugin.Execute(A<INapRequest>._)).Returns(null);
+            A.CallTo(() => _plugin.Execute<Result>(A<INapRequest>._)).Returns(null);
             A.CallTo(() => _plugin.Process(A<NapResponse>._)).Returns(null);
 #endif
 
@@ -120,7 +120,7 @@ namespace Nap.Tests
             // Assert
             A.CallTo(() => _plugin.Configure(A<INapConfig>._)).MustHaveHappened();
             A.CallTo(() => _plugin.Prepare(A<NapRequest>._)).MustNotHaveHappened();
-            A.CallTo(() => _plugin.Execute(A<INapRequest>._)).MustNotHaveHappened();
+            A.CallTo(() => _plugin.Execute<Result>(A<INapRequest>._)).MustNotHaveHappened();
             A.CallTo(() => _plugin.Process(A<NapResponse>._)).MustNotHaveHappened();
         }
 
@@ -139,7 +139,7 @@ namespace Nap.Tests
             Assert.Same(_config, nap.Config);
             A.CallTo(() => _plugin.Configure(A<INapConfig>._)).MustHaveHappened();
             A.CallTo(() => _plugin.Prepare(A<NapRequest>._)).MustNotHaveHappened();
-            A.CallTo(() => _plugin.Execute(A<INapRequest>._)).MustNotHaveHappened();
+            A.CallTo(() => _plugin.Execute<Result>(A<INapRequest>._)).MustNotHaveHappened();
             A.CallTo(() => _plugin.Process(A<NapResponse>._)).MustNotHaveHappened();
         }
 #endif

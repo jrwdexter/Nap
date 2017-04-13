@@ -3,11 +3,16 @@ open Nap
 
 [<AbstractClass>]
 type BasePlugin() =
-    abstract member Setup : NapConfig -> NapConfig
-    default x.Setup config = config
-    abstract member Prepare : NapConfig -> NapConfig
-    default x.Prepare request = request
+    abstract member Configure : NapConfig -> NapConfig
+    default x.Configure config = (x :> IPlugin).Configure config
+    abstract member Prepare : NapRequest -> NapRequest
+    default x.Prepare request = (x :> IPlugin).Prepare request
+    abstract member Execute<'T when 'T : not struct> : NapRequest -> 'T
+    default x.Execute<'T when 'T : not struct> request = (x :> IPlugin).Execute<'T> request
+    abstract member Process : NapResponse -> NapResponse
+    default x.Process response = (x :> IPlugin).Process response
     interface IPlugin with
-        //abstract member x.Setup : NapConfig -> NapConfig
-        member x.ModifyConfiguration config = x.Setup config
-        member x.PrepareRequest request = request
+        member x.Configure config = config
+        member x.Prepare request = request
+        member x.Execute<'T when 'T : not struct> request = Unchecked.defaultof<'T>
+        member x.Process response = response
