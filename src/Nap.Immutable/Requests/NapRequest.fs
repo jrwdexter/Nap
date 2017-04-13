@@ -1,4 +1,4 @@
-﻿namespace rec Nap
+﻿namespace Nap
 
 open System
 open System.Collections.Generic
