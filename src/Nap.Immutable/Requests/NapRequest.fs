@@ -81,7 +81,7 @@ type NapResponse =
             StatusCode = response.StatusCode
             Headers = headers
             Cookies = headers |> Seq.filter (fun h -> h.Key.Equals("set-cookie", StringComparison.OrdinalIgnoreCase))
-                              |> Seq.map (fun h -> NapCookie.create (new Uri(request.Url)) (h.Value))
+                              |> Seq.map (fun h -> NapCookie.Create (new Uri(request.Url)) (h.Value))
                               |> Seq.toList
             Body = body
             ContentHeaders = response.Content.Headers

@@ -6,56 +6,56 @@ open System.Collections.Generic
 /// <summary>
 /// Metadata and flags associated with a cookie response.
 /// </summary>
-type NapCookieMetadata = {
-    /// <summary>
-    /// Gets the moment at which this cookie was generated.
-    /// </summary>
-    CreationDate: DateTime
+type NapCookieMetadata =
+    {
+        /// <summary>
+        /// Gets the moment at which this cookie was generated.
+        /// </summary>
+        CreationDate: DateTime
 
-    /// <summary>
-    /// Gets the GMT moment at which the cookie expires.
-    /// </summary>
-    Expires: DateTime option
+        /// <summary>
+        /// Gets the GMT moment at which the cookie expires.
+        /// </summary>
+        Expires: DateTime option
 
-    /// <summary>
-    /// Gets the max age that the cookie will be usable for, in seconds.
-    /// </summary>
-    MaxAge: int option
+        /// <summary>
+        /// Gets the max age that the cookie will be usable for, in seconds.
+        /// </summary>
+        MaxAge: int option
 
-    /// <summary>
-    /// Gets the domain that the cookie is valid for.
-    /// </summary>
-    Domain: string
+        /// <summary>
+        /// Gets the domain that the cookie is valid for.
+        /// </summary>
+        Domain: string
 
-    /// <summary>
-    /// Gets the absolute path that the cookie is valid for.
-    /// </summary>
-    Path: string
+        /// <summary>
+        /// Gets the absolute path that the cookie is valid for.
+        /// </summary>
+        Path: string
 
-    /// <summary>
-    /// Gets a flag that if true indicates that the cookie should only be used in HTTPS/SSL requests.
-    /// </summary>
-    IsSecure: bool
+        /// <summary>
+        /// Gets a flag that if true indicates that the cookie should only be used in HTTPS/SSL requests.
+        /// </summary>
+        IsSecure: bool
 
-    /// <summary>
-    /// Gets the cookie is set to not be accessible through JavaScript.
-    /// </summary>
-    HttpOnly: bool
+        /// <summary>
+        /// Gets the cookie is set to not be accessible through JavaScript.
+        /// </summary>
+        HttpOnly: bool
 
-    /// <summary>
-    /// Gets the level of protection the cookie offers for cross-site access.
-    /// </summary>
-    /// <remarks>Currently experimental API component.</remarks>
-    SameSite: SameSitePolicy
-}
-
-module NapCookieMetadata =
+        /// <summary>
+        /// Gets the level of protection the cookie offers for cross-site access.
+        /// </summary>
+        /// <remarks>Currently experimental API component.</remarks>
+        SameSite: SameSitePolicy
+    }
+    with
     /// <summary>
     /// Create a new instance of a <see cref="NapCookieMetadata" /> object.
     /// </summary>
     /// <param name="hostUri">The host URI that originated the request.</param>
     /// <param name="directives">The collection of directives that the cookie contains.</param>
-    let create (hostUri : Uri) (directives : Map<string, string option>) =
+    static member Create (hostUri : Uri) (directives : Map<string, string option>) =
         let creationDate = DateTime.UtcNow
 
         // Expires

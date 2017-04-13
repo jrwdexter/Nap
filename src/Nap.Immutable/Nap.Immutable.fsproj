@@ -69,7 +69,6 @@
     <Compile Include="Cookies\SameSitePolicy.fs" />
     <Compile Include="Cookies\NapCookieMetadata.fs" />
     <Compile Include="Cookies\NapCookie.fs" />
-    <Compile Include="Response\NapResponse.fs" />
     <Compile Include="Requests\INapRequestComponents.fs" />
     <Compile Include="Requests\NapRequest.fs" />
     <Compile Include="Plugins\IPlugin.fs" />
