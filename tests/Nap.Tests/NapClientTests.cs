@@ -14,6 +14,8 @@ using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.AutoFakeItEasy;
 using Ploeh.AutoFixture.Xunit2;
 using Xunit;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Nap.Tests
 {
@@ -243,6 +245,24 @@ namespace Nap.Tests
             Assert.Equal($"{key}={value}", _handler.Request.Headers.First(h => h.Key == "cookie").Value.First());
         }
 
+#if IMMUTABLE
+#else
+        [Fact]
+        public void Nap_Result_Includes_CookiesAndHeaders()
+        {
+            // Act
+            const string key = "foo";
+            const string value = "bar";
+            var result = _nap.Get(_url).Execute<Result>();
+
+            // Assert
+            Assert.True(result.Headers.Count >= 2); // 2 specified headers
+            Assert.Equal(1, result.Cookies.Count());
+            Assert.Equal("12345", result.SessionId);
+            Assert.Equal("application/json", result.ContentType);
+        }
+#endif
+
         public class TestHandler : HttpClientHandler
         {
             public HttpRequestMessage Request { get; set; }
@@ -258,13 +278,22 @@ namespace Nap.Tests
                 RequestContent = request.Content == null ? string.Empty : await request.Content?.ReadAsStringAsync();
                 var content = new StringContent(string.Empty);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-                return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = content };
+                var response = new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = content };
+                response.Headers.Add("Set-Cookie", "Session-Id = 12345");
+                return response;
             }
         }
 
         public class Result
         {
             public int StatusCode { get; set; }
+#if IMMUTABLE
+#else
+            public IEnumerable<NapCookie> Cookies { get; set; }
+            public IDictionary<string, string> Headers { get; set; }
+            public string ContentType { get; set; }
+            public string SessionId { get; set; }
+#endif
         }
 
         public class BadResult

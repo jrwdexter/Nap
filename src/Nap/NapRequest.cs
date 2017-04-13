@@ -224,6 +224,7 @@ namespace Nap
                 var property = typeof(T).GetRuntimeProperty("StatusCode");
                 property?.SetValue(toReturn, Convert.ChangeType(response.StatusCode, property.PropertyType));
                 HydrateCookieProperties(response, toReturn);
+                HydrateHeaderProperties(response, toReturn);
 
                 // TODO: Populate items with defaults (headers)
             }
@@ -413,11 +414,11 @@ namespace Nap
                 {
                     var isDictionaryType = property.PropertyType.GenericTypeArguments.Count() > 1;
                     headerType = property.PropertyType.GenericTypeArguments.First();
-                    if (headerType.GetGenericTypeDefinition() == typeof(KeyValuePair<,>) || isDictionaryType)
+                    if ((headerType.IsConstructedGenericType && headerType.GetGenericTypeDefinition() == typeof(KeyValuePair<,>)) || isDictionaryType)
                     {
                         property.SetValue(toReturn, response.Headers.ToDictionary(c => c.Key, c => c.Value));
                     }
-                    if (headerType == typeof(string))
+                    else if (headerType == typeof(string))
                         property.SetValue(toReturn, response.Headers.Select(c => $"{c.Key}: {c.Value}").ToArray());
                 }
                 else
@@ -478,15 +479,15 @@ namespace Nap
                 {
                     var isDictionaryType = property.PropertyType.GenericTypeArguments.Count() > 1;
                     cookieType = property.PropertyType.GenericTypeArguments.First();
-                    if (cookieType.GetGenericTypeDefinition() == typeof(KeyValuePair<,>) || isDictionaryType)
+                    if ((cookieType.IsConstructedGenericType && cookieType.GetGenericTypeDefinition() == typeof(KeyValuePair<,>)) || isDictionaryType)
                     {
                         property.SetValue(toReturn, response.Cookies.ToDictionary(c => c.Name, c => c.Value));
                     }
-                    if (cookieType == typeof(NapCookie))
+                    else if (cookieType == typeof(NapCookie))
                         property.SetValue(toReturn, response.Cookies.ToArray());
-                    if (cookieType == typeof(Cookie))
+                    else if (cookieType == typeof(Cookie))
                         property.SetValue(toReturn, response.Cookies.Select(c => new Cookie(c.Name, c.Value, c.Metadata.Path, c.Metadata.Domain)).ToArray());
-                    if (cookieType == typeof(string))
+                    else if (cookieType == typeof(string))
                         property.SetValue(toReturn, response.Cookies.Select(c => $"{c.Name}: {c.Value}").ToArray());
                 }
                 else
@@ -494,9 +495,9 @@ namespace Nap
                     cookieType = property.PropertyType.GetElementType();
                     if (cookieType == typeof(NapCookie))
                         property.SetValue(toReturn, response.Cookies.ToArray());
-                    if (cookieType == typeof(Cookie))
+                    else if (cookieType == typeof(Cookie))
                         property.SetValue(toReturn, response.Cookies.Select(c => new Cookie(c.Name, c.Value, c.Metadata.Path, c.Metadata.Domain)).ToArray());
-                    if (cookieType == typeof(string))
+                    else if (cookieType == typeof(string))
                         property.SetValue(toReturn, response.Cookies.Select(c => $"{c.Name}: {c.Value}").ToArray());
                 }
             }
@@ -513,9 +514,9 @@ namespace Nap
                 {
                     if (p.PropertyType == typeof(NapCookie))
                         p.SetValue(toReturn, c);
-                    if (p.PropertyType == typeof(Cookie))
+                    else if (p.PropertyType == typeof(Cookie))
                         p.SetValue(toReturn, new Cookie(c.Name, c.Value, c.Metadata.Path, c.Metadata.Domain));
-                    if (p.PropertyType == typeof(string))
+                    else if (p.PropertyType == typeof(string))
                         p.SetValue(toReturn, c.Value);
                     else
                     {
