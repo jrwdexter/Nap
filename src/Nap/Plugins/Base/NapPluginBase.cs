@@ -1,4 +1,6 @@
-﻿namespace Nap.Plugins.Base
+﻿using Nap.Configuration;
+
+namespace Nap.Plugins.Base
 {
     /// <summary>
     /// An abstract class for overriding the basic behavior of Nap.
@@ -6,11 +8,11 @@
     public abstract class NapPluginBase : IPlugin
     {
         /// <summary>
-        /// Setup a <see cref="NapClient"/> for initial use.
+        /// Setup a <see cref="NapClient"/> for initial use with a configuration.
         /// </summary>
-        /// <param name="client">The client to permute and setup.</param>
+        /// <param name="configuration">The configuration to permute and setup.</param>
         /// <returns>A new or modified client for generation of requests.</returns>
-        public virtual NapClient Setup(NapClient client) => client;
+        public virtual INapConfig Configure(INapConfig configuration) => configuration;
 
         /// <summary>
         /// Prepare a request for sending.

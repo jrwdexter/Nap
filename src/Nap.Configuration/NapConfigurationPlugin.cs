@@ -14,13 +14,13 @@ namespace Nap.Configuration
     {
         /// <summary>
         /// Setup a <see cref="NapClient"/> for initial use using a *.config file.
-        /// Overwrites the <see cref="NapClient"/>, so this should be first in plugin order.
+        /// Overwrites the <paramref name="config"/>, so this should be first in plugin order.
         /// </summary>
-        /// <param name="client">Disposed, ignored client.</param>
-        /// <returns>A new client that has been loaded using the *.config file.</returns>
-        public override NapClient Setup(NapClient client)
+        /// <param name="config">Disposed, ignored configuration.</param>
+        /// <returns>A new configuration that has been loaded using the *.config file.</returns>
+        public override INapConfig Configure(INapConfig config)
         {
-            return new NapClient(NapConfig.GetCurrent());
+            return NapConfig.GetCurrent();
         }
     }
 }

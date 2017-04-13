@@ -1,4 +1,6 @@
-﻿namespace Nap.Plugins.Base
+﻿using Nap.Configuration;
+
+namespace Nap.Plugins.Base
 {
     /// <summary>
     /// An interface for overriding the basic behavior of Nap.
@@ -6,11 +8,11 @@
     public interface IPlugin
     {
         /// <summary>
-        /// Setup a <see cref="NapClient"/> for initial use.
+        /// Setup a <see cref="NapClient"/> for initial use with a configuration.
         /// </summary>
-        /// <param name="client">The client to permute and setup.</param>
+        /// <param name="configuration">The configuration to permute and setup.</param>
         /// <returns>A new or modified client for generation of requests.</returns>
-        NapClient Setup(NapClient client);
+        INapConfig Configure(INapConfig configuration);
 
         /// <summary>
         /// Prepare a request for sending.

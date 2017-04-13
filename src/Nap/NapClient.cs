@@ -62,7 +62,7 @@ namespace Nap
         public NapClient(INapConfig config, NapSetup setup) : this(config.BaseUrl)
         {
             _setup = setup;
-            _config = config;
+            _config = Configure(config);
         }
 
 
@@ -83,7 +83,7 @@ namespace Nap
                     lock (_padlock)
                     {
                         if (_config == null)
-                            _config = new EmptyNapConfig();
+                            _config = Configure(new EmptyNapConfig());
                     }
                 }
 
@@ -91,7 +91,7 @@ namespace Nap
             }
             set
             {
-                _config = value;
+                _config = Configure(value);
             }
         }
 
@@ -165,6 +165,18 @@ namespace Nap
             {
                 throw new Exception("Nap request creation aborted.  See inner exception for details.", e); // TODO: Specific exception
             }
+        }
+
+        /// <summary>
+        /// Apply all plugins to the configuration.
+        /// </summary>
+        /// <param name="config">The configuration to permute using plugins.</param>
+        /// <returns>A new, updated configuration as found by applying the plugins in order.</returns>
+        private INapConfig Configure(INapConfig config)
+        {
+            if(_setup != null && _setup.Plugins != null)
+                return _setup.Plugins.Aggregate(config, (c, p) => p.Configure(c));
+            return config;
         }
     }
 }
