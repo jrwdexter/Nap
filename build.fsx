@@ -199,7 +199,7 @@ Target "Coveralls" (fun _ ->
     p.WorkingDirectory <- "./"
     p.FileName <- "./packages/test/coveralls.net/tools/csmacnz.coveralls.exe"
     p.Arguments <-
-        sprintf "--opencover -i coverage.xml --repoToken %s --commitId \"%s\" --commitBranch \"%s\" --commitAuthor \"%s\" --commitEmail \"%s\" --commitMessage \"%s\" --jobId \"%s\" --serviceName \"%s\""
+        sprintf "--opencover -i coverage.xml --repoToken %s --useRelativePaths --commitId \"%s\" --commitBranch \"%s\" --commitAuthor \"%s\" --commitEmail \"%s\" --commitMessage \"%s\" --jobId \"%s\" --serviceName \"%s\""
           coverallsRepoToken
           (currentCommit.CommitId)
           (currentCommit.Branch)
