@@ -1,10 +1,11 @@
-﻿namespace Nap
+﻿namespace rec Nap
 
 open System
 open System.Collections.Generic
 open System.IO
 open System.Net
 open System.Net.Http
+open System.Net.Http.Headers
 open System.Reflection
 open System.Threading.Tasks
 
@@ -15,18 +16,104 @@ open AsyncFinalizable
 open Operators
 open Text
     
-
-type InternalResponse =
+/// <summary>
+/// A basic parsed response from a server.
+/// Contains the most basic information necessary from a server - StatusCode, Headers (Including Cookies
+/// </summary>
+type NapResponse =
     {
-        Raw : HttpResponseMessage
-        Content : string
-        Deserialized : obj option
-    }
+        /// <summary>
+        /// Gets the request that generated this response.
+        /// </summary>
+        Request: NapRequest
 
-type NapRequest =
+        /// <summary>
+        /// Gets the URI that the request was made against.
+        /// </summary>
+        Url: Uri
+
+        /// <summary>
+        /// The status code for the response.
+        /// </summary>
+        StatusCode: HttpStatusCode
+
+        /// <summary>
+        /// The key/value pair collection of headers present in the response.
+        /// Also contains all <see cref="ContentHeaders"/> and <see cref="NonContentHeaders"/> in a more raw form.
+        /// </summary>
+        Headers: Map<string, string>
+
+        /// <summary>
+        /// Get content headers for more in-depth use.
+        /// All of these headers are also contained within <see cref="Headers"/>.
+        /// </summary>
+        ContentHeaders: HttpContentHeaders
+
+        /// <summary>
+        /// Get non-content headers for more in-depth use.
+        /// All of these headers are also contained within <see cref="Headers"/>.
+        /// </summary>
+        NonContentHeaders: HttpResponseHeaders
+
+        /// <summary>
+        /// Gets the set of headers that are of key 'Set-Cookie' and casts them to cookies.
+        /// </summary>
+        Cookies: NapCookie list
+
+        /// <summary>
+        /// Gets the body of the response.
+        /// </summary>
+        Body: string
+
+        /// <summary>
+        /// Gets the deserialized object.
+        /// </summary>
+        Deserialized: obj option
+    }
+    with
+    static member Create (request : NapRequest) (response : HttpResponseMessage) (body : string) = 
+        let headers = response.Headers |> Seq.append (response.Content.Headers)
+                                       |> Seq.collect (fun h -> h.Value |> Seq.map (fun v -> (h.Key, v)))
+                                       |> Map.ofSeq
+        {
+            Request = request
+            Url = new Uri(request.Url)
+            StatusCode = response.StatusCode
+            Headers = headers
+            Cookies = headers |> Seq.filter (fun h -> h.Key.Equals("set-cookie", StringComparison.OrdinalIgnoreCase))
+                              |> Seq.map (fun h -> NapCookie.create (new Uri(request.Url)) (h.Value))
+                              |> Seq.toList
+            Body = body
+            ContentHeaders = response.Content.Headers
+            NonContentHeaders = response.Headers
+            Deserialized = None
+        }
+
+    /// <summary>
+    /// Get the value of a header for this response.
+    /// </summary>
+    /// <param name="headerName">The name of the header value to return.</param>
+    /// <returns>Returns the value of the given header.</returns>
+    member x.GetHeader (headerName : string) = x.Headers |> Map.tryFind headerName
+
+    /// <summary>
+    /// Get the value of all headers matching a header name for this response.
+    /// </summary>
+    /// <param name="headerName">The name of the header value to return.</param>
+    /// <returns>Returns the value of the given header.</returns>
+    member x.GetHeaders (headerName : string) = x.Headers |> Map.filter (fun k _ -> k.Equals(headerName, StringComparison.OrdinalIgnoreCase))
+
+    /// <summary>
+    /// Get the cookie matching a specific name.
+    /// </summary>
+    /// <param name="cookieName">The name of the cookie to find.</param>
+    /// <returns>The cookie that matches <paramref name="cookieName"/>.</returns>
+    member x.GetCookie (cookieName : string) = x.Cookies |> Seq.tryFind(fun c -> c.Name.Equals(cookieName, StringComparison.OrdinalIgnoreCase))
+
+and NapRequest =
     {
         Config          : NapConfig
-        Response        : InternalResponse option
+        Response        : NapResponse option
         RequestEvents   : Map<EventCode, Event<NapRequest> list>
         Url             : string
         Method          : HttpMethod
@@ -185,14 +272,14 @@ type NapRequest =
                 | None -> content.Headers.ContentType.MediaType <- (request.Config.Serializers.[request.Config.Serialization]).ContentType
             let! response = client.SendAsync(requestMessage) |> Async.AwaitTask
             let! content = response.Content.ReadAsStringAsync() |> Async.AwaitTask
-            return { request with Response = { Raw = response; Content = content; Deserialized = None } |> Some }
+            return { request with Response = Some(NapResponse.Create request response content) }
         }
 
     static member private Deserialize<'T> request =
         let path = sprintf "NapRequest.RunReqest()/NapRequest.Deserialize<%s>() [%s]" typeof<'T>.FullName request.Url
         match request.Response with
             | Some(response) ->
-                let serializerOption = request.GetSerializer <| response.Raw.Content.Headers.ContentType.MediaType
+                let serializerOption = request.GetSerializer <| response.ContentHeaders.ContentType.MediaType
                 match serializerOption with
                 | Some(serializer) -> 
                     request.Verbose path <| sprintf "Deserializing content with %s deserializer" (serializer.GetType().FullName)
@@ -201,7 +288,7 @@ type NapRequest =
                         {
                             response with
                                 Deserialized =
-                                    serializer.Deserialize<'T> response.Content
+                                    serializer.Deserialize<'T> response.Body
                                     |> fun o -> 
                                             match o with
                                             | None -> 
@@ -214,7 +301,7 @@ type NapRequest =
                         } |> Some
                     }
                 | None ->
-                    request.Warn path <| sprintf "No deserializer found for content type '%s'" response.Raw.Content.Headers.ContentType.MediaType
+                    request.Warn path <| sprintf "No deserializer found for content type '%s'" response.ContentHeaders.ContentType.MediaType
                     let emptyDeserializedResponse =
                         typeof<'T>.GetTypeInfo().DeclaredConstructors
                         |> Seq.tryFind (fun c -> c.GetParameters().Length = 0 && not <| c.ContainsGenericParameters)
@@ -231,15 +318,10 @@ type NapRequest =
             let deserialized = unbox<'T> deserializedObj
             let statusCodeProperty = typeof<'T>.GetRuntimeProperty("StatusCode")
             if isNull statusCodeProperty |> not then
-                statusCodeProperty.SetValue(deserialized, Convert.ChangeType(response.Raw.StatusCode, statusCodeProperty.PropertyType))
+                statusCodeProperty.SetValue(deserialized, Convert.ChangeType(response.StatusCode, statusCodeProperty.PropertyType))
             let cookieProperty = typeof<'T>.GetRuntimeProperty("Cookies")
             if isNull cookieProperty |> not then
-                let cookies =
-                    response.Raw.Headers
-                    |> Seq.filter (fun h -> h.Key.StartsWith("set-cookie", StringComparison.OrdinalIgnoreCase))
-                    |> Seq.filter (fun c -> (c.Value |> Seq.length) > 0)
-                    |> Seq.map (fun c -> new KeyValuePair<string, string>(c.Key, c.Value |> Seq.head))
-                cookieProperty.SetValue(deserialized, cookies)
+                cookieProperty.SetValue(deserialized, response.Cookies)
             { request with Response = { response with Deserialized = Some(box deserialized) } |> Some } 
         | _ -> request
 
@@ -277,7 +359,7 @@ type NapRequest =
                 |> AsyncFinalizable.bindAsync (NapRequest.RunRequestAsync)
                 |> NapRequest.RunEventsAsync EventCode.AfterRequestExecution
                 |> AsyncFinalizable.get
-            return processedRequest.Response |> Option.bind (fun response -> response.Content |> Some)
+            return processedRequest.Response |> Option.bind (fun response -> response.Body |> Some)
         }
 
     (*** INapRequest interface implementation ***)

@@ -1,17 +1,24 @@
 ﻿using Nap.Plugins.Base;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Nap.Configuration
 {
     /// <summary>
-    /// A plugin which allows for Nap to use *.config files instead of empty initial configurations.
+    /// A plugin to make generation of <see cref="NapClient"/>s with *.config values simple.
     /// </summary>
     public class NapConfigurationPlugin : NapPluginBase
     {
         /// <summary>
-        /// Gets Nap configuration from *.config files instead of from an empty implementation.
+        /// Setup a <see cref="NapClient"/> for initial use using a *.config file.
+        /// Overwrites the <paramref name="config"/>, so this should be first in plugin order.
         /// </summary>
-        /// <returns>The new <see cref="NapConfig"/> object on success.</returns>
-        public override INapConfig GetConfiguration()
+        /// <param name="config">Disposed, ignored configuration.</param>
+        /// <returns>A new configuration that has been loaded using the *.config file.</returns>
+        public override INapConfig Configure(INapConfig config)
         {
             return NapConfig.GetCurrent();
         }

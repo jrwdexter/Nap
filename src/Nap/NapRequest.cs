@@ -14,6 +14,7 @@ using Nap.Exceptions;
 using Nap.Plugins.Base;
 using Nap.Proxies;
 using Nap.Serializers.Base;
+using System.Net.Http.Headers;
 
 namespace Nap
 {
@@ -89,7 +90,7 @@ namespace Nap
         public string Content => _content;
 
         /// <summary>
-        /// Gets the
+        /// Gets the URL of the request.
         /// </summary>
         public string Url => _url;
         #endregion
@@ -136,8 +137,6 @@ namespace Nap
         /// <returns>The <see cref="INapRequest"/> object.</returns>
         public INapRequest IncludeBody(object body)
         {
-            RunBooleanPluginMethod(p => p.BeforeRequestSerialization(this), "Nap plugin returned false.  Request serialization cancelled.");
-
             try
             {
                 _content = _config.Serializers.AsDictionary()[_config.Serialization].Serialize(body);
@@ -147,7 +146,6 @@ namespace Nap
                 throw new NapSerializationException($"Serialization failed for data:\n {body}", ex);
             }
 
-            RunBooleanPluginMethod(p => p.AfterRequestSerialization(this), "Nap plugin returned false.  Request post-serialization cancelled.");
             return this;
         }
 
@@ -199,10 +197,10 @@ namespace Nap
         /// <returns>A task, that when run returns the body content.</returns>
         public async Task<string> ExecuteAsync()
         {
-            var napPluginResult = _plugins.Aggregate<IPlugin, string>(null, (current, plugin) => current ?? plugin.Execute(this) as string);
+            var napPluginResult = _plugins.Aggregate<IPlugin, string>(null, (current, plugin) => current ?? plugin.Execute<string>(this) as string);
             if (napPluginResult != null)
                 return napPluginResult;
-            return (await RunRequestAsync()).Content;
+            return (await RunRequestAsync()).Body;
         }
 
         /// <summary>
@@ -215,26 +213,46 @@ namespace Nap
         /// </returns>
         public async Task<T> ExecuteAsync<T>() where T : class, new()
         {
-            var napPluginResult = _plugins.Aggregate<IPlugin, T>(null, (current, plugin) => current ?? plugin.Execute(this) as T);
+            var napPluginResult = _plugins.Aggregate<IPlugin, T>(null, (current, plugin) => current ?? plugin.Execute<T>(this) as T);
             if (napPluginResult != null)
                 return napPluginResult;
-            var responseWithContent = await RunRequestAsync();
-            var toReturn = GetSerializer(responseWithContent.Response.Content.Headers.ContentType.MediaType).Deserialize<T>(responseWithContent.Content) ?? new T();
+            var response = await RunRequestAsync();
+            var toReturn = GetSerializer(response.ContentHeaders.ContentType.MediaType).Deserialize<T>(response.Body) ?? new T();
 
             if (_config.FillMetadata)
             {
                 var property = typeof(T).GetRuntimeProperty("StatusCode");
-                property?.SetValue(toReturn, Convert.ChangeType(responseWithContent.Response.StatusCode, property.PropertyType));
+                property?.SetValue(toReturn, Convert.ChangeType(response.StatusCode, property.PropertyType));
+                HydrateCookieProperties(response, toReturn);
+                HydrateHeaderProperties(response, toReturn);
 
-                property = typeof(T).GetRuntimeProperty("Cookies");
-                var cookies = responseWithContent.Response.Headers.Where(h => h.Key.StartsWith("set-cookie", StringComparison.OrdinalIgnoreCase));
-                var simpleCookies = cookies.Select(c => new KeyValuePair<string, string>(c.Key, c.Value.FirstOrDefault()));
-                property?.SetValue(toReturn, simpleCookies);
-
-                // TODO: Populate items with defaults (statuscode, etc)
+                // TODO: Populate items with defaults (headers)
             }
 
             return toReturn;
+        }
+
+        /// <summary>
+        /// Execute the request and retrieve a pre-built response type.
+        /// The pre-built <see cref="NapResponse"/> contains many commonly utilized properties.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> that when awaited produces a <see cref="NapResponse"/> that equates to the server's response.</returns>
+        public async Task<NapResponse> ExecuteRawAsync()
+        {
+            var napPluginResult = _plugins.Aggregate<IPlugin, NapResponse>(null, (current, plugin) => current ?? plugin.Execute<NapResponse>(this) as NapResponse);
+            if (napPluginResult != null)
+                return napPluginResult;
+            return await RunRequestAsync();
+        }
+
+        /// <summary>
+        /// Execute the request and retrieve a pre-built response type.
+        /// The pre-built <see cref="NapResponse"/> contains many commonly utilized properties.
+        /// </summary>
+        /// <returns>A <see cref="NapResponse"/> that equates to the server's response.</returns>
+        public NapResponse ExecuteRaw()
+        {
+            return Task.Run(ExecuteRawAsync).Result;
         }
 
         /// <summary>
@@ -267,8 +285,12 @@ namespace Nap
         /// Runs the request.
         /// </summary>
         /// <returns>The content and response.</returns>
-        private async Task<InternalResponse> RunRequestAsync()
+        private async Task<NapResponse> RunRequestAsync(bool skipPreparePlugins = false)
         {
+            // If plugins have not been run, run those and then run the request.
+            if (!skipPreparePlugins)
+                return await _plugins.Aggregate(this, (request, plugin) => plugin.Prepare(request)).RunRequestAsync(true);
+
             var excludedHeaders = new[] { "content-type" };
             using (var client = ClientCreator != null ? ClientCreator(this) : CreateClient())
             {
@@ -298,7 +320,7 @@ namespace Nap
                 if (_method == HttpMethod.Delete)
                     response = await client.DeleteAsync(new Uri(url));
                 if (response == null)
-                    return await new Task<InternalResponse>(() => null);
+                    return null;
 
                 using (var ms = new MemoryStream())
                 using (var sr = new StreamReader(ms))
@@ -306,7 +328,7 @@ namespace Nap
                     await response.Content.CopyToAsync(ms);
                     ms.Position = 0;
                     var responseContent = await sr.ReadToEndAsync();
-                    return new InternalResponse { Response = response, Content = responseContent };
+                    return _plugins.Aggregate(new NapResponse(this, response, responseContent), (r, plugin) => plugin.Process(r));
                 }
             }
         }
@@ -375,6 +397,145 @@ namespace Nap
             return serializer;
         }
 
+        private static T HydrateHeaderProperties<T>(NapResponse response, T toReturn) where T : class, new()
+        {
+            PropertyInfo property = typeof(T).GetRuntimeProperty("Headers");
+
+            // Types of header properties set:
+            // Array-type string
+            // Dictionary-type <string, string>
+            // Specific named string prop
+            // Specific named Convert.ChangeType prop
+            if ((property?.PropertyType?.IsConstructedGenericType ?? false) || (property?.PropertyType?.IsArray ?? false))
+            {
+                Type headerType;
+                // If the property 'Headers' exists and is generic type, let's find the generic parameter and set it to an array
+                if (property.PropertyType.IsConstructedGenericType)
+                {
+                    var isDictionaryType = property.PropertyType.GenericTypeArguments.Count() > 1;
+                    headerType = property.PropertyType.GenericTypeArguments.First();
+                    if ((headerType.IsConstructedGenericType && headerType.GetGenericTypeDefinition() == typeof(KeyValuePair<,>)) || isDictionaryType)
+                    {
+                        property.SetValue(toReturn, response.Headers.ToDictionary(c => c.Key, c => c.Value));
+                    }
+                    else if (headerType == typeof(string))
+                        property.SetValue(toReturn, response.Headers.Select(c => $"{c.Key}: {c.Value}").ToArray());
+                }
+                else
+                {
+                    headerType = property.PropertyType.GetElementType();
+                    if (headerType == typeof(string))
+                        property.SetValue(toReturn, response.Cookies.Select(c => $"{c.Name}: {c.Value}").ToArray());
+                }
+            }
+            else if (property != null)
+            {
+                // TODO: Log
+            }
+
+            // Set individual properties
+            foreach (var h in response.Headers)
+            {
+                var p = typeof(T).GetRuntimeProperty(h.Key.Replace("-", string.Empty));
+                if (p != null)
+                {
+                    if (p.PropertyType == typeof(string))
+                        p.SetValue(toReturn, h.Value);
+                    else
+                    {
+                        try
+                        {
+                            p.SetValue(toReturn, Convert.ChangeType(h.Value, p.PropertyType));
+                        }
+                        catch (InvalidCastException e)
+                        {
+                            // TODO: Log
+                        }
+                    }
+                }
+            }
+
+            return toReturn;
+        }
+
+        private static T HydrateCookieProperties<T>(NapResponse response, T toReturn) where T : class, new()
+        {
+            PropertyInfo property = typeof(T).GetRuntimeProperty("Cookies");
+
+            // Types of cookie properties set:
+            // Array-type NapCookie
+            // Array-type Cookie
+            // Dictionary-type <string, string>
+            // Array-type string
+            // Specific named NapCookie prop
+            // Specific named Cookie prop
+            // Specific named string prop
+            // Specific named Convert.ChangeType prop
+            if ((property?.PropertyType?.IsConstructedGenericType ?? false) || (property?.PropertyType?.IsArray ?? false))
+            {
+                Type cookieType;
+                // If the property 'Cookies' exists and is generic type, let's find the generic parameter and set it to an array
+                if (property.PropertyType.IsConstructedGenericType)
+                {
+                    var isDictionaryType = property.PropertyType.GenericTypeArguments.Count() > 1;
+                    cookieType = property.PropertyType.GenericTypeArguments.First();
+                    if ((cookieType.IsConstructedGenericType && cookieType.GetGenericTypeDefinition() == typeof(KeyValuePair<,>)) || isDictionaryType)
+                    {
+                        property.SetValue(toReturn, response.Cookies.ToDictionary(c => c.Name, c => c.Value));
+                    }
+                    else if (cookieType == typeof(NapCookie))
+                        property.SetValue(toReturn, response.Cookies.ToArray());
+                    else if (cookieType == typeof(Cookie))
+                        property.SetValue(toReturn, response.Cookies.Select(c => new Cookie(c.Name, c.Value, c.Metadata.Path, c.Metadata.Domain)).ToArray());
+                    else if (cookieType == typeof(string))
+                        property.SetValue(toReturn, response.Cookies.Select(c => $"{c.Name}: {c.Value}").ToArray());
+                }
+                else
+                {
+                    cookieType = property.PropertyType.GetElementType();
+                    if (cookieType == typeof(NapCookie))
+                        property.SetValue(toReturn, response.Cookies.ToArray());
+                    else if (cookieType == typeof(Cookie))
+                        property.SetValue(toReturn, response.Cookies.Select(c => new Cookie(c.Name, c.Value, c.Metadata.Path, c.Metadata.Domain)).ToArray());
+                    else if (cookieType == typeof(string))
+                        property.SetValue(toReturn, response.Cookies.Select(c => $"{c.Name}: {c.Value}").ToArray());
+                }
+            }
+            else if (property != null)
+            {
+                // TODO: Log
+            }
+
+            // Set individual properties
+            foreach (var c in response.Cookies)
+            {
+                var p = typeof(T).GetRuntimeProperty(c.Name.Replace("-", string.Empty));
+                if (p != null)
+                {
+                    if (p.PropertyType == typeof(NapCookie))
+                        p.SetValue(toReturn, c);
+                    else if (p.PropertyType == typeof(Cookie))
+                        p.SetValue(toReturn, new Cookie(c.Name, c.Value, c.Metadata.Path, c.Metadata.Domain));
+                    else if (p.PropertyType == typeof(string))
+                        p.SetValue(toReturn, c.Value);
+                    else
+                    {
+                        try
+                        {
+                            p.SetValue(toReturn, Convert.ChangeType(c.Value, p.PropertyType));
+                        }
+                        catch (InvalidCastException e)
+                        {
+                            // TODO: Log
+                        }
+                    }
+                }
+            }
+
+            return toReturn;
+        }
+
+
         private void RunBooleanPluginMethod(Func<IPlugin, bool> pluginMethod, string errorMessage)
         {
             try
@@ -407,6 +568,10 @@ namespace Nap
         }
     }
 
+    /// <summary>
+    /// A class that describes a specific type of object that can be marked 'complete'.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class Finalizable<T>
     {
         /// <summary>
@@ -442,7 +607,7 @@ namespace Nap
         /// </summary>
         /// <param name="item">The item to wrap in a finalizable state.</param>
         /// <returns>The new item that was created.</returns>
-        public static Finalizable<T> Continuing<T>(T item) => new Finalizable<T>(item, true);
+        public static Finalizable<T> Continuing(T item) => new Finalizable<T>(item, false);
     }
 
     /// <summary>
@@ -496,8 +661,20 @@ namespace Nap
         /// An event that is executed immediately prior to a request being serialized by any serializer.
         /// </summary>
         AfterRequestSerialization = 0x80,
+
+        /// <summary>
+        /// An event that is executed immediately before creating a nap request.
+        /// </summary>
         CreatingNapRequest = 0x100,
+
+        /// <summary>
+        /// An event that is executed before authentication is set.
+        /// </summary>
         SetAuthentication = 0x200,
+
+        /// <summary>
+        /// A meta-event describing the collection of all events.
+        /// </summary>
         All = 0x3FF
     }
 

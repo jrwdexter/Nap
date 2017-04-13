@@ -14,6 +14,8 @@ using Ploeh.AutoFixture;
 using Ploeh.AutoFixture.AutoFakeItEasy;
 using Ploeh.AutoFixture.Xunit2;
 using Xunit;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Nap.Tests
 {
@@ -66,13 +68,10 @@ namespace Nap.Tests
                 return new HttpClient(_handler);
             };
             _plugin = _fixture.Freeze<IPlugin>();
-            A.CallTo(() => _plugin.BeforeNapRequestCreation()).Returns(true);
-            A.CallTo(() => _plugin.AfterNapRequestCreation(A<INapRequest>._)).Returns(true);
-            A.CallTo(() => _plugin.BeforeRequestSerialization(A<INapRequest>._)).Returns(true);
-            A.CallTo(() => _plugin.AfterRequestSerialization(A<INapRequest>._)).Returns(true);
-            A.CallTo(() => _plugin.Execute(A<INapRequest>._)).Returns(null);
-            A.CallTo(() => _plugin.GetConfiguration()).Returns(_config);
-            A.CallTo(() => _plugin.GenerateNapRequest(A<INapConfig>._, A<string>._, A<HttpMethod>._)).Returns(_napRequest);
+            A.CallTo(() => _plugin.Configure(A<INapConfig>._)).Returns(_fixture.Freeze<NapConfig>());
+            A.CallTo(() => _plugin.Prepare(A<NapRequest>._)).Returns(_napRequest as NapRequest);
+            A.CallTo(() => _plugin.Execute<Result>(A<INapRequest>._)).Returns(null);
+            A.CallTo(() => _plugin.Process(A<NapResponse>._)).Returns(null);
 #endif
 
             _config = _fixture.Freeze<NapConfig>();
@@ -119,13 +118,10 @@ namespace Nap.Tests
             nap.Get("test");
 
             // Assert
-            A.CallTo(() => _plugin.BeforeNapRequestCreation()).MustHaveHappened();
-            A.CallTo(() => _plugin.AfterNapRequestCreation(A<INapRequest>._)).MustHaveHappened();
-            A.CallTo(() => _plugin.GenerateNapRequest(A<NapConfig>._, A<string>._, HttpMethod.Get));
-            A.CallTo(() => _plugin.GetConfiguration()).MustHaveHappened(); // Happens once when a configuration is not present in the creation (above)
-            A.CallTo(() => _plugin.BeforeRequestSerialization(A<INapRequest>._)).MustNotHaveHappened();
-            A.CallTo(() => _plugin.AfterRequestSerialization(A<INapRequest>._)).MustNotHaveHappened();
-            A.CallTo(() => _plugin.Execute(A<INapRequest>._)).MustNotHaveHappened();
+            A.CallTo(() => _plugin.Configure(A<INapConfig>._)).MustHaveHappened();
+            A.CallTo(() => _plugin.Prepare(A<NapRequest>._)).MustNotHaveHappened();
+            A.CallTo(() => _plugin.Execute<Result>(A<INapRequest>._)).MustNotHaveHappened();
+            A.CallTo(() => _plugin.Process(A<NapResponse>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -141,13 +137,10 @@ namespace Nap.Tests
 
             // Assert
             Assert.Same(_config, nap.Config);
-            A.CallTo(() => _plugin.BeforeNapRequestCreation()).MustHaveHappened();
-            A.CallTo(() => _plugin.AfterNapRequestCreation(A<INapRequest>._)).MustHaveHappened();
-            A.CallTo(() => _plugin.GenerateNapRequest(A<NapConfig>._, A<string>._, HttpMethod.Get));
-            A.CallTo(() => _plugin.GetConfiguration()).MustNotHaveHappened();
-            A.CallTo(() => _plugin.BeforeRequestSerialization(A<INapRequest>._)).MustNotHaveHappened();
-            A.CallTo(() => _plugin.AfterRequestSerialization(A<INapRequest>._)).MustNotHaveHappened();
-            A.CallTo(() => _plugin.Execute(A<INapRequest>._)).MustNotHaveHappened();
+            A.CallTo(() => _plugin.Configure(A<INapConfig>._)).MustHaveHappened();
+            A.CallTo(() => _plugin.Prepare(A<NapRequest>._)).MustNotHaveHappened();
+            A.CallTo(() => _plugin.Execute<Result>(A<INapRequest>._)).MustNotHaveHappened();
+            A.CallTo(() => _plugin.Process(A<NapResponse>._)).MustNotHaveHappened();
         }
 #endif
 
@@ -252,6 +245,24 @@ namespace Nap.Tests
             Assert.Equal($"{key}={value}", _handler.Request.Headers.First(h => h.Key == "cookie").Value.First());
         }
 
+#if IMMUTABLE
+#else
+        [Fact]
+        public void Nap_Result_Includes_CookiesAndHeaders()
+        {
+            // Act
+            const string key = "foo";
+            const string value = "bar";
+            var result = _nap.Get(_url).Execute<Result>();
+
+            // Assert
+            Assert.True(result.Headers.Count >= 2); // 2 specified headers
+            Assert.Equal(1, result.Cookies.Count());
+            Assert.Equal("12345", result.SessionId);
+            Assert.Equal("application/json", result.ContentType);
+        }
+#endif
+
         public class TestHandler : HttpClientHandler
         {
             public HttpRequestMessage Request { get; set; }
@@ -267,13 +278,22 @@ namespace Nap.Tests
                 RequestContent = request.Content == null ? string.Empty : await request.Content?.ReadAsStringAsync();
                 var content = new StringContent(string.Empty);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-                return new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = content };
+                var response = new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = content };
+                response.Headers.Add("Set-Cookie", "Session-Id = 12345");
+                return response;
             }
         }
 
         public class Result
         {
             public int StatusCode { get; set; }
+#if IMMUTABLE
+#else
+            public IEnumerable<NapCookie> Cookies { get; set; }
+            public IDictionary<string, string> Headers { get; set; }
+            public string ContentType { get; set; }
+            public string SessionId { get; set; }
+#endif
         }
 
         public class BadResult

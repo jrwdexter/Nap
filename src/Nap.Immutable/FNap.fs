@@ -14,9 +14,6 @@ module FNap =
     let setBody body (request:INapRequest) = 
         request.IncludeBody body
 
-    let applyConfiguration config (request:INapRequest) =
-        (request :?> NapRequest).ApplyConfig config
-
     let withCookie url cookieName value (request:INapRequest) = 
         request.IncludeCookie url cookieName value
 
@@ -56,8 +53,40 @@ module FNap =
     let executeAsync<'T> (request:INapRequest) =
         request.ExecuteAsync<'T>()
 
-    let useSerializer serializer (request:INapRequest) =
-        request |> applyConfiguration ((downcast request).Config.AddSerializer serializer)
+    /// <summary>
+    /// Configure the request using a configuration function.
+    /// </summary>
+    /// <param name="f">The configuration function that accepts the current configuration and outputs the new configuration.</param>
+    /// <param name="request">The request to permute.</param>
+    let configure f (request:INapRequest) =
+        f (request.Advanced().Configuration) |> (request :?> NapRequest).ApplyConfig
+    
+    /// <summary>
+    /// Retrieve the configuration stored for a given request.
+    /// </summary>
+    /// <param name="request">The request to retrieve stored configuration for.</param>
+    let getConfiguration (request:INapRequest) =
+        request.Advanced().Configuration
+
+    /// <summary>
+    /// Apply an arbitrary configuration to a request.
+    /// Useful for reusable configuration that needs to be applied.
+    /// </summary>
+    /// <param name="config">The configuration to apply to the request.</param>
+    /// <param name="request">The request to permute.</param>
+    let applyConfiguration config (request:INapRequest) =
+        (request :?> NapRequest).ApplyConfig config
+    
+    /// <summary>
+    /// Update the configuration to use the serializer specified.
+    /// </summary>
+    /// <param name="serializer">The serializer to use for the request and/or response (provided the serializer supports the given content types).</param>
+    /// <param name="request">The request to permute.</param>
+    let useSerializer serializer =
+        configure (fun c -> c.AddSerializer serializer)
+    
+    let useSerializerFor contentType serializer =
+        configure <| fun c -> c.AddSerializerFor contentType serializer
 
     let logUsing logger (request:INapRequest) =
         (request :?> NapRequest).ApplyConfig (

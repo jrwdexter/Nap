@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>e517f21c-31f6-4ea5-8cd4-dbf1b18abf64</ProjectGuid>
+    <ProjectGuid>{e517f21c-31f6-4ea5-8cd4-dbf1b18abf64}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Nap.FSharp</RootNamespace>
     <AssemblyName>Nap.Immutable</AssemblyName>
@@ -66,8 +66,11 @@
     <Compile Include="Configuration\ProxyNapConfig.fs" />
     <Compile Include="Configuration\AdvancedNapConfig.fs" />
     <Compile Include="Configuration\NapConfig.fs" />
+    <Compile Include="Cookies\SameSitePolicy.fs" />
+    <Compile Include="Cookies\NapCookieMetadata.fs" />
+    <Compile Include="Cookies\NapCookie.fs" />
+    <Compile Include="Response\NapResponse.fs" />
     <Compile Include="Requests\INapRequestComponents.fs" />
-    <Compile Include="Requests\NapResponse.fs" />
     <Compile Include="Requests\NapRequest.fs" />
     <Compile Include="Plugins\IPlugin.fs" />
     <Compile Include="Plugins\BasePlugin.fs" />

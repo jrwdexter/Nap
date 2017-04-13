@@ -35,10 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Nap, Version=0.2.47.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nap.0.2.47\lib\portable-net45+win+wpa81\Nap.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
   </ItemGroup>
@@ -59,9 +55,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nap.Configuration\Nap.Configuration.csproj">
+    <ProjectReference Include="..\..\src\Nap.Configuration\Nap.Configuration.csproj">
       <Project>{7d733248-2081-41eb-8c66-dd4bbacec1e8}</Project>
       <Name>Nap.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Nap\Nap.csproj">
+      <Project>{2d0869e5-ceb3-4719-bfc3-3faacc721384}</Project>
+      <Name>Nap</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -95,7 +95,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="..\.paket\paket.targets" />
+  <Import Project="..\..\.paket\paket.targets" />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v2.0' Or $(TargetFrameworkVersion) == 'v3.0')">
       <ItemGroup>

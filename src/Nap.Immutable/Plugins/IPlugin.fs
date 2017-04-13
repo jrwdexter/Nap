@@ -8,10 +8,13 @@ type IPlugin =
     // Option: Pull Nap.Plugins into parent assembly of Nap and Nap.Immutable
 
     // Modify configuration as necessary. This is called after a configuration is initially created.
-    abstract member ModifyConfiguration : NapConfig -> NapConfig
+    abstract member Configure : NapConfig -> NapConfig
+    abstract member Prepare : NapRequest -> NapRequest
+
+    abstract member Execute<'T when 'T : not struct> : NapRequest -> 'T
 
     // Prepare a request by further modifying or adjusting it's parameters. Called immediately after creating a request.
-    abstract member PrepareRequest : NapRequest -> NapRequest
+    abstract member Process : NapResponse -> NapResponse
 
 //    // Execute a NapRequest.
 //    // If the request returns Null
