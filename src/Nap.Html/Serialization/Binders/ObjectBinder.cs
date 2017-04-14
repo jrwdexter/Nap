@@ -91,21 +91,12 @@ namespace Nap.Html.Serialization.Binders
 
                         if (nodes != null && isEnumerable)
                         {
-                            // Enumerable case
-                            var enumerableType = enumerableInterface.GetGenericArguments().First();
-                            var castTypeMethod =
-                                typeof(Enumerable).GetMethod("Cast", BindingFlags.Static | BindingFlags.Public)
-                                    .MakeGenericMethod(enumerableType);
-                            var toListMethod =
-                                typeof(Enumerable).GetMethod("ToList", BindingFlags.Static | BindingFlags.Public)
-                                    .MakeGenericMethod(enumerableType);
-                            value = nodes.Select(node => ParseAndBind(propertyAttribute, enumerableType, node));
-                            value = toListMethod.Invoke(null, new[] { castTypeMethod.Invoke(null, new[] { value }) });
+                            value = BinderFactory.Instance.GetEnumerableBinder().Handle(nodes, property.PropertyType, propertyAttribute);
                         }
                         else if (singleNode != null)
                         {
                             // Single case
-                            value = ParseAndBind(propertyAttribute, property.PropertyType, (CQ)nodeForProperty);
+                            value = ParseAndBind(propertyAttribute, property.PropertyType, singleNode);
                         }
                         else
                         {

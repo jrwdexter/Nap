@@ -27,6 +27,13 @@ namespace Nap.Html.Factories.Base
 		[Pure]
 		IBinder GetBinder(Type type);
 
+	    /// <summary>
+	    /// Gets the binder for enumerables.
+	    /// </summary>
+	    /// <returns>The binder implementaiton corresponding to the specified type.</returns>
+	    [Pure]
+	    IEnumerableBinder GetEnumerableBinder();
+
 
 		/// <summary>
 		/// Gets the binder for a specific object (eg string, int, etc).

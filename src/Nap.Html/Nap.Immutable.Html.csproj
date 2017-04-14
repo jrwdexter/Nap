@@ -72,9 +72,11 @@
     <Compile Include="Parsers\HtmlElementParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\Binders\Base\BaseBinder.cs" />
+    <Compile Include="Serialization\Binders\Base\IEnumerableBinder.cs" />
     <Compile Include="Serialization\Binders\Base\IBinder.cs" />
     <Compile Include="Serialization\Binders\DateBinder.cs" />
     <Compile Include="Serialization\Binders\DecimalBinder.cs" />
+    <Compile Include="Serialization\Binders\EnumerableBinder.cs" />
     <Compile Include="Serialization\Binders\IntBinder.cs" />
     <Compile Include="Serialization\Binders\ObjectBinder.cs" />
     <Compile Include="Serialization\Binders\PrimitiveBinder.cs" />

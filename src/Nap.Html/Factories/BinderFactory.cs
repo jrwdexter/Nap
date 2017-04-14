@@ -18,6 +18,7 @@ namespace Nap.Html.Factories
         private static readonly object Padlock = new object();
         private static IBinderFactory _instance;
         private readonly IDictionary<Type, IBinder> _cachedBinders = new Dictionary<Type, IBinder>();
+        private readonly IEnumerableBinder _enumerableBinder = new EnumerableBinder();
 
         /// <summary>
         /// Gets the single, thread-safe instance of the <see cref="IBinderFactory" />.
@@ -84,6 +85,16 @@ namespace Nap.Html.Factories
             }
 
             return binder;
+        }
+
+        /// <summary>
+        /// Gets the binder for enumerables.
+        /// </summary>
+        /// <returns>The binder implementaiton corresponding to the specified type.</returns>
+        [Pure]
+        public IEnumerableBinder GetEnumerableBinder()
+        {
+            return _enumerableBinder;
         }
 
         /// <summary>

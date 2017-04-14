@@ -44,7 +44,9 @@
     <Compile Include="Attributes\Base\BaseHtmlAttribute.cs" />
     <Compile Include="Attributes\NumericalHtmlElementAttribute.cs" />
     <Compile Include="Attributes\HtmlElementAttribute.cs" />
+    <Compile Include="Serialization\Binders\Base\IEnumerableBinder.cs" />
     <Compile Include="Serialization\Binders\DateBinder.cs" />
+    <Compile Include="Serialization\Binders\EnumerableBinder.cs" />
     <Compile Include="Serialization\Binders\IntBinder.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Formats\DefaultBindingFormat.cs" />
