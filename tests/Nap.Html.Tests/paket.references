@@ -1,6 +1,0 @@
-Newtonsoft.Json
-group Test
-  FsUnit
-  FsUnit.xUnit
-  xunit
-  xunit.runner.visualstudio
