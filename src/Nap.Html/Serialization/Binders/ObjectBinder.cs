@@ -72,7 +72,9 @@ namespace Nap.Html.Serialization.Binders
                     property.GetCustomAttributes(typeof(BaseHtmlAttribute), true).FirstOrDefault() as BaseHtmlAttribute;
                 if (propertyAttribute != null)
                 {
-                    var enumerableInterface =
+                    var enumerableInterface = 
+                        property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>) ?
+                        property.PropertyType :
                         property.PropertyType.GetInterfaces()
                             .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
                     var isEnumerable = enumerableInterface != null && property.PropertyType != typeof(string);

@@ -61,6 +61,7 @@
     <Compile Include="Issues\Issue5.cs" />
     <Compile Include="NapClientTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestClasses\HtmlParentTestClass.cs" />
     <Compile Include="TestClasses\ParentTestClass.cs" />
     <Compile Include="TestClasses\RequiresParameters_TestClass.cs" />
     <Compile Include="TestClasses\TestClass.cs" />

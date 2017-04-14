@@ -121,25 +121,99 @@ namespace Nap.Tests.Serializers
         }
 
         [Fact]
-        public void Deserialization_ParentTestClass_MatchesAppropriateValues()
+        public void Deserialization_HtmlParentTestClass_MatchesAppropriateValues()
         {
             // Arrange
             var html = GetFileContents("ParentTestClass.html");
 
             // Act
 #if IMMUTABLE
-            var person = _htmlSerializer.Deserialize<ParentTestClass>(html).Value;
+            var person = _htmlSerializer.Deserialize<HtmlParentTestClass>(html).Value;
 #else
-            var person = _htmlSerializer.Deserialize<ParentTestClass>(html);
+            var person = _htmlSerializer.Deserialize<HtmlParentTestClass>(html);
 #endif
 
             // Assert
             Assert.Equal("Jeff", person.Spouse.FirstName);
             Assert.Equal("Doe", person.Spouse.LastName);
-            Assert.Equal("John", person.Children.First().FirstName);
-            Assert.Equal("Doe", person.Children.First().LastName);
-            Assert.Equal("Jane", person.Children.Last().FirstName);
-            Assert.Equal("Doe", person.Children.Last().LastName);
+        }
+
+        [Fact]
+        public void Deserialization_HtmlParentTestClass_Matches_Children_List()
+        {
+            // Arrange
+            var html = GetFileContents("ParentTestClass.html");
+
+            // Act
+#if IMMUTABLE
+            var person = _htmlSerializer.Deserialize<HtmlParentTestClass>(html).Value;
+#else
+            var person = _htmlSerializer.Deserialize<HtmlParentTestClass>(html);
+#endif
+
+            // Assert
+            Assert.Equal("John", person.Children_List.First().FirstName);
+            Assert.Equal("Doe", person.Children_List.First().LastName);
+            Assert.Equal("Jane", person.Children_List.Last().FirstName);
+            Assert.Equal("Doe", person.Children_List.Last().LastName);
+        }
+
+        [Fact]
+        public void Deserialization_HtmlParentTestClass_Matches_Children_Array()
+        {
+            // Arrange
+            var html = GetFileContents("ParentTestClass.html");
+
+            // Act
+#if IMMUTABLE
+            var person = _htmlSerializer.Deserialize<HtmlParentTestClass>(html).Value;
+#else
+            var person = _htmlSerializer.Deserialize<HtmlParentTestClass>(html);
+#endif
+
+            // Assert
+            Assert.Equal("John", person.Children_Enumerable.First().FirstName);
+            Assert.Equal("Doe", person.Children_Enumerable.First().LastName);
+            Assert.Equal("Jane", person.Children_Enumerable.Last().FirstName);
+            Assert.Equal("Doe", person.Children_Enumerable.Last().LastName);
+        }
+
+#if IMMUTABLE
+        [Fact]
+        public void Deserialization_HtmlParentTestClass_Matches_Children_Enumerable()
+        {
+            // Arrange
+            var html = GetFileContents("ParentTestClass.html");
+
+            // Act
+            var person = _htmlSerializer.Deserialize<HtmlParentTestClass>(html).Value;
+
+            // Assert
+            Assert.Equal("John", person.Children_FSharpList.First().FirstName);
+            Assert.Equal("Doe", person.Children_FSharpList.First().LastName);
+            Assert.Equal("Jane", person.Children_FSharpList.Last().FirstName);
+            Assert.Equal("Doe", person.Children_FSharpList.Last().LastName);
+        }
+#endif
+
+        [Fact]
+        public void Deserialization_HtmlParentTestClass_Matches_Children_FSharpList()
+        {
+            // Arrange
+            var html = GetFileContents("ParentTestClass.html");
+
+            // Act
+#if IMMUTABLE
+            var person = _htmlSerializer.Deserialize<HtmlParentTestClass>(html).Value;
+#else
+            var person = _htmlSerializer.Deserialize<HtmlParentTestClass>(html);
+#endif
+
+            // Assert
+            Assert.Equal("John", person.Children_Array.First().FirstName);
+            Assert.Equal("Doe", person.Children_Array.First().LastName);
+            Assert.Equal("Jane", person.Children_Array.Last().FirstName);
+            Assert.Equal("Doe", person.Children_Array.Last().LastName);
         }
     }
 }

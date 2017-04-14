@@ -28,13 +28,13 @@ namespace Nap.Html.Serialization.Binders
             // TODO: Cache reflection methods
 
             // Enumerable case
-            var enumerableType = outputType.GetGenericArguments().First();
+            var enumerableType = outputType.IsArray ? outputType.GetElementType() : outputType.GetGenericArguments().First();
             var castTypeMethod =
                 typeof(Enumerable).GetMethod("Cast", BindingFlags.Static | BindingFlags.Public)
                     .MakeGenericMethod(enumerableType);
             object value = input.Select(node => ParseAndBind(propertyAttribute, enumerableType, node));
             value = castTypeMethod.Invoke(null, new[] { value });
-            if (ImplementsGenericInterface(outputType, typeof(List<>))) // List
+            if (ImplementsGenericType(outputType, typeof(List<>))) // List
             {
                 var toListMethod =
                     typeof(Enumerable).GetMethod("ToList", BindingFlags.Static | BindingFlags.Public)
@@ -42,7 +42,7 @@ namespace Nap.Html.Serialization.Binders
                 value = toListMethod.Invoke(null, new[] { value });
             }
 #if IMMUTABLE
-            else if (ImplementsGenericInterface(outputType, typeof(FSharpList<>))) // F# list
+            else if (ImplementsGenericType(outputType, typeof(FSharpList<>))) // F# list
             {
                 var toFsharplistMethod =
                     typeof(ListModule).GetMethod("OfSeq", BindingFlags.Static | BindingFlags.Public)
@@ -53,15 +53,17 @@ namespace Nap.Html.Serialization.Binders
             else // other enumerables
             {
                 var toArrayMethod =
-                    typeof(Enumerable).GetMethod("ToList", BindingFlags.Static | BindingFlags.Public)
+                    typeof(Enumerable).GetMethod("ToArray", BindingFlags.Static | BindingFlags.Public)
                         .MakeGenericMethod(enumerableType);
                 value = toArrayMethod.Invoke(null, new[] { value });
             }
             return value;
         }
 
-        private static bool ImplementsGenericInterface(Type type, Type interfaceType)
+        private static bool ImplementsGenericType(Type type, Type interfaceType)
         {
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == interfaceType)
+                return true;
             return type.GetInterfaces().Any(i =>
                 i.IsGenericType &&
                 i.GetGenericTypeDefinition() == interfaceType
