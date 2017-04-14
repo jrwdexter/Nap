@@ -16,11 +16,43 @@ open AsyncFinalizable
 open Operators
 open Text
     
+type INapRequest =
+    abstract member DoNot : unit -> IRemovableNapRequestComponent
+    abstract member Advanced : unit -> IAdvancedNapRequestComponent
+    abstract member IncludeQueryParameter : string -> string -> INapRequest
+    abstract member IncludeBody : obj -> INapRequest
+    abstract member IncludeHeader : string -> string -> INapRequest
+    abstract member IncludeCookie : string -> string -> string -> INapRequest
+    abstract member FillMetadata : unit -> INapRequest
+    abstract member ExecuteAsync : unit -> Task<string>
+    abstract member ExecuteAsync<'T> : unit -> Task<'T>
+    abstract member Execute : unit -> string
+    abstract member Execute<'T> : unit -> 'T
+    abstract member ExecuteRaw : unit -> NapResponse
+    abstract member ExecuteRawAsync : unit -> Task<NapResponse>
+
+and IRemovableNapRequestComponent =
+    abstract member FillMetadata : unit -> INapRequest
+    abstract member IncludeBody : unit -> INapRequest
+    abstract member IncludeHeader : string -> INapRequest
+    abstract member IncludeCookie : string -> INapRequest
+    abstract member IncludeQueryParameter : string -> INapRequest
+
+and IAdvancedNapRequestComponent =
+    abstract ClientCreator : (INapRequest -> HttpClient) with get
+    abstract Proxy : ProxyNapConfig option with get
+    abstract Authentication : AuthenticationNapConfig with get
+    abstract Configuration : NapConfig with get
+    abstract member SetProxy : ProxyNapConfig -> INapRequest
+    abstract member SetClientCreator : Func<INapRequest, HttpClient> -> INapRequest
+    abstract member SetAuthentication : AuthenticationNapConfig -> INapRequest
+
+
 /// <summary>
 /// A basic parsed response from a server.
 /// Contains the most basic information necessary from a server - StatusCode, Headers (Including Cookies
 /// </summary>
-type NapResponse =
+and NapResponse =
     {
         /// <summary>
         /// Gets the request that generated this response.
@@ -346,6 +378,20 @@ and NapRequest =
                 | Some(deserialized) -> unbox<'T> deserialized |> Some
                 | None -> None
         }
+
+    member x.ExecuteFSRawAsync () =
+        async {
+            let path = sprintf "NapRequest.Execute() [%s]" x.Url
+            x.Info path <| sprintf "Executing %O request with body %s" x.Method x.Content
+            x.Verbose path <| sprintf "Executing %O request with parameters full structure %A" x.Method x
+            return!
+                async.Return <| Continuing(x)
+                |> NapRequest.RunEventsAsync EventCode.BeforeRequestExecution
+                |> AsyncFinalizable.bindAsync (NapRequest.RunRequestAsync)
+                |> NapRequest.RunEventsAsync EventCode.AfterRequestExecution
+                |> AsyncFinalizable.get
+                |> Async.map (fun r -> r.Response)
+        }
         
             
     member x.ExecuteFSAsync () = 
@@ -378,6 +424,10 @@ and NapRequest =
             let result = x.ExecuteFSAsync () |> Async.RunSynchronously
             defaultArg result null
 
+        member x.ExecuteRaw(): NapResponse = 
+            let response = x.ExecuteFSRawAsync () |> Async.RunSynchronously
+            defaultArg response Unchecked.defaultof<NapResponse>
+
         member x.ExecuteAsync<'T> () : Task<'T> =
             async {
                 let! result = x.ExecuteFSTypedAsync<'T> ()
@@ -388,6 +438,12 @@ and NapRequest =
             async {
                 let! result = x.ExecuteFSTypedAsync<string> ()
                 return defaultArg result null
+            } |> Async.StartAsTask
+
+        member x.ExecuteRawAsync(): Task<NapResponse> = 
+            async {
+                let! result = x.ExecuteFSRawAsync ()
+                return defaultArg result Unchecked.defaultof<NapResponse>
             } |> Async.StartAsTask
 
         member x.FillMetadata(): INapRequest = 
