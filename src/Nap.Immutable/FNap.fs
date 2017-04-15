@@ -92,3 +92,25 @@ module FNap =
         (request :?> NapRequest).ApplyConfig (
             (request :?> NapRequest).Config.SetLogging logger
         )
+
+module Resp =
+    let chain method url (response:NapResponse) =
+        response.ChainRequest url method
+    let chainGet url (response:NapResponse) =
+        response.ChainRequest url HttpMethod.Get 
+    let chainPost url (response:NapResponse) =
+        response.ChainRequest url HttpMethod.Post 
+    let chainPut url (response:NapResponse) =
+        response.ChainRequest url HttpMethod.Put 
+    let chainDelete url (response:NapResponse) =
+        response.ChainRequest url HttpMethod.Delete 
+    let chainMap url method map (response:NapResponse) =
+        response.ChainMapRequest method url map
+    let chainMapGet url map (response:NapResponse) =
+        response.ChainMapRequest url HttpMethod.Get map
+    let chainMapPost url map (response:NapResponse) =
+        response.ChainMapRequest url HttpMethod.Post map
+    let chainMapPut url map (response:NapResponse) =
+        response.ChainMapRequest url HttpMethod.Put map
+    let chainMapDelete url map (response:NapResponse) =
+        response.ChainMapRequest url HttpMethod.Delete map
