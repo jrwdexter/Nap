@@ -304,7 +304,8 @@ and NapRequest =
                 | None -> content.Headers.ContentType.MediaType <- (request.Config.Serializers.[request.Config.Serialization]).ContentType
             let! response = client.SendAsync(requestMessage) |> Async.AwaitTask
             let! content = response.Content.ReadAsStringAsync() |> Async.AwaitTask
-            return { request with Response = Some(NapResponse.Create request response content) }
+            let hydratedResponse = NapResponse.Create request response content
+            return { request with Response = Some(hydratedResponse) }
         }
 
     static member private Deserialize<'T> request =
@@ -351,9 +352,8 @@ and NapRequest =
             let statusCodeProperty = typeof<'T>.GetRuntimeProperty("StatusCode")
             if isNull statusCodeProperty |> not then
                 statusCodeProperty.SetValue(deserialized, Convert.ChangeType(response.StatusCode, statusCodeProperty.PropertyType))
-            let cookieProperty = typeof<'T>.GetRuntimeProperty("Cookies")
-            if isNull cookieProperty |> not then
-                cookieProperty.SetValue(deserialized, response.Cookies)
+            NapRequest.HydrateHeaderProperties response deserialized |> ignore
+            NapRequest.HydrateCookieProperties response deserialized |> ignore
             { request with Response = { response with Deserialized = Some(box deserialized) } |> Some } 
         | _ -> request
 
@@ -407,6 +407,98 @@ and NapRequest =
                 |> AsyncFinalizable.get
             return processedRequest.Response |> Option.bind (fun response -> response.Body |> Some)
         }
+
+    static member private HydrateHeaderProperties<'T> (response : NapResponse) (toReturn : 'T) : 'T =
+        let property = typeof<'T>.GetRuntimeProperty("Headers")
+
+        // Types of header properties set:
+        // Array-type string
+        // Dictionary-type <string, string>
+        // Specific named string prop
+        // Specific named Convert.ChangeType prop
+        if (property |> isNull |> not) && ((property.PropertyType.IsConstructedGenericType) || (property.PropertyType.IsArray)) then
+            // If the property 'Headers' exists and is generic type, let's find the generic parameter and set it to an array
+            if (property.PropertyType.IsConstructedGenericType) then
+                let isDictionaryType = (property.PropertyType.GenericTypeArguments |> Seq.length) > 1;
+                let headerType = property.PropertyType.GenericTypeArguments |> Seq.head
+                // TODO: Add dictionary, fix map
+                if ((headerType.IsConstructedGenericType && headerType.GetGenericTypeDefinition() = typedefof<KeyValuePair<_,_>>) || isDictionaryType) then
+                    property.SetValue(toReturn, response.Headers)
+                elif (headerType = typeof<string>) then
+                    property.SetValue(toReturn, response.Headers |> Seq.map (fun c -> sprintf "%s: %s" c.Key c.Value) |> Seq.toArray)
+            else
+                let headerType = property.PropertyType.GetElementType();
+                if (headerType = typeof<string>) then
+                    property.SetValue(toReturn, response.Cookies |> Seq.map (fun c -> sprintf "%s: %s" c.Name c.Value) |> Seq.toArray)
+        // elif (property != null)
+            // TODO: Log
+
+        // Set individual properties
+        for h in response.Headers do
+            let p = typeof<'T>.GetRuntimeProperty(h.Key.Replace("-", System.String.Empty))
+            if (p |> isNull |> not) then
+                if p.PropertyType = typeof<string> then
+                    p.SetValue(toReturn, h.Value);
+                else
+                    //try
+                    p.SetValue(toReturn, Convert.ChangeType(h.Value, p.PropertyType));
+                    //| with e as InvalidCastException ->
+
+        toReturn
+
+    static member private HydrateCookieProperties<'T> (response : NapResponse) (toReturn : 'T) : 'T =
+        let property = typeof<'T>.GetRuntimeProperty("Cookies")
+
+        // Types of cookie properties set:
+        // Array-type NapCookie
+        // Array-type Cookie
+        // Dictionary-type <string, string>
+        // Array-type string
+        // Specific named NapCookie prop
+        // Specific named Cookie prop
+        // Specific named string prop
+        // Specific named Convert.ChangeType prop
+        if (property |> isNull |> not) && ((property.PropertyType.IsConstructedGenericType) || (property.PropertyType.IsArray)) then
+            // If the property 'Cookies' exists and is generic type, let's find the generic parameter and set it to an array
+            if (property.PropertyType.IsConstructedGenericType) then
+                let isDictionaryType = (property.PropertyType.GenericTypeArguments |> Seq.length) > 1
+                let cookieType = property.PropertyType.GenericTypeArguments |> Seq.head
+                if ((cookieType.IsConstructedGenericType && cookieType.GetGenericTypeDefinition() = typedefof<KeyValuePair<_,_>>) || isDictionaryType) then
+                    property.SetValue(toReturn, response.Cookies |> Seq.map (fun c -> c.Name, c.Value) |> Map.ofSeq)
+                elif (cookieType = typeof<NapCookie>) then
+                    property.SetValue(toReturn, response.Cookies |> Seq.toArray)
+                elif (cookieType = typeof<Cookie>) then
+                    property.SetValue(toReturn, response.Cookies |> Seq.map (fun c -> new Cookie(c.Name, c.Value, c.Metadata.Path, c.Metadata.Domain)) |> Seq.toArray)
+                elif (cookieType = typeof<string>) then
+                    property.SetValue(toReturn, response.Cookies |> Seq.map (fun c -> sprintf "%s: %s" c.Name c.Value) |> Seq.toArray)
+            else
+                let cookieType = property.PropertyType.GetElementType()
+                if (cookieType = typeof<NapCookie>) then
+                    property.SetValue(toReturn, response.Cookies |> Seq.toArray)
+                elif (cookieType = typeof<Cookie>) then
+                    property.SetValue(toReturn, response.Cookies |> Seq.map (fun c -> new Cookie(c.Name, c.Value, c.Metadata.Path, c.Metadata.Domain)) |> Seq.toArray)
+                elif (cookieType = typeof<string>) then
+                    property.SetValue(toReturn, response.Cookies |> Seq.map (fun c -> sprintf "%s: %s" c.Name c.Value) |> Seq.toArray)
+        //elif (property != null) then
+            // TODO: Log
+
+        // Set individual properties
+        for c in response.Cookies do
+            let p = typeof<'T>.GetRuntimeProperty(c.Name.Replace("-", System.String.Empty));
+            if (p |> isNull |> not) then
+                if (p.PropertyType = typeof<NapCookie>) then
+                    p.SetValue(toReturn, c);
+                else if (p.PropertyType = typeof<Cookie>) then
+                    p.SetValue(toReturn, new Cookie(c.Name, c.Value, c.Metadata.Path, c.Metadata.Domain));
+                else if (p.PropertyType = typeof<string>) then
+                    p.SetValue(toReturn, c.Value);
+                else
+                    //try
+                        p.SetValue(toReturn, Convert.ChangeType(c.Value, p.PropertyType));
+                    //catch (InvalidCastException e)
+                        // TODO: Log
+
+        toReturn;
 
     (*** INapRequest interface implementation ***)
     interface INapRequest with

@@ -245,8 +245,6 @@ namespace Nap.Tests
             Assert.Equal($"{key}={value}", _handler.Request.Headers.First(h => h.Key == "cookie").Value.First());
         }
 
-#if IMMUTABLE
-#else
         [Fact]
         public void Nap_Result_Includes_CookiesAndHeaders()
         {
@@ -261,7 +259,6 @@ namespace Nap.Tests
             Assert.Equal("12345", result.SessionId);
             Assert.Equal("application/json", result.ContentType);
         }
-#endif
 
         public class TestHandler : HttpClientHandler
         {
@@ -287,13 +284,10 @@ namespace Nap.Tests
         public class Result
         {
             public int StatusCode { get; set; }
-#if IMMUTABLE
-#else
             public IEnumerable<NapCookie> Cookies { get; set; }
             public IDictionary<string, string> Headers { get; set; }
             public string ContentType { get; set; }
             public string SessionId { get; set; }
-#endif
         }
 
         public class BadResult
