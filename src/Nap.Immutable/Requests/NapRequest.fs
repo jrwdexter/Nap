@@ -142,6 +142,22 @@ and NapResponse =
     /// <returns>The cookie that matches <paramref name="cookieName"/>.</returns>
     member x.GetCookie (cookieName : string) = x.Cookies |> Seq.tryFind(fun c -> c.Name.Equals(cookieName, StringComparison.OrdinalIgnoreCase))
 
+    member x.ChainRequest (url: string) (verb: HttpMethod) =
+        let initialRequest = { NapRequest.Default with Url = url; Method = verb } :> INapRequest
+        x.Request.Cookies
+        |> Seq.map (snd>>NapCookie.FromCookie)
+        |> Seq.append x.Cookies
+        |> Seq.fold (fun (req:INapRequest) cookie -> req.IncludeCookie (cookie.Metadata.Url.ToString()) cookie.Name cookie.Name) initialRequest
+
+    member x.ChainMapRequest (url: string) (verb: HttpMethod) (requestMap:(NapResponse -> INapRequest -> INapRequest)) =
+        let initialRequest = { NapRequest.Default with Url = url; Method = verb } :> INapRequest
+        x.Request.Cookies
+        |> Seq.map (snd>>NapCookie.FromCookie)
+        |> Seq.append x.Cookies
+        |> Seq.fold (fun (req:INapRequest) cookie -> 
+            req.IncludeCookie (cookie.Metadata.Url.ToString()) cookie.Name cookie.Value) initialRequest
+        |> requestMap x
+
 and NapRequest =
     {
         Config          : NapConfig

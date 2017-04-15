@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 namespace Nap
 {
@@ -51,6 +52,16 @@ namespace Nap
                 Value = null;
                 Metadata = new NapCookieMetadata();
             }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of a <see cref="NapCookie"/> class from a .NET cookie.
+        /// </summary>
+        public NapCookie(Cookie cookie)
+        {
+            Name = cookie.Name;
+            Value = cookie.Value;
+            Metadata = new NapCookieMetadata(cookie);
         }
     }
 }

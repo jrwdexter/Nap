@@ -64,6 +64,16 @@ namespace Nap
         #region Properties
 
         /// <summary>
+        /// Gets the configuration that this request was seeded with.
+        /// </summary>
+        public INapConfig Configuration => _config;
+
+        /// <summary>
+        /// Gets the collection of plugins that are enabled for this request.
+        /// </summary>
+        public IReadOnlyCollection<IPlugin> Plugins => _plugins;
+
+        /// <summary>
         /// Gets the set of cookies that has been configured for this request.
         /// Required for configuration of the request with a custom <see cref="HttpClient"/>.
         /// </summary>

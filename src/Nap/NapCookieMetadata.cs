@@ -1,6 +1,7 @@
 ﻿using NodaTime;
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace Nap
 {
@@ -12,12 +13,12 @@ namespace Nap
         /// <summary>
         /// Gets the moment at which this cookie was generated.
         /// </summary>
-        public Instant CreationDate { get; }
+        public DateTime CreationDate { get; }
 
         /// <summary>
         /// Gets the GMT moment at which the cookie expires.
         /// </summary>
-        public Instant? Expires { get; }
+        public DateTime? Expires { get; }
 
         /// <summary>
         /// Gets the max age that the cookie will be usable for, in seconds.
@@ -50,12 +51,44 @@ namespace Nap
         /// <remarks>Currently experimental API component.</remarks>
         public SameSitePolicy SameSite { get; }
 
+        /// <summary>
+        /// Gets the URL that this cookie applies to.
+        /// </summary>
+        public Uri Url
+        {
+            get
+            {
+                var secureString = IsSecure ? "s" : string.Empty;
+                return new Uri($"http{secureString}://{Domain}/{Path}");
+            }
+        }
+
+        /// <summary>
+        /// A value indicating whether or not the cookie is still valid.
+        /// </summary>
+        public bool IsValid
+        {
+            get
+            {
+                if (MaxAge.HasValue)
+                {
+                    return DateTime.UtcNow < (CreationDate.AddSeconds(MaxAge.Value));
+                }
+                else if (Expires.HasValue)
+                {
+                    return DateTime.UtcNow < Expires.Value;
+                }
+
+                return true;
+            }
+        }
+
         internal NapCookieMetadata(Uri hostUri, IDictionary<string, string> directives)
         {
-            CreationDate = Instant.FromDateTimeUtc(DateTime.UtcNow);
+            CreationDate = DateTime.UtcNow;
             // Expires
             if (directives.ContainsKey("expires") && directives["expires"] != null)
-                Expires = Instant.FromDateTimeUtc(DateTime.Parse(directives["expires"]));
+                Expires = DateTime.Parse(directives["expires"]);
             else
                 Expires = null;
             // Max-Age
@@ -96,6 +129,18 @@ namespace Nap
             }
             else
                 SameSite = SameSitePolicy.Unset;
+        }
+
+        internal NapCookieMetadata(Cookie cookie)
+        {
+            CreationDate = cookie.TimeStamp;
+            Expires = cookie.Expires;
+            MaxAge = null;
+            Domain = cookie.Domain;
+            Path = cookie.Path;
+            IsSecure = cookie.Secure;
+            HttpOnly = cookie.HttpOnly;
+            SameSite = SameSitePolicy.Unset;
         }
     }
 }

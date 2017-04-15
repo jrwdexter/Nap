@@ -113,3 +113,14 @@ type NapCookieMetadata =
             HttpOnly = httpOnly
             SameSite = sameSite
         }
+
+    member x.Url
+        with get() =
+            Uri(sprintf "http%s://%s/%s" (if x.IsSecure then "s" else String.Empty) x.Domain x.Path)
+    
+    member x.IsValid
+        with get() =
+            match x.MaxAge, x.Expires with
+            | Some(age), _ -> DateTime.UtcNow < x.CreationDate.AddSeconds(float age)
+            | _, Some(exp) -> DateTime.UtcNow < exp
+            | None, None -> true

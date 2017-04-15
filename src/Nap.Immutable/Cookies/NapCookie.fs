@@ -2,6 +2,7 @@
 
 open System
 open System.Collections.Generic
+open System.Net
 open System.Linq
 
 /// <summary>
@@ -51,3 +52,18 @@ type NapCookie =
                 Value = String.Empty
                 Metadata = NapCookieMetadata.Create requestUri segments
             }
+
+    static member FromCookie (cookie:Cookie) =
+        {
+            Name = cookie.Name
+            Value = cookie.Value
+            Metadata = { CreationDate = cookie.TimeStamp
+                         Expires = cookie.Expires |> Some
+                         MaxAge = None
+                         Domain = cookie.Domain
+                         Path = cookie.Path
+                         IsSecure = cookie.Secure
+                         HttpOnly = cookie.HttpOnly
+                         SameSite = SameSitePolicy.Unset
+                       }
+        }

@@ -82,6 +82,41 @@ namespace Nap
         }
 
         /// <summary>
+        /// Create a new request out of a response.
+        /// By default includes the original configuration, as well as the cookies that the server responded with.
+        /// </summary>
+        /// <param name="url">The URL for the new request.</param>
+        /// <param name="verb">The verb of the new request.</param>
+        /// <returns>A new request based on the response from the server.</returns>
+        public INapRequest ChainRequest(string url, HttpMethod verb)
+        {
+            var request =
+                Cookies.Aggregate(new NapRequest(Request.Plugins, Request.Configuration, url, verb) as INapRequest,
+                                  (req, cookie) => req.IncludeCookie(cookie.Metadata.Url.ToString(), cookie.Name, cookie.Value));
+            request =
+                Request.Cookies.Aggregate(request, (req, cookie) => req.IncludeCookie(cookie.Item1.ToString(), cookie.Item2.Name, cookie.Item2.Value));
+            return request;
+        }
+
+        /// <summary>
+        /// Create a new request out of a response.
+        /// By default includes the original configuration, as well as the cookies that the server responded with.
+        /// </summary>
+        /// <param name="url">The URL for the new request.</param>
+        /// <param name="verb">The verb of the new request.</param>
+        /// <param name="updateRequest">An optional function that can be applied to further update the request.</param>
+        /// <returns>A new request based on the response from the server.</returns>
+        public INapRequest ChainMapRequest(string url, HttpMethod verb, Func<NapResponse, INapRequest, INapRequest> updateRequest)
+        {
+            var request =
+                Cookies.Aggregate(new NapRequest(Request.Plugins, Request.Configuration, url, verb) as INapRequest,
+                                  (req, cookie) => req.IncludeCookie(cookie.Metadata.Domain, cookie.Name, cookie.Value));
+            request =
+                Request.Cookies.Aggregate(request, (req, cookie) => req.IncludeCookie(cookie.Item1.ToString(), cookie.Item2.Name, cookie.Item2.Value));
+            return updateRequest(this, request);
+        }
+
+        /// <summary>
         /// Get the value of a header for this response.
         /// </summary>
         /// <param name="headerName">The name of the header value to return.</param>
