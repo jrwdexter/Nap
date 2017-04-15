@@ -1,3 +1,8 @@
+### 0.4.3
+* Added an `ExecuteRaw()` functionality, which enables a basic response type.
+* Added cookie and header functionality to deserialized responses.
+* Added chaining functionality (request -> response -> request) for persisting cookies.
+
 ### 0.4.2
 * Fixed issue where Nap.Immutable was not getting produced.
 * Fixed issue where Nap.Immutable.Html was being mislabeled as Nap.Html.Immutable
