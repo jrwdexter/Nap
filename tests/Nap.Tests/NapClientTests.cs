@@ -264,10 +264,16 @@ namespace Nap.Tests
         public void Nap_Response_Chain_ToRequest_Includes_Cookie()
         {
             // Arrange
-            var newRequest = _nap.Get(_url).ExecuteRaw().ChainRequest(_url, HttpMethod.Get) as NapRequest;
+            var request = _nap.Get(_url) as NapRequest;
 
             // Assert
-            Assert.True(newRequest.Cookies.Count() > 0);
+            Assert.True(request.Cookies.Count() == 0);
+
+            // Act
+            request = ((INapRequest)request).ExecuteRaw().ChainRequest(_url, HttpMethod.Get) as NapRequest;
+
+            // Assert
+            Assert.True(request.Cookies.Count() > 0);
         }
 
         public class TestHandler : HttpClientHandler
