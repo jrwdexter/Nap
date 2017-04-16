@@ -1,5 +1,6 @@
 ### 0.4.6
 * Bug fix for cookie retrieval when cookies have additional attributes.
+* Bug fix for cookie values.
 
 ### 0.4.5
 * Chaining bug fix.
