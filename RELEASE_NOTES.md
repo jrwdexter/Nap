@@ -1,3 +1,6 @@
+### 0.4.8
+* Issue fix for double slashes in cookies.
+
 ### 0.4.7
 * Bug fix for cookie values.
 
