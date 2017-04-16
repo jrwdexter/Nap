@@ -1,3 +1,6 @@
+### 0.4.5
+* Chaining bug fix.
+
 ### 0.4.4
 * Added `ExecuteRaw()` functionality to modules
 * Moved modules from `FNap` to `Req`/`Resp`.
