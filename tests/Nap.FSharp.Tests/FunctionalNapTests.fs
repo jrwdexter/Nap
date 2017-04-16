@@ -20,7 +20,7 @@ module FunctionalNapTests =
     let key = "foo"
     let value = "bar"
 
-    let baseRequest = FNap.get url
+    let baseRequest = Req.get url
 
     type TestClass = {
         [<HtmlElement(".firstName")>] FirstName : string
@@ -34,30 +34,30 @@ module FunctionalNapTests =
         sr.ReadToEnd()
 
     [<Fact>]
-    let ``FNap.get requests url with correct verb`` () =
-        (downcast FNap.get url).Url |> should equal url
-        (downcast FNap.get url).Method |> should equal HttpMethod.Get
+    let ``Req.get requests url with correct verb`` () =
+        (downcast Req.get url).Url |> should equal url
+        (downcast Req.get url).Method |> should equal HttpMethod.Get
 
     [<Fact>]
-    let ``FNap.post requests url with correct verb`` () =
-        (downcast FNap.post url).Url |> should equal url
-        (downcast FNap.post url).Method |> should equal HttpMethod.Post
+    let ``Req.post requests url with correct verb`` () =
+        (downcast Req.post url).Url |> should equal url
+        (downcast Req.post url).Method |> should equal HttpMethod.Post
 
     [<Fact>]
-    let ``FNap.put requests url with correct verb`` () =
-        (downcast FNap.put url).Url |> should equal url
-        (downcast FNap.put url).Method |> should equal HttpMethod.Put
+    let ``Req.put requests url with correct verb`` () =
+        (downcast Req.put url).Url |> should equal url
+        (downcast Req.put url).Method |> should equal HttpMethod.Put
 
     [<Fact>]
-    let ``FNap.delete requests url with correct verb`` () =
-        (downcast FNap.delete url).Url |> should equal url
-        (downcast FNap.delete url).Method |> should equal HttpMethod.Delete
+    let ``Req.delete requests url with correct verb`` () =
+        (downcast Req.delete url).Url |> should equal url
+        (downcast Req.delete url).Method |> should equal HttpMethod.Delete
 
     [<Fact>]
-    let ``FNap.withCookies adds a cookie`` () =
+    let ``Req.withCookies adds a cookie`` () =
         let uri = Uri(url)
-        (downcast (baseRequest |> FNap.withCookie url key value)).Cookies |> should haveLength 1
-        (downcast (baseRequest |> FNap.withCookie url key value)).Cookies.Head |> should equal (url |> Uri,new Cookie(key, value, uri.AbsolutePath, uri.Host))
+        (downcast (baseRequest |> Req.withCookie url key value)).Cookies |> should haveLength 1
+        (downcast (baseRequest |> Req.withCookie url key value)).Cookies.Head |> should equal (url |> Uri,new Cookie(key, value, uri.AbsolutePath, uri.Host))
 
     [<Fact>]
     let ``Immutable Html serializer operates well on records`` () =
