@@ -64,8 +64,10 @@ module Req =
     /// </summary>
     /// <param name="f">The configuration function that accepts the current configuration and outputs the new configuration.</param>
     /// <param name="request">The request to permute.</param>
-    let configure f (request:INapRequest) =
-        f (request.Advanced().Configuration) |> (request :?> NapRequest).ApplyConfig
+    let configure f (request:INapRequest) : INapRequest =
+        f (request.Advanced().Configuration)
+        |> (request :?> NapRequest).ApplyConfig
+        |> fun req -> upcast req
     
     /// <summary>
     /// Retrieve the configuration stored for a given request.
@@ -80,8 +82,9 @@ module Req =
     /// </summary>
     /// <param name="config">The configuration to apply to the request.</param>
     /// <param name="request">The request to permute.</param>
-    let applyConfiguration config (request:INapRequest) =
+    let applyConfiguration config (request:INapRequest) : INapRequest =
         (request :?> NapRequest).ApplyConfig config
+        |> fun req -> upcast req
     
     /// <summary>
     /// Update the configuration to use the serializer specified.
@@ -92,12 +95,13 @@ module Req =
         configure (fun c -> c.AddSerializer serializer)
     
     let useSerializerFor contentType serializer =
-        configure <| fun c -> c.AddSerializerFor contentType serializer
+        (configure <| fun c -> c.AddSerializerFor contentType serializer)
 
-    let logUsing logger (request:INapRequest) =
+    let logUsing logger (request:INapRequest) : INapRequest =
         (request :?> NapRequest).ApplyConfig (
             (request :?> NapRequest).Config.SetLogging logger
         )
+        |> fun req -> upcast req
 
 module Resp =
     let chain method url (response:NapResponse) =

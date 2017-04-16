@@ -35,7 +35,7 @@ namespace Nap
             var segments = cookieString.Split(';').Select(c =>
             {
                 var split = c.Split('=').Select(s => s?.Trim()).ToList();
-                if (c.Length > 1)
+                if (split.Count > 1)
                     return new KeyValuePair<string, string>(split[0], split[1]);
                 else
                     return new KeyValuePair<string, string>(split[0], null);
@@ -44,7 +44,7 @@ namespace Nap
             {
                 Name = segments.First().Key;
                 Value = segments.First().Value;
-                Metadata = new NapCookieMetadata(requestUri, segments);
+                Metadata = new NapCookieMetadata(requestUri, segments.ToDictionary(kv => kv.Key.ToLower(), kv => kv.Value));
             }
             else
             {
