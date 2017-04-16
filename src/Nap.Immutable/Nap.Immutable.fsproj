@@ -76,7 +76,7 @@
     <Compile Include="Plugins\DefaultPlugin.fs" />
     <Compile Include="NapSetup.fs" />
     <Compile Include="NapClient.fs" />
-    <Compile Include="FNap.fs" />
+    <Compile Include="NapModules.fs" />
     <None Include="Script.fsx" />
     <None Include="paket.references" />
   </ItemGroup>
