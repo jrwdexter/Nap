@@ -5,7 +5,7 @@ open System.Net
 open System.Net.Http
 open Nap
 
-module FNap =
+module Req =
     let get = NapClient.Lets.Get
     let post = NapClient.Lets.Post
     let put = NapClient.Lets.Put
@@ -45,13 +45,19 @@ module FNap =
         request.Execute<'T>()
 
     let executeRaw (request:INapRequest) =
-        request.Execute()
+        request.ExecuteRaw()
 
-    let executeRawAsync (request:INapRequest) =
-        request.ExecuteAsync()
+    let executeString (request:INapRequest) =
+        request.Execute()
 
     let executeAsync<'T> (request:INapRequest) =
         request.ExecuteAsync<'T>()
+
+    let executeRawAsync (request:INapRequest) =
+        request.ExecuteRawAsync()
+
+    let executeStringAsync (request:INapRequest) =
+        request.ExecuteAsync()
 
     /// <summary>
     /// Configure the request using a configuration function.
