@@ -32,25 +32,30 @@ type NapCookie =
     /// <param name="requestUri">The request URI that this cookie belongs to.</param>
     /// <param name="cookieString">The string that will generate a cookie (value of a Set-Cookie header).</param>
     static member Create (requestUri:Uri) (cookieString: string) =
+        let lowercaseSegmentKeys =
+            Map.toSeq >> Seq.map (fun ((k:string),v) -> k.ToLower(),v) >> Map.ofSeq
         let segments =
-            cookieString.Split(';') |> Seq.map(fun c ->
-                let split = c.Split('=') |> Seq.map(fun s -> s |> Option.ofObj |> Option.map (fun o -> o.Trim()) |> Option.toObj) |> Seq.toList
-                if (c.Length > 1) then
-                    (split.[0], Some(split.[1]))
-                else
-                    (split.[0], None)
-            ) |> Map.ofSeq
+            seq { for c in cookieString.Split(';') do
+                     let split = c.Split('=') |> Seq.map(fun s -> s |> Option.ofObj |> Option.map (fun o -> o.Trim()) |> Option.toObj) |> Seq.toList
+                     match split with
+                     | [name] -> yield (name, None)
+                     | name::rest -> yield (name, Some(rest.Head))
+                     | [] -> ()
+            }
         if (segments |> Seq.length > 0) then
             {
-                Name = (segments |> Seq.head).Key
-                Value = (segments |> Seq.head).Value |> Option.get
-                Metadata = NapCookieMetadata.Create requestUri segments
+                Name = (segments |> Seq.head) |> fst
+                Value = 
+                    match (segments |> Seq.head) |> snd with
+                    | Some(v) -> v
+                    | None -> String.Empty
+                Metadata = NapCookieMetadata.Create requestUri (lowercaseSegmentKeys <| Map.ofSeq segments)
             }
             else
             {
                 Name = String.Empty
                 Value = String.Empty
-                Metadata = NapCookieMetadata.Create requestUri segments
+                Metadata = NapCookieMetadata.Create requestUri (lowercaseSegmentKeys <| Map.ofSeq segments)
             }
 
     static member FromCookie (cookie:Cookie) =

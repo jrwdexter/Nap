@@ -256,8 +256,13 @@ namespace Nap.Tests
             // Assert
             Assert.True(result.Headers.Count >= 2); // 2 specified headers
             Assert.Equal(1, result.Cookies.Count());
-            Assert.Equal("12345", result.SessionId);
+            Assert.Equal("6ce8b8ceb0ed99ab0d0650771295bd84", result.SessionId);
             Assert.Equal("application/json", result.ContentType);
+            var sessionCookie = result.Cookies.FirstOrDefault(c => c.Name.Equals("SessionId"));
+            Assert.NotNull(sessionCookie);
+            Assert.Equal("/test", sessionCookie.Metadata.Path);
+            Assert.True(sessionCookie.Metadata.IsSecure, "Should be secure");
+            Assert.True(sessionCookie.Metadata.HttpOnly, "Should be HTTP only");
         }
 
         [Fact]
@@ -292,7 +297,7 @@ namespace Nap.Tests
                 var content = new StringContent(string.Empty);
                 content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
                 var response = new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = content };
-                response.Headers.Add("Set-Cookie", "Session-Id = 12345");
+                response.Headers.Add("Set-Cookie", "SessionId=6ce8b8ceb0ed99ab0d0650771295bd84; path=/test; secure; HttpOnly");
                 return response;
             }
         }
