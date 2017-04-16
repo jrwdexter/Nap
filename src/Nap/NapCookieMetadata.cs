@@ -58,7 +58,7 @@ namespace Nap
             get
             {
                 var secureString = IsSecure ? "s" : string.Empty;
-                return new Uri($"http{secureString}://{Domain}/{Path}");
+                return new Uri($"http{secureString}://{Domain.TrimEnd('/')}/{Path.TrimStart('/')}");
             }
         }
 

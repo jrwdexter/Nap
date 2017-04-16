@@ -116,7 +116,7 @@ type NapCookieMetadata =
 
     member x.Url
         with get() =
-            Uri(sprintf "http%s://%s/%s" (if x.IsSecure then "s" else String.Empty) x.Domain x.Path)
+            Uri(sprintf "http%s://%s/%s" (if x.IsSecure then "s" else String.Empty) (x.Domain.TrimEnd('/')) (x.Path.TrimStart('/')))
     
     member x.IsValid
         with get() =
