@@ -1,3 +1,7 @@
+### 0.4.4
+* Added `ExecuteRaw()` functionality to modules
+* Moved modules from `FNap` to `Req`/`Resp`
+
 ### 0.4.3
 * Added an `ExecuteRaw()` functionality, which enables a basic response type.
 * Added cookie and header functionality to deserialized responses.
