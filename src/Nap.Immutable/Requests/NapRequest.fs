@@ -147,7 +147,7 @@ and NapResponse =
         x.Request.Cookies
         |> Seq.map (snd>>NapCookie.FromCookie)
         |> Seq.append x.Cookies
-        |> Seq.fold (fun (req:INapRequest) cookie -> req.IncludeCookie (cookie.Metadata.Url.ToString()) cookie.Name cookie.Name) initialRequest
+        |> Seq.fold (fun (req:INapRequest) cookie -> req.IncludeCookie (cookie.Metadata.Url.ToString()) cookie.Name cookie.Value) initialRequest
 
     member x.ChainMapRequest (url: string) (verb: HttpMethod) (requestMap:(NapResponse -> INapRequest -> INapRequest)) =
         let initialRequest = { NapRequest.Default with Url = url; Method = verb } :> INapRequest
