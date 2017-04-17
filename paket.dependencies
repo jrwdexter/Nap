@@ -6,7 +6,7 @@ nuget System.Net.Http 4.1.0
 nuget System.Threading.Tasks
 
 nuget CsQuery 1.3.4 framework: >= net45
-nuget Newtonsoft.Json 6.0.2
+nuget Newtonsoft.Json >= 6.0.2
 
 group Build
   source https://nuget.org/api/v2
