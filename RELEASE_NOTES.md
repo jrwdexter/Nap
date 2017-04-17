@@ -1,3 +1,6 @@
+### 0.4.10
+* Updated nuget package dependencies to be appropriate.
+
 ### 0.4.9
 * Issue fix for double slashes in cookies.
 
