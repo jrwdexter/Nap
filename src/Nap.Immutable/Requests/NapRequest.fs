@@ -319,7 +319,13 @@ and NapRequest =
                 | Some((_,v)) -> content.Headers.ContentType.MediaType <- v
                 | None -> content.Headers.ContentType.MediaType <- (request.Config.Serializers.[request.Config.Serialization]).ContentType
             let! response = client.SendAsync(requestMessage) |> Async.AwaitTask
-            let! content = response.Content.ReadAsStringAsync() |> Async.AwaitTask
+            let! bytes = response.Content.ReadAsByteArrayAsync() |> Async.AwaitTask
+            let encoding =
+                try 
+                    Encoding.GetEncoding(response.Content.Headers.ContentEncoding |> Seq.head)
+                with
+                | _ -> Encoding.UTF8
+            let content = encoding.GetString(bytes, 0, Seq.length bytes)
             let hydratedResponse = NapResponse.Create request response content
             return { request with Response = Some(hydratedResponse) }
         }
