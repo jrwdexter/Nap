@@ -332,14 +332,18 @@ namespace Nap
                 if (response == null)
                     return null;
 
-                using (var ms = new MemoryStream())
-                using (var sr = new StreamReader(ms))
+                var bytes = await response.Content.ReadAsByteArrayAsync();
+                var encoding = System.Text.Encoding.UTF8;
+                try
                 {
-                    await response.Content.CopyToAsync(ms);
-                    ms.Position = 0;
-                    var responseContent = await sr.ReadToEndAsync();
-                    return _plugins.Aggregate(new NapResponse(this, response, responseContent), (r, plugin) => plugin.Process(r));
+                    encoding = System.Text.Encoding.GetEncoding(response.Content.Headers.ContentEncoding.First());
                 }
+                catch
+                {
+                }
+
+                var responseContent = encoding.GetString(bytes, 0, bytes.Length);
+                return _plugins.Aggregate(new NapResponse(this, response, responseContent), (r, plugin) => plugin.Process(r));
             }
         }
 
