@@ -1,3 +1,6 @@
+### 0.4.12
+* Fixed an issue where invalid response content types would break deserialization.
+
 ### 0.4.11
 * Fixed an issue where invalid response content types would break deserialization.
 
