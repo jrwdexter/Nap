@@ -359,7 +359,7 @@ namespace Nap
         /// Creates the URL from an (optional) <see cref="INapConfig.BaseUrl"/>, URL and query parameters.
         /// </summary>
         /// <returns>The fully formed URL.</returns>
-        private string CreateUrl()
+        internal string CreateUrl()
         {
             var urlTemp = _url;
             if (!_url.StartsWith("http", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrEmpty(_config.BaseUrl))
