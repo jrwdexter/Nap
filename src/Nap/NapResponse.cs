@@ -67,14 +67,14 @@ namespace Nap
         internal NapResponse(NapRequest request, HttpResponseMessage response, string body)
         {
             Request = request;
-            Url = new Uri(request.Url);
+            Url = new Uri(request.CreateUrl());
             StatusCode = response.StatusCode;
             Headers = new ReadOnlyCollection<KeyValuePair<string, string>>(response.Headers
                                                                                    .Union(response.Content.Headers)
                                                                                    .SelectMany(h => h.Value.Select(v => new KeyValuePair<string, string>(h.Key, v)))
                                                                                    .ToList());
             Cookies = new ReadOnlyCollection<NapCookie>(Headers.Where(h => h.Key.Equals("set-cookie", StringComparison.OrdinalIgnoreCase))
-                                                               .Select(h => new NapCookie(new Uri(request.Url), h.Value))
+                                                               .Select(h => new NapCookie(new Uri(request.CreateUrl()), h.Value))
                                                                .ToList());
             Body = body;
             ContentHeaders = response.Content.Headers;
